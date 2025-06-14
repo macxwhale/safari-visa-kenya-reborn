@@ -1,7 +1,14 @@
 
 import ApplicationSummaryCard from "@/components/ApplicationSummaryCard";
 
-const applications = [
+type StatusType = "Under Review" | "Approved" | "Rejected";
+
+const applications: {
+  reference: string;
+  name: string;
+  status: StatusType;
+  submitted: string;
+}[] = [
   {
     reference: "ETA20249001",
     name: "Jane Doe",
