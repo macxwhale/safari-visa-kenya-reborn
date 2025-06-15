@@ -2,9 +2,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
 import ApplicationStepper from "@/components/ApplicationStepper";
-import PersonalInfoStep from "./PersonalInfoStep";
 import PassportStep from "./PassportStep";
 import SelfieStep from "./SelfieStep";
 import ContactInfoStep from "./ContactInfoStep";
@@ -15,18 +13,9 @@ import DocumentsStep from "./DocumentsStep";
 import ReviewStep from "./ReviewStep";
 import PaymentStep from "./PaymentStep";
 import { HelpCircle } from "lucide-react";
-
-const STEP_LABELS = [
-  "Passport Information",
-  "Selfie or Photo", 
-  "Contact Information",
-  "Trip Information",
-  "Traveller Information",
-  "Customs Declaration",
-  "Required Documents",
-  "Confirm and Proceed",
-  "Payment",
-];
+import { useApplicationForm } from "@/hooks/useApplicationForm";
+import { STEP_LABELS } from "./applicationFormConfig";
+import { submitApplication } from "@/services/applicationService";
 
 interface ApplicationFormProps {
   travelerType: string;
@@ -37,54 +26,10 @@ interface ApplicationFormProps {
 
 export default function ApplicationForm({ travelerType, applicationType, country, onReset }: ApplicationFormProps) {
   const [step, setStep] = useState(0);
-  const [form, setForm] = useState({
-    passportDoc: null as File | null,
-    selfieDoc: null as File | null,
-    fullName: "",
-    email: "",
-    phone: "",
-    passport: "",
-    nationality: "",
-    dateOfBirth: "",
-    placeOfBirth: "",
-    passportIssueDate: "",
-    passportExpiryDate: "",
-    purposeOfVisit: "",
-    accommodationAddress: "",
-    homeAddress: "",
-    occupation: "",
-    contactInKenya: "",
-    travelFrom: country || "",
-    entryDate: "",
-    exitDate: "",
-    flightNumber: "",
-    customsDeclaration: false,
-    additionalDocs: [] as File[],
-    arrivalMode: 'air' as 'air' | 'sea' | 'land',
-    departureMode: 'air' as 'air' | 'sea' | 'land',
-    arrivalPort: "",
-    departurePort: "",
-    arrivalAirline: "",
-    departureAirline: "",
-    departureFlightNumber: "",
-    finalDestinationCountry: "",
-    accommodationCheckInDate: "",
-    accommodationCheckOutDate: "",
-    tripFinancedByThirdParty: null as boolean | null,
-    countryOfBirth: "",
-    nationalityAtBirth: "",
-    convictedInPast5Years: null as boolean | null,
-    deniedEntryToKenya: null as boolean | null,
-    maritalStatus: "",
-    previouslyTravelledToKenya: null as boolean | null,
-  });
+  const { form, handleFormChange } = useApplicationForm(country || "");
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  const handleFormChange = (field: string, value: string | File | File[] | boolean | null) => {
-    setForm(prev => ({ ...prev, [field]: value }));
-  };
 
   const goNext = () => {
     if (step < STEP_LABELS.length - 1) setStep(s => s + 1);
@@ -98,54 +43,8 @@ export default function ApplicationForm({ travelerType, applicationType, country
   const handleSubmit = async () => {
     setSubmitting(true);
     setError(null);
-    let passport_doc_url: string | undefined;
-    let selfie_doc_url: string | undefined;
-
     try {
-      if (form.passportDoc) {
-        const { data, error: uploadError } = await supabase.storage
-          .from("eta-documents")
-          .upload(`public/${Date.now()}_passport_${form.passportDoc.name}`, form.passportDoc);
-        if (uploadError) {
-          setError("Failed to upload passport document: " + uploadError.message);
-          setSubmitting(false);
-          return;
-        }
-        passport_doc_url = data?.path;
-      }
-
-      if (form.selfieDoc) {
-        const { data, error: uploadError } = await supabase.storage
-          .from("eta-documents")
-          .upload(`public/${Date.now()}_selfie_${form.selfieDoc.name}`, form.selfieDoc);
-        if (uploadError) {
-          setError("Failed to upload selfie document: " + uploadError.message);
-          setSubmitting(false);
-          return;
-        }
-        selfie_doc_url = data?.path;
-      }
-
-      const { error: insertError } = await supabase
-        .from("eta_applications")
-        .insert([
-          {
-            user_id: null,
-            full_name: form.fullName,
-            email: form.email,
-            passport: form.passport,
-            nationality: form.nationality,
-            travel_from: form.travelFrom,
-            entry_date: form.entryDate,
-            doc_url: passport_doc_url,
-          },
-        ]);
-      if (insertError) {
-        setError("Submission failed: " + insertError.message);
-        setSubmitting(false);
-        return;
-      }
-
+      await submitApplication(form);
       alert("Application submitted!");
       onReset();
       navigate("/dashboard");
