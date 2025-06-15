@@ -3,6 +3,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
 import * as React from "react";
+import { cn } from "@/lib/utils";
+import { Check } from "lucide-react";
 
 interface TravelInfoStepProps {
   form: {
@@ -11,36 +13,61 @@ interface TravelInfoStepProps {
     nationalityAtBirth: string;
     convictedInPast5Years: boolean | null;
     deniedEntryToKenya: boolean | null;
+    maritalStatus: string;
+    previouslyTravelledToKenya: boolean | null;
   };
   onChange: (field: string, value: any) => void;
 }
 
-const QuestionRadioGroup: React.FC<{
+const ButtonRadioGroup: React.FC<{
   label: string;
-  value: boolean | null;
-  onChange: (value: boolean) => void;
+  options: { value: string; label: string }[];
+  value: string | boolean | null;
+  onChange: (value: any) => void;
   idPrefix: string;
-}> = ({ label, value, onChange, idPrefix }) => (
-  <div className="space-y-2">
-    <Label className="font-normal text-gray-700">{label}</Label>
-    <RadioGroup
-      value={value === null ? "" : value ? "yes" : "no"}
-      onValueChange={(val) => onChange(val === "yes")}
-      className="flex items-center space-x-6 pt-2"
-    >
-      <div className="flex items-center space-x-2">
-        <RadioGroupItem value="yes" id={`${idPrefix}-yes`} />
-        <Label htmlFor={`${idPrefix}-yes`} className="font-normal">Yes</Label>
-      </div>
-      <div className="flex items-center space-x-2">
-        <RadioGroupItem value="no" id={`${idPrefix}-no`} />
-        <Label htmlFor={`${idPrefix}-no`} className="font-normal">No</Label>
-      </div>
-    </RadioGroup>
-  </div>
-);
+}> = ({ label, options, value, onChange, idPrefix }) => {
+  const stringValue = value === null ? "" : typeof value === 'boolean' ? (value ? "yes" : "no") : value;
+  return (
+    <div className="space-y-2">
+      <Label className="font-normal text-gray-700">{label}</Label>
+      <RadioGroup
+        value={stringValue}
+        onValueChange={onChange}
+        className="flex flex-wrap items-center gap-3 pt-2"
+      >
+        {options.map((option) => (
+          <div key={option.value} className="flex items-center">
+            <RadioGroupItem value={option.value} id={`${idPrefix}-${option.value}`} className="peer sr-only" />
+            <Label
+              htmlFor={`${idPrefix}-${option.value}`}
+              className={cn(
+                "flex items-center justify-center rounded-md border bg-white px-4 py-2 font-medium text-gray-800 shadow-sm hover:bg-gray-50 cursor-pointer transition-all",
+                "peer-data-[state=checked]:border-green-600 peer-data-[state=checked]:ring-2 peer-data-[state=checked]:ring-green-100"
+              )}
+            >
+              {stringValue === option.value && <Check className="w-4 h-4 mr-2 text-green-600" />}
+              {option.label}
+            </Label>
+          </div>
+        ))}
+      </RadioGroup>
+    </div>
+  );
+};
 
 export default function TravelInfoStep({ form, onChange }: TravelInfoStepProps) {
+  const maritalStatusOptions = [
+    { value: 'single', label: 'Single' },
+    { value: 'married', label: 'Married' },
+    { value: 'divorced', label: 'Divorced' },
+    { value: 'widowed', label: 'Widowed' },
+  ];
+
+  const yesNoOptions = [
+    { value: 'yes', label: 'Yes' },
+    { value: 'no', label: 'No' },
+  ];
+
   return (
     <div className="space-y-8 animate-fade-in max-w-2xl">
       <div>
@@ -49,13 +76,30 @@ export default function TravelInfoStep({ form, onChange }: TravelInfoStepProps) 
       </div>
       
       <div className="space-y-6">
-        <QuestionRadioGroup
+        <ButtonRadioGroup
           label="Is your trip financed by a third party, which is not your employer nor a government?"
+          options={yesNoOptions}
           value={form.tripFinancedByThirdParty}
-          onChange={(value) => onChange('tripFinancedByThirdParty', value)}
+          onChange={(value) => onChange('tripFinancedByThirdParty', value === 'yes')}
           idPrefix="financed"
         />
 
+        <ButtonRadioGroup
+          label="What is your marital status?"
+          options={maritalStatusOptions}
+          value={form.maritalStatus}
+          onChange={(value) => onChange('maritalStatus', value)}
+          idPrefix="marital"
+        />
+
+        <ButtonRadioGroup
+          label="Have you previously travelled to Kenya?"
+          options={yesNoOptions}
+          value={form.previouslyTravelledToKenya}
+          onChange={(value) => onChange('previouslyTravelledToKenya', value === 'yes')}
+          idPrefix="travelled"
+        />
+        
         <div className="space-y-2">
           <Label htmlFor="countryOfBirth" className="font-normal text-gray-700">What is your country of birth?</Label>
           <Select onValueChange={(value) => onChange('countryOfBirth', value)} value={form.countryOfBirth}>
@@ -86,17 +130,19 @@ export default function TravelInfoStep({ form, onChange }: TravelInfoStepProps) 
           </Select>
         </div>
 
-        <QuestionRadioGroup
+        <ButtonRadioGroup
           label="Have you ever been convicted of any offence, under any system of law, in the past 5 years?"
+          options={yesNoOptions}
           value={form.convictedInPast5Years}
-          onChange={(value) => onChange('convictedInPast5Years', value)}
+          onChange={(value) => onChange('convictedInPast5Years', value === 'yes')}
           idPrefix="convicted"
         />
 
-        <QuestionRadioGroup
+        <ButtonRadioGroup
           label="Have you ever been previously denied entry to Kenya?"
+          options={yesNoOptions}
           value={form.deniedEntryToKenya}
-          onChange={(value) => onChange('deniedEntryToKenya', value)}
+          onChange={(value) => onChange('deniedEntryToKenya', value === 'yes')}
           idPrefix="denied"
         />
       </div>

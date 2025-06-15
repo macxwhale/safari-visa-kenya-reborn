@@ -1,3 +1,4 @@
+
 interface ReviewStepProps {
   travelerType: string;
   applicationType?: string;
@@ -40,6 +41,8 @@ interface ReviewStepProps {
     nationalityAtBirth: string;
     convictedInPast5Years: boolean | null;
     deniedEntryToKenya: boolean | null;
+    maritalStatus: string;
+    previouslyTravelledToKenya: boolean | null;
   };
 }
 
@@ -233,6 +236,10 @@ export default function ReviewStep({ travelerType, applicationType, country, for
           <h3 className="font-medium text-gray-900 mb-3">Traveller Information</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
             <div>
+              <span className="text-gray-600">Marital Status:</span>
+              <span className="ml-2 font-medium capitalize">{form.maritalStatus || 'N/A'}</span>
+            </div>
+            <div>
               <span className="text-gray-600">Country of Birth:</span>
               <span className="ml-2 font-medium">{form.countryOfBirth || 'N/A'}</span>
             </div>
@@ -253,6 +260,10 @@ export default function ReviewStep({ travelerType, applicationType, country, for
               <div>
                 <p className="text-gray-600">Have you ever been previously denied entry to Kenya?</p>
                 <p className="font-medium">{formatBoolean(form.deniedEntryToKenya)}</p>
+              </div>
+              <div>
+                <p className="text-gray-600">Have you previously travelled to Kenya?</p>
+                <p className="font-medium">{formatBoolean(form.previouslyTravelledToKenya)}</p>
               </div>
           </div>
         </div>

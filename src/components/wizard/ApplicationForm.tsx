@@ -75,6 +75,8 @@ export default function ApplicationForm({ travelerType, applicationType, country
     nationalityAtBirth: "",
     convictedInPast5Years: null as boolean | null,
     deniedEntryToKenya: null as boolean | null,
+    maritalStatus: "",
+    previouslyTravelledToKenya: null as boolean | null,
   });
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
