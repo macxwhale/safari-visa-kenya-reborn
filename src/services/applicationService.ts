@@ -4,8 +4,8 @@ import { ApplicationFormState } from "@/hooks/useApplicationForm";
 
 export const submitApplication = async (form: ApplicationFormState) => {
   let passport_doc_url: string | undefined;
-  let selfie_doc_url: string | undefined;
 
+  // Passport upload (critical)
   if (form.passportDoc) {
     const { data, error: uploadError } = await supabase.storage
       .from("eta-documents")
@@ -16,15 +16,32 @@ export const submitApplication = async (form: ApplicationFormState) => {
     passport_doc_url = data?.path;
   }
 
+  // Selfie upload (critical)
   if (form.selfieDoc) {
-    const { data, error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase.storage
       .from("eta-documents")
       .upload(`public/${Date.now()}_selfie_${form.selfieDoc.name}`, form.selfieDoc);
     if (uploadError) {
       throw new Error("Failed to upload selfie document: " + uploadError.message);
     }
-    selfie_doc_url = data?.path;
   }
+
+  // Optional documents upload (non-critical, fire-and-forget)
+  const uploadOptionalFile = async (file: File, type: string) => {
+    const { error } = await supabase.storage
+      .from("eta-documents")
+      .upload(`public/${Date.now()}_${type}_${file.name}`, file);
+    if (error) {
+      console.error(`Failed to upload optional document (${type}): ${error.message}`);
+    }
+  };
+
+  const uploadPromises = [
+    ...form.accommodationDocs.map(file => uploadOptionalFile(file, 'accommodation')),
+    ...form.airlineDocs.map(file => uploadOptionalFile(file, 'airline')),
+  ];
+
+  Promise.all(uploadPromises);
 
   const { error: insertError } = await supabase
     .from("eta_applications")
