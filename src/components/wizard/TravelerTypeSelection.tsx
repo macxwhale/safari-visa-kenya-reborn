@@ -1,6 +1,8 @@
 
 import { Button } from "@/components/ui/button";
 import { X, Globe, HelpCircle } from "lucide-react";
+import { useState } from "react";
+import HowToApplyModal from "./HowToApplyModal";
 
 interface TravelerTypeSelectionProps {
   onTravelerTypeSelect: (type: string) => void;
@@ -25,6 +27,35 @@ const travelerTypes = [
 ];
 
 export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }: TravelerTypeSelectionProps) {
+  const [showHowToApply, setShowHowToApply] = useState(false);
+
+  const handleTravelerTypeClick = (typeId: string) => {
+    if (typeId === "tourist") {
+      setShowHowToApply(true);
+    } else {
+      onTravelerTypeSelect(typeId);
+    }
+  };
+
+  const handleContinueFromModal = () => {
+    setShowHowToApply(false);
+    onTravelerTypeSelect("tourist");
+  };
+
+  const handleBackFromModal = () => {
+    setShowHowToApply(false);
+  };
+
+  if (showHowToApply) {
+    return (
+      <HowToApplyModal
+        onClose={onClose}
+        onContinue={handleContinueFromModal}
+        onBack={handleBackFromModal}
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       {/* Modal overlay */}
@@ -62,7 +93,7 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
             {travelerTypes.map((type) => (
               <div
                 key={type.id}
-                onClick={() => onTravelerTypeSelect(type.id)}
+                onClick={() => handleTravelerTypeClick(type.id)}
                 className={`${type.color} text-white rounded-lg p-6 cursor-pointer hover:opacity-90 transition-opacity`}
               >
                 <div className="flex items-start gap-4">
