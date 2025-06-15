@@ -26,13 +26,65 @@ const HeroSection = () => (
           >
             <Button
               size="lg"
-              className="w-full xl:px-10 xl:py-4 font-bold text-lg rounded-full bg-white text-[rgba(10,64,2,1)] border-none shadow-none hover:bg-gray-100 transition"
+              className="w-full xl:px-10 xl:py-4 font-bold text-lg rounded-full bg-[#244FBB] text-white border-none shadow-none hover:bg-[#1a3878] transition"
             >
               Apply Now
             </Button>
           </Link>
+          <Link
+            to="/dashboard"
+            className="w-full sm:w-auto"
+          >
+            <Button
+              variant="outline"
+              size="lg"
+              className="w-full xl:px-5 xl:py-4 font-bold text-lg rounded-full text-white border-white hover:bg-white/10 bg-[#082A16] transition"
+            >
+              Check status
+              <svg
+                className="ml-2 w-6 h-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 25 25"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M14.788 5.53h6m-6 3h3m4 3.5c0 5.25-4.25 9.5-9.5 9.5s-9.5-4.25-9.5-9.5 4.25-9.5 9.5-9.5m10.5 20-2-2"
+                />
+              </svg>
+            </Button>
+          </Link>
         </div>
-        {/* Removed Check Status and Airport Staff Box */}
+        <div className="mt-6 xl:mt-12">
+          <Link
+            to="/lookup/ta"
+            className="self-start relative z-20 flex flex-col gap-px w-full max-w-sm rounded-lg p-2 bg-white/10"
+          >
+            <span className="flex items-center text-sm text-white font-semibold whitespace-nowrap">
+              Airport Staff
+              <svg
+                className="ml-2 w-6 h-6"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M5 12h14m0 0-7-7m7 7-7 7"
+                />
+              </svg>
+            </span>
+            <p className="text-xs text-white">
+              Check the status of a traveler&apos;s submitted application here.
+            </p>
+          </Link>
+        </div>
       </div>
       <div className="col-span-1 grid lg:col-span-7">
         <img
@@ -47,4 +99,3 @@ const HeroSection = () => (
 );
 
 export default HeroSection;
-
