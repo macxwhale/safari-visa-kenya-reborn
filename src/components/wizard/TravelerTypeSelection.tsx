@@ -3,9 +3,12 @@ import { Button } from "@/components/ui/button";
 import { X, Globe, HelpCircle } from "lucide-react";
 import { useState } from "react";
 import HowToApplyModal from "./HowToApplyModal";
+import DeclarationModal from "./DeclarationModal";
+import ApplicationTypeModal from "./ApplicationTypeModal";
+import CountryResidenceModal from "./CountryResidenceModal";
 
 interface TravelerTypeSelectionProps {
-  onTravelerTypeSelect: (type: string) => void;
+  onTravelerTypeSelect: (type: string, applicationType?: string, country?: string) => void;
   onClose: () => void;
 }
 
@@ -27,35 +30,94 @@ const travelerTypes = [
 ];
 
 export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }: TravelerTypeSelectionProps) {
-  const [showHowToApply, setShowHowToApply] = useState(false);
+  const [currentModal, setCurrentModal] = useState<"main" | "howToApply" | "declaration" | "applicationType" | "countryResidence">("main");
+  const [selectedData, setSelectedData] = useState({
+    travelerType: "",
+    applicationType: "",
+    country: ""
+  });
 
   const handleTravelerTypeClick = (typeId: string) => {
     if (typeId === "tourist") {
-      setShowHowToApply(true);
+      setSelectedData(prev => ({ ...prev, travelerType: typeId }));
+      setCurrentModal("howToApply");
     } else {
       onTravelerTypeSelect(typeId);
     }
   };
 
-  const handleContinueFromModal = () => {
-    setShowHowToApply(false);
-    onTravelerTypeSelect("tourist");
+  const handleContinueFromHowToApply = () => {
+    setCurrentModal("declaration");
   };
 
-  const handleBackFromModal = () => {
-    setShowHowToApply(false);
+  const handleContinueFromDeclaration = () => {
+    setCurrentModal("applicationType");
   };
 
-  if (showHowToApply) {
+  const handleApplicationTypeSelect = (type: 'individual' | 'group') => {
+    setSelectedData(prev => ({ ...prev, applicationType: type }));
+    setCurrentModal("countryResidence");
+  };
+
+  const handleCountrySelect = (country: string) => {
+    setSelectedData(prev => ({ ...prev, country }));
+    onTravelerTypeSelect(selectedData.travelerType, selectedData.applicationType, country);
+  };
+
+  const handleBack = () => {
+    if (currentModal === "howToApply") {
+      setCurrentModal("main");
+    } else if (currentModal === "declaration") {
+      setCurrentModal("howToApply");
+    } else if (currentModal === "applicationType") {
+      setCurrentModal("declaration");
+    } else if (currentModal === "countryResidence") {
+      setCurrentModal("applicationType");
+    }
+  };
+
+  // Render appropriate modal based on current state
+  if (currentModal === "howToApply") {
     return (
       <HowToApplyModal
         onClose={onClose}
-        onContinue={handleContinueFromModal}
-        onBack={handleBackFromModal}
+        onContinue={handleContinueFromHowToApply}
+        onBack={handleBack}
       />
     );
   }
 
+  if (currentModal === "declaration") {
+    return (
+      <DeclarationModal
+        onClose={onClose}
+        onContinue={handleContinueFromDeclaration}
+        onBack={handleBack}
+      />
+    );
+  }
+
+  if (currentModal === "applicationType") {
+    return (
+      <ApplicationTypeModal
+        onClose={onClose}
+        onTypeSelect={handleApplicationTypeSelect}
+        onBack={handleBack}
+      />
+    );
+  }
+
+  if (currentModal === "countryResidence") {
+    return (
+      <CountryResidenceModal
+        onClose={onClose}
+        onCountrySelect={handleCountrySelect}
+        onBack={handleBack}
+      />
+    );
+  }
+
+  // Main traveler type selection
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       {/* Modal overlay */}

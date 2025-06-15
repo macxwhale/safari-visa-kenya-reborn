@@ -1,6 +1,8 @@
 
 interface ReviewStepProps {
   travelerType: string;
+  applicationType?: string;
+  country?: string;
   form: {
     fullName: string;
     email: string;
@@ -12,12 +14,14 @@ interface ReviewStepProps {
   };
 }
 
-export default function ReviewStep({ travelerType, form }: ReviewStepProps) {
+export default function ReviewStep({ travelerType, applicationType, country, form }: ReviewStepProps) {
   return (
     <div className="animate-fade-in">
       <h2 className="font-semibold mb-2 text-lg">Review your information</h2>
       <ul className="list-disc ml-4 space-y-1 text-gray-700">
         <li>Traveler Type: <span className="font-mono">{travelerType}</span></li>
+        {applicationType && <li>Application Type: <span className="font-mono">{applicationType}</span></li>}
+        {country && <li>Country of Residence: <span className="font-mono">{country}</span></li>}
         <li>Name: <span className="font-mono">{form.fullName}</span></li>
         <li>Email: <span className="font-mono">{form.email}</span></li>
         <li>Passport Number: <span className="font-mono">{form.passport}</span></li>

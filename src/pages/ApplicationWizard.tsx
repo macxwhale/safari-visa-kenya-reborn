@@ -5,22 +5,34 @@ import TravelerTypeSelection from "@/components/wizard/TravelerTypeSelection";
 import ApplicationForm from "@/components/wizard/ApplicationForm";
 
 export default function ApplicationWizard() {
-  const [travelerType, setTravelerType] = useState<string>("");
+  const [applicationData, setApplicationData] = useState({
+    travelerType: "",
+    applicationType: "",
+    country: ""
+  });
   const navigate = useNavigate();
 
-  const handleTravelerTypeSelect = (type: string) => {
-    setTravelerType(type);
+  const handleTravelerTypeSelect = (type: string, applicationType?: string, country?: string) => {
+    setApplicationData({
+      travelerType: type,
+      applicationType: applicationType || "",
+      country: country || ""
+    });
   };
 
   const handleReset = () => {
-    setTravelerType("");
+    setApplicationData({
+      travelerType: "",
+      applicationType: "",
+      country: ""
+    });
   };
 
   const handleClose = () => {
     navigate("/");
   };
 
-  if (!travelerType) {
+  if (!applicationData.travelerType) {
     return (
       <TravelerTypeSelection 
         onTravelerTypeSelect={handleTravelerTypeSelect}
@@ -31,7 +43,9 @@ export default function ApplicationWizard() {
 
   return (
     <ApplicationForm 
-      travelerType={travelerType}
+      travelerType={applicationData.travelerType}
+      applicationType={applicationData.applicationType}
+      country={applicationData.country}
       onReset={handleReset}
     />
   );

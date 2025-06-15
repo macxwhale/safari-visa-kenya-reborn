@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -21,17 +20,19 @@ const STEP_LABELS = [
 
 interface ApplicationFormProps {
   travelerType: string;
+  applicationType?: string;
+  country?: string;
   onReset: () => void;
 }
 
-export default function ApplicationForm({ travelerType, onReset }: ApplicationFormProps) {
-  const [step, setStep] = useState(1); // Start at step 1 since step 0 is traveler type selection
+export default function ApplicationForm({ travelerType, applicationType, country, onReset }: ApplicationFormProps) {
+  const [step, setStep] = useState(1);
   const [form, setForm] = useState({
     fullName: "",
     email: "",
     passport: "",
     nationality: "",
-    travelFrom: "",
+    travelFrom: country || "",
     entryDate: "",
     doc: null as File | null,
   });
@@ -49,7 +50,7 @@ export default function ApplicationForm({ travelerType, onReset }: ApplicationFo
 
   const goBack = () => {
     if (step > 1) setStep(s => s - 1);
-    else onReset(); // Go back to traveler type selection
+    else onReset();
   };
 
   const handleSubmit = async () => {
@@ -58,7 +59,6 @@ export default function ApplicationForm({ travelerType, onReset }: ApplicationFo
     let doc_url: string | undefined;
 
     try {
-      // 1. Upload document to storage if present
       if (form.doc) {
         const { data, error: uploadError } = await supabase.storage
           .from("eta-documents")
@@ -71,7 +71,6 @@ export default function ApplicationForm({ travelerType, onReset }: ApplicationFo
         doc_url = data?.path;
       }
 
-      // 2. Submit application to DB
       const { error: insertError } = await supabase
         .from("eta_applications")
         .insert([
@@ -136,6 +135,8 @@ export default function ApplicationForm({ travelerType, onReset }: ApplicationFo
         return (
           <ReviewStep 
             travelerType={travelerType}
+            applicationType={applicationType}
+            country={country}
             form={form}
           />
         );
