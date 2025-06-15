@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 
@@ -22,14 +23,14 @@ const exemptionsList = [
 
 export default function HowToApplyModal({ onClose, onContinue, onBack }: HowToApplyModalProps) {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Modal overlay */}
-      <div className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"></div>
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose}/>
       
       {/* Modal content */}
-      <div className="relative z-50 bg-white rounded-lg shadow-xl max-w-4xl w-full mx-auto max-h-[90vh] overflow-hidden">
+      <div className="relative z-50 bg-white rounded-lg shadow-xl max-w-4xl w-full mx-auto max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
+        <div className="flex items-center justify-between p-6 border-b flex-shrink-0">
           <h1 className="text-2xl font-bold text-gray-900">How to Apply</h1>
           <Button 
             variant="ghost" 
@@ -42,7 +43,7 @@ export default function HowToApplyModal({ onClose, onContinue, onBack }: HowToAp
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
+        <div className="p-6 overflow-y-auto">
           <p className="text-gray-700 mb-6 leading-relaxed">
             All visitors including infants and children who intend to travel to the Republic of Kenya must have an approved Electronic Travel Authorisation (eTA) before the start of their journey.
           </p>
@@ -62,7 +63,7 @@ export default function HowToApplyModal({ onClose, onContinue, onBack }: HowToAp
         </div>
 
         {/* Footer */}
-        <div className="flex justify-between items-center p-6 border-t bg-gray-50">
+        <div className="flex justify-between items-center p-6 border-t bg-gray-50 flex-shrink-0">
           <Button variant="outline" onClick={onClose}>
             Close
           </Button>

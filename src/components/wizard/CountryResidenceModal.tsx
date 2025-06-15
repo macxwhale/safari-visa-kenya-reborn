@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { X, Search } from "lucide-react";
@@ -41,14 +42,14 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Modal overlay */}
-      <div className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"></div>
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose}/>
       
       {/* Modal content */}
-      <div className="relative z-50 bg-white rounded-lg shadow-xl max-w-2xl w-full mx-auto max-h-[90vh] overflow-hidden">
+      <div className="relative z-50 bg-white rounded-lg shadow-xl max-w-2xl w-full mx-auto max-h-[90vh] flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
+        <div className="flex items-center justify-between p-6 border-b flex-shrink-0">
           <h1 className="text-2xl font-bold text-gray-900">Country of Residence</h1>
           <Button 
             variant="ghost" 
@@ -61,7 +62,7 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
         </div>
 
         {/* Content */}
-        <div className="p-6">
+        <div className="p-6 overflow-y-auto">
           <p className="text-sm text-gray-700 mb-6 leading-relaxed">
             Please select your country of residence. This should be the country where you currently live.
           </p>
@@ -108,7 +109,7 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
         </div>
 
         {/* Footer */}
-        <div className="flex justify-between items-center p-6 border-t bg-gray-50">
+        <div className="flex justify-between items-center p-6 border-t bg-gray-50 flex-shrink-0">
           <Button variant="outline" onClick={onBack}>
             Back
           </Button>

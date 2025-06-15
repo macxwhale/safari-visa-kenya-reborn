@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { X, User, Users } from "lucide-react";
 
@@ -9,9 +10,9 @@ interface ApplicationTypeModalProps {
 
 export default function ApplicationTypeModal({ onClose, onTypeSelect, onBack }: ApplicationTypeModalProps) {
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Modal overlay */}
-      <div className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"></div>
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
       
       {/* Modal content */}
       <div className="relative z-50 bg-white rounded-lg shadow-xl max-w-3xl w-full mx-auto">
