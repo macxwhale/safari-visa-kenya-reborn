@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -39,8 +38,7 @@ export default function Index() {
         <nav className="flex items-center justify-between">
           <a href="/" className="shrink-0 flex items-center group">
             <span className="sr-only">Electronic Travel Authorisation</span>
-            <Logo />
-            <div className="hidden lg:block lg:ml-6">
+            <div>
               <h3 className="text-sm text-[#757575] font-medium leading-tight">
                 Immigration Services
               </h3>
