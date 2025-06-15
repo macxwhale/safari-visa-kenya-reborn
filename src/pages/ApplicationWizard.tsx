@@ -1,8 +1,10 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ApplicationStepper from "@/components/ApplicationStepper";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 
 const STEP_LABELS = [
   "Personal Info",
@@ -23,6 +25,17 @@ export default function ApplicationWizard() {
     entryDate: "",
     doc: null as File | null,
   });
+  const { user, loading } = useAuth();
+  const navigate = useNavigate();
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // If not logged in, require login to apply
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate("/auth");
+    }
+  }, [user, loading, navigate]);
 
   // --- Step Content Rendering ---
   let content = null;
@@ -141,19 +154,70 @@ export default function ApplicationWizard() {
   function goBack() {
     if (step > 0) setStep((s) => s - 1);
   }
-  function handleSubmit() {
-    // In a real app, you'd submit the form to an API here!
-    alert("Submitted! (This is a demo)");
-    setStep(0);
-    setForm({
-      fullName: "",
-      email: "",
-      passport: "",
-      nationality: "",
-      travelFrom: "",
-      entryDate: "",
-      doc: null,
-    });
+
+  async function handleSubmit() {
+    setSubmitting(true);
+    setError(null);
+    let doc_url: string | undefined;
+
+    try {
+      if (!user) {
+        setError("You must be signed in to apply.");
+        setSubmitting(false);
+        return;
+      }
+      // 1. Upload document to storage if present
+      if (form.doc) {
+        const { data, error: uploadError } = await supabase.storage
+          .from("eta-documents")
+          .upload(`${user.id}/${Date.now()}_${form.doc.name}`, form.doc);
+        if (uploadError) {
+          setError("Failed to upload document: " + uploadError.message);
+          setSubmitting(false);
+          return;
+        }
+        doc_url = data?.path;
+      }
+
+      // 2. Submit application to DB
+      const { error: insertError } = await supabase
+        .from("eta_applications")
+        .insert([
+          {
+            user_id: user.id,
+            full_name: form.fullName,
+            email: form.email,
+            passport: form.passport,
+            nationality: form.nationality,
+            travel_from: form.travelFrom,
+            entry_date: form.entryDate,
+            doc_url,
+            // status/submitted_at handled by default
+          },
+        ]);
+      if (insertError) {
+        setError("Submission failed: " + insertError.message);
+        setSubmitting(false);
+        return;
+      }
+
+      alert("Application submitted!");
+      setStep(0);
+      setForm({
+        fullName: "",
+        email: "",
+        passport: "",
+        nationality: "",
+        travelFrom: "",
+        entryDate: "",
+        doc: null,
+      });
+      navigate("/dashboard");
+    } catch (e: any) {
+      setError("Unexpected error: " + (e.message || e.toString()));
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -161,14 +225,17 @@ export default function ApplicationWizard() {
       <div className="max-w-2xl bg-white shadow-lg mx-auto mt-12 mb-20 rounded-lg border border-gray-200 p-8 space-y-6 animate-fade-in">
         <ApplicationStepper currentStep={step} steps={STEP_LABELS} />
         <div>{content}</div>
+        {error && <div className="text-red-600 text-sm mt-2">{error}</div>}
         <div className="flex justify-between pt-6">
-          <Button variant="secondary" onClick={goBack} disabled={step === 0}>
+          <Button variant="secondary" onClick={goBack} disabled={step === 0 || submitting}>
             Back
           </Button>
           {step < STEP_LABELS.length - 1 ? (
-            <Button onClick={goNext}>Next</Button>
+            <Button onClick={goNext} disabled={submitting}>Next</Button>
           ) : (
-            <Button onClick={handleSubmit}>Submit Application</Button>
+            <Button onClick={handleSubmit} disabled={submitting}>
+              {submitting ? "Submitting..." : "Submit Application"}
+            </Button>
           )}
         </div>
       </div>

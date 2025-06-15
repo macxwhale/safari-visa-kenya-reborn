@@ -9,7 +9,48 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      eta_applications: {
+        Row: {
+          doc_url: string | null
+          email: string
+          entry_date: string
+          full_name: string
+          id: string
+          nationality: string
+          passport: string
+          status: string
+          submitted_at: string | null
+          travel_from: string
+          user_id: string | null
+        }
+        Insert: {
+          doc_url?: string | null
+          email: string
+          entry_date: string
+          full_name: string
+          id?: string
+          nationality: string
+          passport: string
+          status?: string
+          submitted_at?: string | null
+          travel_from: string
+          user_id?: string | null
+        }
+        Update: {
+          doc_url?: string | null
+          email?: string
+          entry_date?: string
+          full_name?: string
+          id?: string
+          nationality?: string
+          passport?: string
+          status?: string
+          submitted_at?: string | null
+          travel_from?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
