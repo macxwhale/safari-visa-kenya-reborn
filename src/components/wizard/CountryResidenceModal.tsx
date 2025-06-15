@@ -141,6 +141,119 @@ const frequentlySelected = [
   "United States of America"
 ];
 
+const countryISOCodes: Record<string, string> = {
+  "Afghanistan": "AF",
+  "Albania": "AL",
+  "Algeria": "DZ",
+  "Andorra": "AD",
+  "Angola": "AO",
+  "Argentina": "AR",
+  "Armenia": "AM",
+  "Australia": "AU",
+  "Austria": "AT",
+  "Azerbaijan": "AZ",
+  "Bahrain": "BH",
+  "Bangladesh": "BD",
+  "Belarus": "BY",
+  "Belgium": "BE",
+  "Belize": "BZ",
+  "Benin": "BJ",
+  "Bhutan": "BT",
+  "Bolivia": "BO",
+  "Bosnia and Herzegovina": "BA",
+  "Botswana": "BW",
+  "Brazil": "BR",
+  "Brunei": "BN",
+  "Bulgaria": "BG",
+  "Burkina Faso": "BF",
+  "Cambodia": "KH",
+  "Cameroon": "CM",
+  "Canada": "CA",
+  "Chad": "TD",
+  "Chile": "CL",
+  "China": "CN",
+  "Colombia": "CO",
+  "Costa Rica": "CR",
+  "Croatia": "HR",
+  "Cuba": "CU",
+  "Cyprus": "CY",
+  "Czech Republic": "CZ",
+  "Denmark": "DK",
+  "Ecuador": "EC",
+  "Egypt": "EG",
+  "Estonia": "EE",
+  "Ethiopia": "ET",
+  "Finland": "FI",
+  "France": "FR",
+  "Georgia": "GE",
+  "Germany": "DE",
+  "Ghana": "GH",
+  "Greece": "GR",
+  "Guatemala": "GT",
+  "Guinea": "GN",
+  "Hungary": "HU",
+  "Iceland": "IS",
+  "India": "IN",
+  "Indonesia": "ID",
+  "Iran": "IR",
+  "Iraq": "IQ",
+  "Ireland": "IE",
+  "Israel": "IL",
+  "Italy": "IT",
+  "Japan": "JP",
+  "Jordan": "JO",
+  "Kazakhstan": "KZ",
+  "Kuwait": "KW",
+  "Latvia": "LV",
+  "Lebanon": "LB",
+  "Libya": "LY",
+  "Lithuania": "LT",
+  "Luxembourg": "LU",
+  "Malaysia": "MY",
+  "Maldives": "MV",
+  "Mali": "ML",
+  "Malta": "MT",
+  "Mexico": "MX",
+  "Morocco": "MA",
+  "Netherlands": "NL",
+  "New Zealand": "NZ",
+  "Nigeria": "NG",
+  "Norway": "NO",
+  "Oman": "OM",
+  "Pakistan": "PK",
+  "Panama": "PA",
+  "Peru": "PE",
+  "Philippines": "PH",
+  "Poland": "PL",
+  "Portugal": "PT",
+  "Qatar": "QA",
+  "Romania": "RO",
+  "Russia": "RU",
+  "Saudi Arabia": "SA",
+  "Senegal": "SN",
+  "Serbia": "RS",
+  "Singapore": "SG",
+  "Slovakia": "SK",
+  "Slovenia": "SI",
+  "South Africa": "ZA",
+  "South Korea": "KR",
+  "Spain": "ES",
+  "Sri Lanka": "LK",
+  "Sweden": "SE",
+  "Switzerland": "CH",
+  "Thailand": "TH",
+  "Tunisia": "TN",
+  "Turkey": "TR",
+  "Ukraine": "UA",
+  "United Arab Emirates": "AE",
+  "United Kingdom": "GB",
+  "United States": "US",
+  "United States of America": "US",
+  "Uruguay": "UY",
+  "Venezuela": "VE",
+  "Vietnam": "VN"
+};
+
 interface CountryResidenceModalProps {
   onClose: () => void;
   onCountrySelect: (country: string) => void;
@@ -169,6 +282,16 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
     showFrequentlySelected
       ? !filteredFrequentlySelected.includes(country)
       : true
+  );
+
+  // function to render the badge with iso code
+  const renderISOBadge = (country: string) => (
+    <span
+      className="inline-flex items-center justify-center bg-gray-100 text-gray-700 font-mono text-sm font-semibold rounded w-12 h-7 mr-3 border border-gray-200"
+      style={{ minWidth: 36 }}
+    >
+      {countryISOCodes[country] || "??"}
+    </span>
   );
 
   const handleContinue = () => {
@@ -227,11 +350,11 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
                   <div
                     key={country}
                     onClick={() => setSelectedCountry(country)}
-                    className={`flex items-center gap-3 cursor-pointer rounded px-2 py-2 border-b hover:bg-gray-50 transition-colors ${
-                      selectedCountry === country ? "bg-brand-green/10 border-brand-green/80" : "border-transparent"
+                    className={`flex items-center gap-2 cursor-pointer rounded px-2 py-2 border-b hover:bg-gray-50 transition-colors ${
+                      selectedCountry === country ? "bg-gray-100 border-brand-green" : "border-transparent"
                     }`}
                   >
-                    <span className="text-xl" aria-hidden="true">{countryFlags[country] || "🌐"}</span>
+                    {renderISOBadge(country)}
                     <span className="text-base font-medium text-gray-900">{country}</span>
                   </div>
                 ))}
@@ -246,11 +369,11 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
               <div
                 key={country}
                 onClick={() => setSelectedCountry(country)}
-                className={`flex items-center gap-3 cursor-pointer rounded px-2 py-2 border-b hover:bg-gray-50 transition-colors ${
-                  selectedCountry === country ? "bg-brand-green/10 border-brand-green/80" : "border-transparent"
+                className={`flex items-center gap-2 cursor-pointer rounded px-2 py-2 border-b hover:bg-gray-50 transition-colors ${
+                  selectedCountry === country ? "bg-gray-100 border-brand-green" : "border-transparent"
                 }`}
               >
-                <span className="text-xl" aria-hidden="true">{countryFlags[country] || "🌐"}</span>
+                {renderISOBadge(country)}
                 <span className="text-base font-medium text-gray-900">{country}</span>
               </div>
             )) : (
