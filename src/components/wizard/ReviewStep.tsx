@@ -15,6 +15,8 @@ interface ReviewStepProps {
     passportExpiryDate: string;
     purposeOfVisit: string;
     accommodationAddress: string;
+    homeAddress: string;
+    occupation: string;
     contactInKenya: string;
     travelFrom: string;
     entryDate: string;
@@ -79,6 +81,14 @@ export default function ReviewStep({ travelerType, applicationType, country, for
             <div>
               <span className="text-gray-600">Place of Birth:</span>
               <span className="ml-2 font-medium">{form.placeOfBirth}</span>
+            </div>
+            <div>
+              <span className="text-gray-600">Home Address:</span>
+              <span className="ml-2 font-medium">{form.homeAddress}</span>
+            </div>
+            <div>
+              <span className="text-gray-600">Occupation:</span>
+              <span className="ml-2 font-medium">{form.occupation}</span>
             </div>
           </div>
         </div>

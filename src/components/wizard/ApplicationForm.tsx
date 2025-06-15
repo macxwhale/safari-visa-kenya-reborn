@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -51,6 +50,8 @@ export default function ApplicationForm({ travelerType, applicationType, country
     passportExpiryDate: "",
     purposeOfVisit: "",
     accommodationAddress: "",
+    homeAddress: "",
+    occupation: "",
     contactInKenya: "",
     travelFrom: country || "",
     entryDate: "",
