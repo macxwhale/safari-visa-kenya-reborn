@@ -1,7 +1,6 @@
-
 import { Button } from "@/components/ui/button";
 import { X, Globe, HelpCircle } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import HowToApplyModal from "./HowToApplyModal";
 import DeclarationModal from "./DeclarationModal";
 import ApplicationTypeModal from "./ApplicationTypeModal";
@@ -37,7 +36,13 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
     country: ""
   });
 
+  // Add useEffect to log state changes
+  useEffect(() => {
+    console.log("Modal state changed to:", currentModal);
+  }, [currentModal]);
+
   const handleTravelerTypeClick = (typeId: string) => {
+    console.log("Traveler type clicked:", typeId);
     if (typeId === "tourist") {
       setSelectedData(prev => ({ ...prev, travelerType: typeId }));
       setCurrentModal("howToApply");
@@ -47,8 +52,10 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
   };
 
   const handleContinueFromHowToApply = () => {
-    console.log("Continuing from How to Apply modal");
+    console.log("=== CONTINUE FROM HOW TO APPLY TRIGGERED ===");
+    console.log("Current state before update:", currentModal);
     setCurrentModal("declaration");
+    console.log("State update called - should transition to declaration");
   };
 
   const handleContinueFromDeclaration = () => {
@@ -69,6 +76,7 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
   };
 
   const handleBack = () => {
+    console.log("Back button clicked from:", currentModal);
     if (currentModal === "howToApply") {
       setCurrentModal("main");
     } else if (currentModal === "declaration") {
@@ -80,10 +88,13 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
     }
   };
 
+  console.log("=== RENDER ===");
   console.log("Current modal state:", currentModal);
+  console.log("Selected data:", selectedData);
 
   // Render appropriate modal based on current state
   if (currentModal === "howToApply") {
+    console.log("Rendering HowToApplyModal");
     return (
       <HowToApplyModal
         onClose={onClose}
@@ -94,6 +105,7 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
   }
 
   if (currentModal === "declaration") {
+    console.log("Rendering DeclarationModal");
     return (
       <DeclarationModal
         onClose={onClose}
@@ -104,6 +116,7 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
   }
 
   if (currentModal === "applicationType") {
+    console.log("Rendering ApplicationTypeModal");
     return (
       <ApplicationTypeModal
         onClose={onClose}
@@ -114,6 +127,7 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
   }
 
   if (currentModal === "countryResidence") {
+    console.log("Rendering CountryResidenceModal");
     return (
       <CountryResidenceModal
         onClose={onClose}
@@ -124,6 +138,7 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
   }
 
   // Main traveler type selection
+  console.log("Rendering main modal");
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Modal overlay */}
