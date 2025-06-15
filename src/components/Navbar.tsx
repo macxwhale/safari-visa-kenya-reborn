@@ -9,12 +9,12 @@ const Navbar = () => {
       <div className="max-w-[1440px] mx-auto flex items-center px-8 py-3 h-20">
         {/* Left Title Section */}
         <div>
-          {/* "Immigration Services" in lighter font */}
-          <p className="text-xs text-gray-400 font-medium mb-0 pl-0 leading-none">
+          {/* "Immigration Services" in lighter font, uppercase, with .font-sans for Lexend */}
+          <p className="text-xs text-gray-400 font-medium mb-0 pl-0 leading-none font-sans tracking-wide uppercase">
             Immigration Services
           </p>
-          {/* "Electronic Travel Authorisation (eTA)" in bold black (Montserrat-like font if available) */}
-          <h1 className="text-2xl md:text-[1.65rem] font-extrabold text-black leading-none mt-0 tracking-wide font-sans">
+          {/* "Electronic Travel Authorisation (eTA)" main title, uses .font-sans for Lexend */}
+          <h1 className="text-2xl md:text-[1.65rem] font-extrabold text-black leading-none mt-1 tracking-wide font-sans">
             Electronic Travel Authorisation (eTA)
           </h1>
         </div>
@@ -26,7 +26,7 @@ const Navbar = () => {
             type="button"
             className="flex items-center gap-2 group transition hover:text-green-700 focus:outline-none"
           >
-            {/* Inline SVG of UK flag (small, to match reference) */}
+            {/* Inline SVG of UK flag */}
             <span title="UK Flag" className="inline-block">
               <svg width="26" height="16" viewBox="0 0 38 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden>
                 <rect width="38" height="24" rx="2" fill="#012169"/>
@@ -38,7 +38,7 @@ const Navbar = () => {
                 <rect y="9" width="38" height="6" fill="#C8102E"/>
               </svg>
             </span>
-            <span className="text-sm font-semibold">English</span>
+            <span className="text-sm font-semibold font-sans">English</span>
           </button>
           {/* Settings icon */}
           <button className="text-green-800 hover:text-green-900 transition" aria-label="Settings">
