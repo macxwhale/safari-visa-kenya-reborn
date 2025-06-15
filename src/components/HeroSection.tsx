@@ -20,11 +20,12 @@ const HeroSection = () => (
         <p className="mt-5 text-lg text-white xl:mt-11 xl:text-2xl">
           Apply for your eTA online, fast and safely — anywhere and anytime.
         </p>
-        <div className="mt-8 flex w-full lg:max-w-sm flex-wrap items-center gap-4 xl:mt-16 sm:flex-nowrap xl:gap-6 z-30">
+        <div className="mt-10 flex w-full lg:max-w-sm flex-wrap items-center gap-6 xl:mt-20 sm:flex-nowrap xl:gap-8 z-30">
           <Link to="/apply" className="w-full sm:w-auto">
             <Button
               size="lg"
-              className="w-full sm:w-auto xl:px-10 xl:py-4 font-bold text-lg rounded-full bg-white text-black border-none shadow-none hover:bg-gray-100 transition"
+              className="w-full sm:w-auto px-8 py-4 xl:px-14 xl:py-6 font-bold text-lg rounded-full bg-white"
+              style={{ color: "rgba(10,64,2,1)", border: 'none', boxShadow: 'none' }}
             >
               Apply Now
             </Button>
@@ -33,7 +34,7 @@ const HeroSection = () => (
             <Button
               variant="outline"
               size="lg"
-              className="w-full sm:w-auto xl:px-10 xl:py-4 font-bold text-lg rounded-full border-white bg-transparent text-white shadow-none hover:bg-white/10 transition flex items-center"
+              className="w-full sm:w-auto px-8 py-4 xl:px-14 xl:py-6 font-bold text-lg rounded-full border-white bg-transparent text-white shadow-none hover:bg-white/10 transition flex items-center"
               style={{ borderWidth: 2 }}
             >
               Check status
