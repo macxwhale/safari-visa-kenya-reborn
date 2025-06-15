@@ -57,9 +57,9 @@ export default function Index() {
             <Logo />
             <div className="hidden lg:block lg:mx-6">
               <h3 className="text-sm text-[#757575] font-medium">
-                Directorate of Immigration Services
+                Immigration Services
               </h3>
-              <p className="text-2xl text-[#244FBB] font-bold font-sans">
+              <p className="text-2xl text-black font-bold font-sans">
                 Electronic Travel Authorisation (eTA)
               </p>
             </div>
@@ -104,7 +104,11 @@ export default function Index() {
       {/* Hero Section */}
       <section className="z-10 mx-auto mt-6 w-full max-w-screen-2xl px-4">
         <div className="grid grid-cols-1 overflow-hidden rounded-2xl lg:grid-cols-12 shadow-md">
-          <div className="bg-[#082A16] relative col-span-1 p-4 sm:px-7 sm:py-9 lg:col-span-5 xl:px-12 overflow-hidden">
+          {/* Updated bounding box color */}
+          <div
+            className="relative col-span-1 p-4 sm:px-7 sm:py-9 lg:col-span-5 xl:px-12 overflow-hidden"
+            style={{ backgroundColor: "rgba(10,64,2,1)" }}
+          >
             <h2 className="text-2xl font-semibold text-pretty text-white lg:text-3xl xl:text-5xl font-sans">
               Your visit to Kenya begins here
             </h2>
