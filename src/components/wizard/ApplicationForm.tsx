@@ -59,6 +59,16 @@ export default function ApplicationForm({ travelerType, applicationType, country
     flightNumber: "",
     customsDeclaration: false,
     additionalDocs: [] as File[],
+    arrivalMode: 'air' as 'air' | 'sea' | 'land',
+    departureMode: 'air' as 'air' | 'sea' | 'land',
+    arrivalPort: "",
+    departurePort: "",
+    arrivalAirline: "",
+    departureAirline: "",
+    departureFlightNumber: "",
+    finalDestinationCountry: "",
+    accommodationCheckInDate: "",
+    accommodationCheckOutDate: "",
   });
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
