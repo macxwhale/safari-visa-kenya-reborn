@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +21,7 @@ const STEP_LABELS = [
   "Selfie or Photo", 
   "Contact Information",
   "Trip Information",
-  "Travel Information",
+  "Traveller Information",
   "Customs Declaration",
   "Required Documents",
   "Confirm and Proceed",
@@ -69,6 +70,11 @@ export default function ApplicationForm({ travelerType, applicationType, country
     finalDestinationCountry: "",
     accommodationCheckInDate: "",
     accommodationCheckOutDate: "",
+    tripFinancedByThirdParty: null as boolean | null,
+    countryOfBirth: "",
+    nationalityAtBirth: "",
+    convictedInPast5Years: null as boolean | null,
+    deniedEntryToKenya: null as boolean | null,
   });
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);

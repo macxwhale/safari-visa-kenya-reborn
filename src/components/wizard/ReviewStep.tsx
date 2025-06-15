@@ -35,6 +35,11 @@ interface ReviewStepProps {
     finalDestinationCountry: string;
     accommodationCheckInDate: string;
     accommodationCheckOutDate: string;
+    tripFinancedByThirdParty: boolean | null;
+    countryOfBirth: string;
+    nationalityAtBirth: string;
+    convictedInPast5Years: boolean | null;
+    deniedEntryToKenya: boolean | null;
   };
 }
 
@@ -42,6 +47,10 @@ export default function ReviewStep({ travelerType, applicationType, country, for
   const formatMode = (mode: string) => {
     if (!mode) return 'N/A';
     return mode.charAt(0).toUpperCase() + mode.slice(1);
+  }
+  const formatBoolean = (value: boolean | null) => {
+    if (value === null) return 'Not answered';
+    return value ? 'Yes' : 'No';
   }
   return (
     <div className="animate-fade-in max-w-2xl">
@@ -217,6 +226,35 @@ export default function ReviewStep({ travelerType, applicationType, country, for
             </div>
           </div>
 
+        </div>
+
+        {/* Traveller Information Section */}
+        <div className="bg-gray-50 rounded-lg p-4">
+          <h3 className="font-medium text-gray-900 mb-3">Traveller Information</h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+            <div>
+              <span className="text-gray-600">Country of Birth:</span>
+              <span className="ml-2 font-medium">{form.countryOfBirth || 'N/A'}</span>
+            </div>
+            <div>
+              <span className="text-gray-600">Nationality at Birth:</span>
+              <span className="ml-2 font-medium">{form.nationalityAtBirth || 'N/A'}</span>
+            </div>
+          </div>
+          <div className="space-y-3 text-sm mt-4 pt-4 border-t">
+              <div>
+                <p className="text-gray-600">Is your trip financed by a third party, which is not your employer nor a government?</p>
+                <p className="font-medium">{formatBoolean(form.tripFinancedByThirdParty)}</p>
+              </div>
+              <div>
+                <p className="text-gray-600">Have you ever been convicted of any offence, under any system of law, in the past 5 years?</p>
+                <p className="font-medium">{formatBoolean(form.convictedInPast5Years)}</p>
+              </div>
+              <div>
+                <p className="text-gray-600">Have you ever been previously denied entry to Kenya?</p>
+                <p className="font-medium">{formatBoolean(form.deniedEntryToKenya)}</p>
+              </div>
+          </div>
         </div>
 
         {/* Documents Section */}
