@@ -24,56 +24,56 @@ const Logo = () => (
 );
 
 const Footer = () => (
-  <footer className="mt-8 bg-[#082A16]">
-    <div className="relative w-full max-w-screen-2xl mx-auto p-4 pb-8 lg:mt-10">
-      <div className="flex flex-wrap items-center justify-between gap-2.5">
-        <div className="flex-1 max-w-md">
-          <p className="text-base font-bold text-white">
+  <footer className="mt-12 bg-[#082A16]">
+    <div className="relative w-full max-w-screen-2xl mx-auto p-6 pb-8 lg:p-8 lg:pb-12">
+      <div className="flex flex-wrap items-start justify-between gap-8">
+        <div className="flex-1 max-w-lg">
+          <p className="text-lg font-bold text-white mb-4">
             For assistance:
           </p>
-          <p className="text-base font-light text-white">
-            Email us at
+          <p className="text-base font-light text-white leading-relaxed">
+            Email us at{" "}
             <a
               href="mailto:etakenya@gov.ke"
-              className="font-light text-base underline"
+              className="font-light text-base underline hover:no-underline transition-all"
             >
               etakenya@gov.ke
             </a>
-            or reach out to us on WhatsApp at
+            {" "}or reach out to us on WhatsApp at{" "}
             <a
               href="tel:+254110922064"
-              className="font-light text-base underline"
+              className="font-light text-base underline hover:no-underline transition-all"
             >
               +254 110 922 064
             </a>
           </p>
-          <div className="flex gap-4 items-center text-white sm:mt-20 mt-10">
+          <div className="flex gap-6 items-center text-white mt-8 sm:mt-16">
             <Link
               to="/terms-and-conditions"
-              className="text-white text-xs font-normal underline"
+              className="text-white text-sm font-normal underline hover:no-underline transition-all"
             >
               Terms and Conditions
             </Link>
-            |
+            <span className="text-white/60">|</span>
             <Link
               to="/privacy-policy"
-              className="text-white text-xs font-normal underline"
+              className="text-white text-sm font-normal underline hover:no-underline transition-all"
             >
               Privacy Policy
             </Link>
           </div>
         </div>
         {/* logos and note */}
-        <div>
-          <div className="flex gap-8 items-center">
+        <div className="flex flex-col items-end">
+          <div className="flex gap-8 items-center mb-6">
             <Logo />
           </div>
-          <p className="text-xs tracking-normal font-light text-white max-w-xs my-6">
+          <p className="text-sm tracking-normal font-light text-white max-w-xs text-right leading-relaxed mb-6">
             The Ministry of Interior and National Administration, State Department for Immigration and Citizen Services, Directorate of Immigration Services
           </p>
           {/* lang */}
           <div className="relative w-fit">
-            <span className="flex items-center gap-1.5 ml-2 text-sm text-white font-semibold">
+            <span className="flex items-center gap-2 text-sm text-white font-semibold">
               <img
                 className="h-4 w-5"
                 src={flags.EN}

@@ -8,23 +8,23 @@ const heroImg =
   "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1100&q=80";
 
 const HeroSection = () => (
-  <section className="z-10 mx-auto mt-6 w-full max-w-screen-2xl px-4">
-    <div className="grid grid-cols-1 overflow-hidden rounded-2xl lg:grid-cols-12 shadow-md">
+  <section className="z-10 mx-auto mt-8 w-full max-w-screen-2xl px-4">
+    <div className="grid grid-cols-1 overflow-hidden rounded-2xl lg:grid-cols-12 shadow-lg">
       <div
-        className="relative col-span-1 p-4 sm:px-7 sm:py-9 lg:col-span-5 xl:px-12 overflow-hidden"
+        className="relative col-span-1 p-6 sm:px-8 sm:py-12 lg:col-span-5 xl:px-12 xl:py-12 overflow-hidden"
         style={{ backgroundColor: "rgba(10,64,2,1)" }}
       >
-        <h2 className="text-2xl font-semibold text-pretty text-white lg:text-3xl xl:text-5xl font-sans">
+        <h2 className="text-2xl font-semibold text-pretty text-white lg:text-3xl xl:text-5xl font-sans leading-tight">
           Your visit to Kenya begins here
         </h2>
-        <p className="mt-5 text-lg text-white xl:mt-11 xl:text-2xl">
+        <p className="mt-6 text-lg text-white xl:mt-8 xl:text-2xl leading-relaxed">
           Apply for your eTA online, fast and safely — anywhere and anytime.
         </p>
-        <div className="mt-10 flex w-full lg:max-w-sm flex-wrap items-center gap-6 xl:mt-20 sm:flex-nowrap xl:gap-8 z-30">
+        <div className="mt-12 flex w-full lg:max-w-md flex-wrap items-center gap-4 xl:mt-16 sm:flex-nowrap xl:gap-6 z-30">
           <Link to="/apply" className="w-full sm:w-auto">
             <Button
               size="lg"
-              className="w-full sm:w-auto px-8 py-4 xl:px-14 xl:py-6 font-bold text-lg rounded-full bg-white"
+              className="w-full sm:w-auto px-8 py-4 xl:px-12 xl:py-5 font-bold text-lg rounded-full bg-white transition-colors duration-200 hover:bg-gray-100"
               style={{ color: "rgba(10,64,2,1)", border: 'none', boxShadow: 'none' }}
             >
               Apply Now
@@ -34,15 +34,14 @@ const HeroSection = () => (
             <Button
               variant="outline"
               size="lg"
-              className="w-full sm:w-auto px-8 py-4 xl:px-14 xl:py-6 font-bold text-lg rounded-full border-white bg-transparent text-white shadow-none hover:bg-white/10 transition flex items-center"
+              className="w-full sm:w-auto px-8 py-4 xl:px-12 xl:py-5 font-bold text-lg rounded-full border-white bg-transparent text-white shadow-none hover:bg-white/10 transition-colors duration-200 flex items-center justify-center"
               style={{ borderWidth: 2 }}
             >
               Check status
-              <Search className="ml-2 w-6 h-6 text-white" strokeWidth={3} />
+              <Search className="ml-2 w-5 h-5 text-white" strokeWidth={2.5} />
             </Button>
           </Link>
         </div>
-        {/* Removed Airport Staff box as previously requested */}
       </div>
       <div className="col-span-1 grid lg:col-span-7">
         <img
@@ -57,4 +56,3 @@ const HeroSection = () => (
 );
 
 export default HeroSection;
-

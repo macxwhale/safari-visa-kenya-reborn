@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -11,12 +12,6 @@ import Footer from "@/components/Footer";
 const flags = {
   EN: "https://flagcdn.com/gb.svg", // UK flag for English
 };
-// Placeholder hero/bg image - replace with your assets if uploaded
-const heroImg =
-  "https://images.unsplash.com/photo-1506744038136-46273834b3fb?w=1100&q=80";
-// Placeholder for "Discover Kenya" image
-const discoverImg =
-  "https://images.unsplash.com/photo-1472396961693-142e6e269027?w=900&q=80";
 
 // DUMMY SVG logo - only used for SEO/accessibility and fallback
 const Logo = () => (
@@ -40,16 +35,16 @@ export default function Index() {
   return (
     <div className="min-h-screen flex flex-col w-full bg-white font-sans">
       <TopBar />
-      <header className="relative w-full max-w-screen-2xl mx-auto p-4">
+      <header className="relative w-full max-w-screen-2xl mx-auto px-4 py-4">
         <nav className="flex items-center justify-between">
           <a href="/" className="shrink-0 flex items-center group">
             <span className="sr-only">Electronic Travel Authorisation</span>
             <Logo />
-            <div className="hidden lg:block lg:mx-6">
-              <h3 className="text-sm text-[#757575] font-medium">
+            <div className="hidden lg:block lg:ml-6">
+              <h3 className="text-sm text-[#757575] font-medium leading-tight">
                 Immigration Services
               </h3>
-              <p className="text-2xl text-black font-bold font-sans">
+              <p className="text-2xl text-black font-bold font-sans leading-tight mt-1">
                 Electronic Travel Authorisation (eTA)
               </p>
             </div>
@@ -57,7 +52,7 @@ export default function Index() {
           <div className="flex items-center gap-4">
             {/* Language Dropdown - static */}
             <button
-              className="flex items-center px-4 py-2 text-sm font-semibold text-[#244FBB] bg-white rounded-full border border-[#d0d7e8] shadow-sm"
+              className="flex items-center px-4 py-2 text-sm font-semibold text-[#244FBB] bg-white rounded-full border border-[#d0d7e8] shadow-sm transition-colors hover:bg-gray-50"
               style={{
                 minWidth: 110,
                 minHeight: 40,
@@ -74,7 +69,7 @@ export default function Index() {
             </button>
             {/* Settings Cog */}
             <button
-              className="block p-2 rounded-full bg-white border border-[#d0d7e8] text-[#006718] hover:bg-gray-50"
+              className="block p-2 rounded-full bg-white border border-[#d0d7e8] text-[#006718] hover:bg-gray-50 transition-colors"
               style={{ minWidth: 40, minHeight: 40 }}
               aria-label="Settings"
             >
