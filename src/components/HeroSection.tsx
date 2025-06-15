@@ -20,25 +20,25 @@ const HeroSection = () => (
         <p className="mt-6 text-lg text-white xl:mt-8 xl:text-2xl leading-relaxed">
           Apply for your eTA online, fast and safely — anywhere and anytime.
         </p>
-        <div className="mt-12 flex w-full lg:max-w-md flex-wrap items-center gap-4 xl:mt-16 sm:flex-nowrap xl:gap-6 z-30">
-          <Link to="/apply" className="w-full sm:w-auto">
+        <div className="mt-12 flex w-full lg:max-w-md flex-col gap-4 xl:mt-16 sm:flex-row sm:gap-3 z-30">
+          <Link to="/apply" className="w-full sm:flex-1">
             <Button
               size="lg"
-              className="w-full sm:w-auto px-8 py-4 xl:px-12 xl:py-5 font-bold text-lg rounded-full bg-white transition-colors duration-200 hover:bg-gray-100"
+              className="w-full px-6 py-3 font-medium text-base rounded-full bg-white transition-colors duration-200 hover:bg-gray-100"
               style={{ color: "rgba(10,64,2,1)", border: 'none', boxShadow: 'none' }}
             >
               Apply Now
             </Button>
           </Link>
-          <Link to="/dashboard" className="w-full sm:w-auto">
+          <Link to="/dashboard" className="w-full sm:flex-1">
             <Button
               variant="outline"
               size="lg"
-              className="w-full sm:w-auto px-8 py-4 xl:px-12 xl:py-5 font-bold text-lg rounded-full border-white bg-transparent text-white shadow-none hover:bg-white/10 transition-colors duration-200 flex items-center justify-center"
+              className="w-full px-6 py-3 font-medium text-base rounded-full border-white bg-transparent text-white shadow-none hover:bg-white/10 transition-colors duration-200 flex items-center justify-center gap-2"
               style={{ borderWidth: 2 }}
             >
               Check status
-              <Search className="ml-2 w-5 h-5 text-white" strokeWidth={2.5} />
+              <Search className="w-4 h-4 text-white" strokeWidth={2.5} />
             </Button>
           </Link>
         </div>
