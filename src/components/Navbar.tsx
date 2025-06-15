@@ -1,9 +1,7 @@
+
 import { Flag } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 
 const links = [
   { name: "Home", href: "/" },
@@ -13,8 +11,6 @@ const links = [
 
 export default function Navbar() {
   const { pathname } = useLocation();
-  const { user, signOut } = useAuth();
-  const navigate = useNavigate();
 
   return (
     <header className="w-full border-b bg-white/70 backdrop-blur sticky top-0 z-30">
@@ -38,22 +34,6 @@ export default function Navbar() {
               </Link>
             </li>
           ))}
-          {!user ? (
-            <li>
-              <Button size="sm" variant="outline" onClick={() => navigate("/auth")}>Sign In</Button>
-            </li>
-          ) : (
-            <>
-              <li>
-                <span className="px-2 text-xs text-gray-600">{user.email}</span>
-              </li>
-              <li>
-                <Button size="sm" variant="outline" onClick={() => { signOut(); navigate("/"); }}>
-                  Logout
-                </Button>
-              </li>
-            </>
-          )}
         </ul>
       </nav>
     </header>

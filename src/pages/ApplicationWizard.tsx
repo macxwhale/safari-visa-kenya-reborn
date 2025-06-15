@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+
+import { useState } from "react";
 import ApplicationStepper from "@/components/ApplicationStepper";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -25,17 +25,9 @@ export default function ApplicationWizard() {
     entryDate: "",
     doc: null as File | null,
   });
-  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // If not logged in, require login to apply
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate("/auth");
-    }
-  }, [user, loading, navigate]);
 
   // --- Step Content Rendering ---
   let content = null;
@@ -161,16 +153,11 @@ export default function ApplicationWizard() {
     let doc_url: string | undefined;
 
     try {
-      if (!user) {
-        setError("You must be signed in to apply.");
-        setSubmitting(false);
-        return;
-      }
       // 1. Upload document to storage if present
       if (form.doc) {
         const { data, error: uploadError } = await supabase.storage
           .from("eta-documents")
-          .upload(`${user.id}/${Date.now()}_${form.doc.name}`, form.doc);
+          .upload(`public/${Date.now()}_${form.doc.name}`, form.doc);
         if (uploadError) {
           setError("Failed to upload document: " + uploadError.message);
           setSubmitting(false);
@@ -184,7 +171,7 @@ export default function ApplicationWizard() {
         .from("eta_applications")
         .insert([
           {
-            user_id: user.id,
+            user_id: null,
             full_name: form.fullName,
             email: form.email,
             passport: form.passport,

@@ -1,20 +1,14 @@
 
-import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import ApplicationSummaryCard from "@/components/ApplicationSummaryCard";
-import { useNavigate } from "react-router-dom";
 
 type StatusType = "Under Review" | "Approved" | "Rejected";
 
 export default function MyApplications() {
-  const { user, loading } = useAuth();
-  const navigate = useNavigate();
-
   const { data: applications, isLoading, error } = useQuery({
-    queryKey: ["applications", user?.id],
+    queryKey: ["applications"],
     queryFn: async () => {
-      if (!user) return [];
       const { data, error } = await supabase
         .from("eta_applications")
         .select("*")
@@ -22,18 +16,12 @@ export default function MyApplications() {
       if (error) throw error;
       return data;
     },
-    enabled: !!user,
   });
-
-  if (!loading && !user) {
-    navigate("/auth");
-    return null;
-  }
 
   return (
     <div className="min-h-screen bg-gray-50 pb-24">
       <div className="max-w-5xl mx-auto pt-14">
-        <h1 className="text-2xl font-bold mb-6">My eTA Applications</h1>
+        <h1 className="text-2xl font-bold mb-6">eTA Applications</h1>
         {isLoading ? (
           <div>Loading...</div>
         ) : error ? (
