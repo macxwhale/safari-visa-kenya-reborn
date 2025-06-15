@@ -47,7 +47,8 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
   };
 
   const handleContinueFromHowToApply = () => {
-    setCurrentModal("declaration");
+    // Using a timeout to ensure the state update is processed correctly
+    setTimeout(() => setCurrentModal("declaration"), 0);
   };
 
   const handleContinueFromDeclaration = () => {
