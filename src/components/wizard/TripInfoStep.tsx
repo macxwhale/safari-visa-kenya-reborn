@@ -5,7 +5,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Airplane, Bus, Ferry, Calendar as CalendarIcon, Search } from "lucide-react";
+import { Plane, Bus, Ship, Calendar as CalendarIcon, Search } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 
@@ -99,10 +99,10 @@ export default function TripInfoStep({ form, onChange }: TripInfoStepProps) {
         />
         <div className="flex space-x-2">
           <ModeButton label="Arriving by Air" value="air" currentValue={form.arrivalMode} onClick={(v) => onChange('arrivalMode', v)}>
-            <Airplane />
+            <Plane />
           </ModeButton>
           <ModeButton label="Arriving by Sea" value="sea" currentValue={form.arrivalMode} onClick={(v) => onChange('arrivalMode', v)}>
-            <Ferry />
+            <Ship />
           </ModeButton>
           <ModeButton label="Arriving by Land" value="land" currentValue={form.arrivalMode} onClick={(v) => onChange('arrivalMode', v)}>
             <Bus />
@@ -139,10 +139,10 @@ export default function TripInfoStep({ form, onChange }: TripInfoStepProps) {
         />
         <div className="flex space-x-2">
           <ModeButton label="Departing by Air" value="air" currentValue={form.departureMode} onClick={(v) => onChange('departureMode', v)}>
-            <Airplane />
+            <Plane />
           </ModeButton>
           <ModeButton label="Departing by Sea" value="sea" currentValue={form.departureMode} onClick={(v) => onChange('departureMode', v)}>
-            <Ferry />
+            <Ship />
           </ModeButton>
           <ModeButton label="Departing by Land" value="land" currentValue={form.departureMode} onClick={(v) => onChange('departureMode', v)}>
             <Bus />
