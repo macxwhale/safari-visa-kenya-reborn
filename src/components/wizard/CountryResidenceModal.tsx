@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { X, Search } from "lucide-react";
@@ -44,7 +43,7 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       {/* Modal overlay */}
-      <div className="fixed inset-0 bg-black/50 z-40"></div>
+      <div className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"></div>
       
       {/* Modal content */}
       <div className="relative z-50 bg-white rounded-lg shadow-xl max-w-2xl w-full mx-auto max-h-[90vh] overflow-hidden">
