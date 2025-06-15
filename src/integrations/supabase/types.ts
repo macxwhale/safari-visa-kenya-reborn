@@ -9,78 +9,177 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      profiles: {
+      api_configurations: {
         Row: {
-          avatar_url: string | null
           created_at: string | null
-          email: string | null
-          full_name: string | null
+          description: string | null
           id: string
+          key: string
+          updated_at: string | null
+          value: string
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          key: string
+          updated_at?: string | null
+          value: string
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          key?: string
+          updated_at?: string | null
+          value?: string
+        }
+        Relationships: []
+      }
+      applications: {
+        Row: {
+          app_id: string
+          app_secret: string
+          bearer_token: string | null
+          business_short_code: string
+          callback_url: string | null
+          consumer_key: string
+          consumer_secret: string
+          created_at: string | null
+          id: string
+          is_active: boolean | null
+          name: string
+          party_a: string
+          party_b: string
+          passkey: string
           updated_at: string | null
         }
         Insert: {
-          avatar_url?: string | null
+          app_id: string
+          app_secret: string
+          bearer_token?: string | null
+          business_short_code: string
+          callback_url?: string | null
+          consumer_key: string
+          consumer_secret: string
           created_at?: string | null
-          email?: string | null
-          full_name?: string | null
-          id: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          party_a: string
+          party_b: string
+          passkey: string
           updated_at?: string | null
         }
         Update: {
-          avatar_url?: string | null
+          app_id?: string
+          app_secret?: string
+          bearer_token?: string | null
+          business_short_code?: string
+          callback_url?: string | null
+          consumer_key?: string
+          consumer_secret?: string
           created_at?: string | null
-          email?: string | null
-          full_name?: string | null
           id?: string
+          is_active?: boolean | null
+          name?: string
+          party_a?: string
+          party_b?: string
+          passkey?: string
           updated_at?: string | null
         }
         Relationships: []
       }
-      projects: {
-        Row: {
-          created_at: string
-          created_by: string | null
-          domain: string
-          id: string
-          metadata: Json
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          created_by?: string | null
-          domain: string
-          id?: string
-          metadata?: Json
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          created_by?: string | null
-          domain?: string
-          id?: string
-          metadata?: Json
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      user_roles: {
+      profiles: {
         Row: {
           created_at: string | null
           id: string
-          role: Database["public"]["Enums"]["app_role"]
-          user_id: string
+          role: string | null
+          updated_at: string | null
+          username: string | null
         }
         Insert: {
           created_at?: string | null
-          id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id: string
+          id: string
+          role?: string | null
+          updated_at?: string | null
+          username?: string | null
         }
         Update: {
           created_at?: string | null
           id?: string
-          role?: Database["public"]["Enums"]["app_role"]
-          user_id?: string
+          role?: string | null
+          updated_at?: string | null
+          username?: string | null
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          account_reference: string
+          amount: number
+          app_id: string
+          application: string | null
+          checkout_request_id: string | null
+          completed_at: string | null
+          created_at: string | null
+          id: string
+          merchant_request_id: string | null
+          mpesa_receipt_number: string | null
+          narration: string | null
+          party_a: string
+          phone_number: string
+          raw_callback: Json | null
+          result_code: number | null
+          result_desc: string | null
+          status: string | null
+          transaction_date: number | null
+          transaction_desc: string
+          updated_at: string | null
+        }
+        Insert: {
+          account_reference?: string
+          amount: number
+          app_id: string
+          application?: string | null
+          checkout_request_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          merchant_request_id?: string | null
+          mpesa_receipt_number?: string | null
+          narration?: string | null
+          party_a: string
+          phone_number: string
+          raw_callback?: Json | null
+          result_code?: number | null
+          result_desc?: string | null
+          status?: string | null
+          transaction_date?: number | null
+          transaction_desc?: string
+          updated_at?: string | null
+        }
+        Update: {
+          account_reference?: string
+          amount?: number
+          app_id?: string
+          application?: string | null
+          checkout_request_id?: string | null
+          completed_at?: string | null
+          created_at?: string | null
+          id?: string
+          merchant_request_id?: string | null
+          mpesa_receipt_number?: string | null
+          narration?: string | null
+          party_a?: string
+          phone_number?: string
+          raw_callback?: Json | null
+          result_code?: number | null
+          result_desc?: string | null
+          status?: string | null
+          transaction_date?: number | null
+          transaction_desc?: string
+          updated_at?: string | null
         }
         Relationships: []
       }
@@ -89,16 +188,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      has_role: {
-        Args: {
-          _user_id: string
-          _role: Database["public"]["Enums"]["app_role"]
-        }
-        Returns: boolean
-      }
+      [_ in never]: never
     }
     Enums: {
-      app_role: "admin" | "user"
+      [_ in never]: never
     }
     CompositeTypes: {
       [_ in never]: never
@@ -213,8 +306,6 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {
-      app_role: ["admin", "user"],
-    },
+    Enums: {},
   },
 } as const
