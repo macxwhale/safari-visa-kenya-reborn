@@ -47,20 +47,23 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
   };
 
   const handleContinueFromHowToApply = () => {
-    // Using a timeout to ensure the state update is processed correctly
-    setTimeout(() => setCurrentModal("declaration"), 0);
+    console.log("Continuing from How to Apply modal");
+    setCurrentModal("declaration");
   };
 
   const handleContinueFromDeclaration = () => {
+    console.log("Continuing from Declaration modal");
     setCurrentModal("applicationType");
   };
 
   const handleApplicationTypeSelect = (type: 'individual' | 'group') => {
+    console.log("Application type selected:", type);
     setSelectedData(prev => ({ ...prev, applicationType: type }));
     setCurrentModal("countryResidence");
   };
 
   const handleCountrySelect = (country: string) => {
+    console.log("Country selected:", country);
     setSelectedData(prev => ({ ...prev, country }));
     onTravelerTypeSelect(selectedData.travelerType, selectedData.applicationType, country);
   };
@@ -76,6 +79,8 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
       setCurrentModal("applicationType");
     }
   };
+
+  console.log("Current modal state:", currentModal);
 
   // Render appropriate modal based on current state
   if (currentModal === "howToApply") {
