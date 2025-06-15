@@ -1,9 +1,5 @@
 
-interface Step {
-  label: string;
-  completed: boolean;
-  active: boolean;
-}
+import { Check } from "lucide-react";
 
 export default function ApplicationStepper({
   currentStep,
@@ -13,41 +9,46 @@ export default function ApplicationStepper({
   steps: string[];
 }) {
   return (
-    <div className="w-full flex items-center justify-center gap-0">
+    <div className="space-y-4">
+      <h2 className="text-lg font-semibold text-gray-900 mb-6">Application Progress</h2>
+      
       {steps.map((label, i) => (
-        <div className="flex items-center" key={label}>
-          <div
-            className={
-              "flex flex-col items-center w-32"
-            }
-          >
-            <span
-              className={
-                [
-                  "rounded-full border-2 w-8 h-8 flex items-center justify-center font-semibold transition-colors",
-                  i < currentStep
-                    ? "bg-[#19a594]/80 border-[#19a594] text-white"
-                    : i === currentStep
-                    ? "bg-[#19a594] border-[#19a594] text-white"
-                    : "bg-white border-gray-300 text-gray-400"
-                ].join(" ")
-              }
-            >
-              {i + 1}
-            </span>
-            <span
+        <div className="flex items-start space-x-3" key={label}>
+          <div className="flex-shrink-0">
+            <div
               className={[
-                "text-xs mt-2 text-center transition-colors select-none leading-tight",
+                "w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-colors",
+                i < currentStep
+                  ? "bg-green-600 text-white"
+                  : i === currentStep
+                  ? "bg-green-600 text-white"
+                  : "bg-gray-200 text-gray-500"
+              ].join(" ")}
+            >
+              {i < currentStep ? (
+                <Check className="w-4 h-4" />
+              ) : (
+                i + 1
+              )}
+            </div>
+          </div>
+          
+          <div className="flex-1 min-w-0">
+            <p
+              className={[
+                "text-sm font-medium transition-colors",
                 i <= currentStep
-                  ? "font-semibold text-[#19a594]"
-                  : "text-gray-400"
+                  ? "text-green-600"
+                  : "text-gray-500"
               ].join(" ")}
             >
               {label}
-            </span>
+            </p>
           </div>
+          
+          {/* Connector line */}
           {i !== steps.length - 1 && (
-            <div className="w-12 h-1 bg-gray-200 mx-0" />
+            <div className="absolute left-4 mt-8 w-px h-6 bg-gray-200" style={{ marginLeft: '15px' }} />
           )}
         </div>
       ))}
