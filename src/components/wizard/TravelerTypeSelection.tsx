@@ -17,7 +17,7 @@ const travelerTypes = [
     id: "tourist",
     title: "Tourists & Visitors",
     description: "If you are visiting Kenya for tourism, business, or visiting for any other reason to apply for your travel authorisation.",
-    color: "bg-green-600",
+    color: "bg-brand-green",
     icon: <Globe className="w-12 h-12 text-white" />
   },
   {
@@ -176,8 +176,8 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
 
           {/* Diplomat Section */}
           <div className="bg-gray-50 rounded-lg p-4 flex items-center gap-4">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-              <div className="w-8 h-8 bg-green-600 rounded"></div>
+            <div className="w-12 h-12 bg-brand-green/20 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-8 h-8 bg-brand-green rounded"></div>
             </div>
             <div>
               <h4 className="font-semibold text-gray-900 mb-1">Diplomats and Laissez Passer Holders</h4>

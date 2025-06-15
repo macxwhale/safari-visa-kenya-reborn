@@ -86,13 +86,13 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
                 key={country}
                 onClick={() => setSelectedCountry(country)}
                 className={`p-3 border-b last:border-b-0 cursor-pointer hover:bg-gray-50 transition-colors ${
-                  selectedCountry === country ? 'bg-green-50 border-green-200' : ''
+                  selectedCountry === country ? 'bg-brand-green/10 border-brand-green/50' : ''
                 }`}
               >
                 <div className="flex items-center justify-between">
                   <span className="text-sm font-medium text-gray-900">{country}</span>
                   {selectedCountry === country && (
-                    <div className="w-4 h-4 bg-green-600 rounded-full flex items-center justify-center">
+                    <div className="w-4 h-4 bg-brand-green rounded-full flex items-center justify-center">
                       <div className="w-2 h-2 bg-white rounded-full"></div>
                     </div>
                   )}
@@ -120,7 +120,7 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
             <Button 
               onClick={handleContinue}
               disabled={!selectedCountry}
-              className="bg-green-600 hover:bg-green-700 text-white disabled:bg-gray-400"
+              className="bg-brand-green hover:bg-brand-green/90 text-white disabled:bg-gray-400"
             >
               Continue
             </Button>

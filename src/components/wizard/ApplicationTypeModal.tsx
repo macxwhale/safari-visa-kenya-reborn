@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { X, User, Users } from "lucide-react";
 
@@ -55,7 +54,7 @@ export default function ApplicationTypeModal({ onClose, onTypeSelect, onBack }: 
 
             <div
               onClick={() => onTypeSelect('group')}
-              className="bg-green-600 text-white rounded-lg p-6 cursor-pointer hover:bg-green-700 transition-colors"
+              className="bg-brand-green text-white rounded-lg p-6 cursor-pointer hover:bg-brand-green/90 transition-colors"
             >
               <div className="flex items-center gap-4 mb-4">
                 <Users className="w-12 h-12 text-white" />

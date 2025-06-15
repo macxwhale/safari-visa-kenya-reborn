@@ -73,7 +73,7 @@ export default function HowToApplyModal({ onClose, onContinue, onBack }: HowToAp
             </Button>
             <Button 
               onClick={onContinue}
-              className="bg-green-600 hover:bg-green-700 text-white"
+              className="bg-brand-green hover:bg-brand-green/90 text-white"
             >
               Continue
             </Button>
