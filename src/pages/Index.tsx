@@ -1,4 +1,3 @@
-
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -35,7 +34,7 @@ const Logo = () => (
 export default function Index() {
   return (
     <div className="min-h-screen flex flex-col w-full bg-white font-sans">
-      {/* Orange Support Bar */}
+      {/* Orange Support Bar (now icon only, text removed) */}
       <div className="w-full bg-[#c2491d] px-0 py-2">
         <div className="max-w-screen-2xl mx-auto flex items-center px-4">
           <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 20 21">
@@ -47,19 +46,7 @@ export default function Index() {
               d="M10 13.845V10.51m0-3.333h.008m8.325 3.333a8.333 8.333 0 1 1-16.666 0 8.333 8.333 0 0 1 16.666 0Z"
             />
           </svg>
-          <p className="ml-3 text-sm font-medium text-white">
-            If you need any assistance regarding your application, please email us at:&nbsp;
-            <a
-              href="mailto:etakenya@gov.ke"
-              className="underline"
-            >
-              etakenya@gov.ke
-            </a>
-            , or reach out to us on WhatsApp at{" "}
-            <a href="https://wa.me/+254110922064" className="underline">
-              +254 110 922 064
-            </a>.
-          </p>
+          {/* Text has been removed per user request */}
         </div>
       </div>
       {/* Header/NavBar */}
