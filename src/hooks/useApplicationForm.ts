@@ -23,6 +23,7 @@ export const initialFormState = {
   exitDate: "",
   flightNumber: "",
   customsDeclaration: false,
+  bringingCurrencyOver5000: null as boolean | null,
   additionalDocs: [] as File[],
   arrivalMode: 'air' as 'air' | 'sea' | 'land',
   departureMode: 'air' as 'air' | 'sea' | 'land',
