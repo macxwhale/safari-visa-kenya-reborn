@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { X, Check } from "lucide-react";
 import { useState } from "react";
@@ -12,14 +13,14 @@ export default function DeclarationModal({ onClose, onContinue, onBack }: Declar
   const [agreed, setAgreed] = useState(false);
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
       {/* Modal overlay */}
-      <div className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"></div>
-      
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
+
       {/* Modal content */}
-      <div className="relative z-50 bg-white rounded-lg shadow-xl max-w-4xl w-full mx-auto max-h-[90vh] overflow-hidden">
+      <div className="relative z-50 bg-white rounded-lg shadow-xl max-w-4xl w-full mx-auto max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
+        <div className="flex items-center justify-between p-6 border-b flex-shrink-0">
           <h1 className="text-2xl font-bold text-gray-900">Declaration of Consent</h1>
           <Button 
             variant="ghost" 
@@ -32,7 +33,7 @@ export default function DeclarationModal({ onClose, onContinue, onBack }: Declar
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)]">
+        <div className="p-6 overflow-y-auto max-h-[calc(90vh-180px)] flex-1">
           <div className="space-y-6">
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
               <h3 className="font-semibold text-blue-900 mb-2">Important Information</h3>
@@ -79,7 +80,7 @@ export default function DeclarationModal({ onClose, onContinue, onBack }: Declar
         </div>
 
         {/* Footer */}
-        <div className="flex justify-between items-center p-6 border-t bg-gray-50">
+        <div className="flex justify-between items-center p-6 border-t bg-gray-50 flex-shrink-0">
           <Button variant="outline" onClick={onBack}>
             Back
           </Button>
