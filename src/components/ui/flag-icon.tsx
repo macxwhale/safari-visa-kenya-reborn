@@ -1,6 +1,4 @@
 
-import { getCountryCallingCode, getCountries, getCountryCode } from 'country-flag-icons'
-
 interface FlagIconProps {
   country: string;
   className?: string;
