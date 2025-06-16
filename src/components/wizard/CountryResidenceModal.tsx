@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { X, Search, HelpCircle } from "lucide-react";
 import { useState } from "react";
+import { FlagIcon } from "@/components/ui/flag-icon";
 
 // Simplified map; in production a library or full-iso mapping would be best.
 const countryFlags: Record<string, string> = {
@@ -284,14 +285,18 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
       : true
   );
 
-  // function to render the badge with iso code
-  const renderISOBadge = (country: string) => (
-    <span
-      className="inline-flex items-center justify-center bg-gray-100 text-gray-700 font-mono text-sm font-semibold rounded w-12 h-7 mr-3 border border-gray-200"
-      style={{ minWidth: 36 }}
+  // Updated function to render flag with country name
+  const renderCountryItem = (country: string) => (
+    <div
+      key={country}
+      onClick={() => setSelectedCountry(country)}
+      className={`flex items-center gap-3 cursor-pointer rounded px-2 py-2 border-b hover:bg-gray-50 transition-colors ${
+        selectedCountry === country ? "bg-gray-100 border-brand-green" : "border-transparent"
+      }`}
     >
-      {countryISOCodes[country] || "??"}
-    </span>
+      <FlagIcon country={country} size={32} />
+      <span className="text-base font-medium text-gray-900">{country}</span>
+    </div>
   );
 
   const handleContinue = () => {
@@ -346,18 +351,7 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
             <>
               <div className="font-semibold text-base text-gray-900 mb-2 mt-3">Frequently Selected</div>
               <div className="mb-2">
-                {filteredFrequentlySelected.map(country => (
-                  <div
-                    key={country}
-                    onClick={() => setSelectedCountry(country)}
-                    className={`flex items-center gap-2 cursor-pointer rounded px-2 py-2 border-b hover:bg-gray-50 transition-colors ${
-                      selectedCountry === country ? "bg-gray-100 border-brand-green" : "border-transparent"
-                    }`}
-                  >
-                    {renderISOBadge(country)}
-                    <span className="text-base font-medium text-gray-900">{country}</span>
-                  </div>
-                ))}
+                {filteredFrequentlySelected.map(renderCountryItem)}
               </div>
             </>
           )}
@@ -365,18 +359,7 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
           {/* All Countries */}
           <div className="font-semibold text-base text-gray-900 mb-2 mt-4">All Countries</div>
           <div>
-            {filteredAllCountries.length ? filteredAllCountries.map(country => (
-              <div
-                key={country}
-                onClick={() => setSelectedCountry(country)}
-                className={`flex items-center gap-2 cursor-pointer rounded px-2 py-2 border-b hover:bg-gray-50 transition-colors ${
-                  selectedCountry === country ? "bg-gray-100 border-brand-green" : "border-transparent"
-                }`}
-              >
-                {renderISOBadge(country)}
-                <span className="text-base font-medium text-gray-900">{country}</span>
-              </div>
-            )) : (
+            {filteredAllCountries.length ? filteredAllCountries.map(renderCountryItem) : (
               <div className="text-gray-500 text-center py-8">
                 <p>No countries found matching "{searchTerm}"</p>
               </div>
