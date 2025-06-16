@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { X, Globe, HelpCircle } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -71,8 +72,11 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
 
   const handleCountrySelect = (country: string) => {
     console.log("Country selected:", country);
-    setSelectedData(prev => ({ ...prev, country }));
-    onTravelerTypeSelect(selectedData.travelerType, selectedData.applicationType, country);
+    const updatedData = { ...selectedData, country };
+    setSelectedData(updatedData);
+    console.log("Final data being passed:", updatedData);
+    // Now pass all the collected data to complete the selection
+    onTravelerTypeSelect(updatedData.travelerType, updatedData.applicationType, country);
   };
 
   const handleBack = () => {
