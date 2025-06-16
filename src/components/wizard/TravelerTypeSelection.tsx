@@ -30,7 +30,7 @@ const travelerTypes = [
 ];
 
 export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }: TravelerTypeSelectionProps) {
-  const [currentModal, setCurrentModal] = useState<"main" | "howToApply" | "declaration" | "applicationType" | "countryResidence">("main");
+  const [currentModal, setCurrentModal] = useState<"main" | "howToApply" | "declaration" | "applicationType" | "countryResidence" | "complete">("main");
   const [selectedData, setSelectedData] = useState({
     travelerType: "",
     applicationType: "",
@@ -74,9 +74,16 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
     console.log("Country selected:", country);
     const updatedData = { ...selectedData, country };
     setSelectedData(updatedData);
-    console.log("Final data being passed:", updatedData);
-    // Now pass all the collected data to complete the selection
-    onTravelerTypeSelect(updatedData.travelerType, updatedData.applicationType, country);
+    console.log("Final data collected:", updatedData);
+    
+    // Instead of immediately calling onTravelerTypeSelect, set state to complete
+    setCurrentModal("complete");
+    
+    // Add a small delay to show completion, then proceed to next step
+    setTimeout(() => {
+      console.log("Proceeding to ApplicationForm with data:", updatedData);
+      onTravelerTypeSelect(updatedData.travelerType, updatedData.applicationType, country);
+    }, 500);
   };
 
   const handleBack = () => {
@@ -89,6 +96,8 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
       setCurrentModal("declaration");
     } else if (currentModal === "countryResidence") {
       setCurrentModal("applicationType");
+    } else if (currentModal === "complete") {
+      setCurrentModal("countryResidence");
     }
   };
 
@@ -138,6 +147,22 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
         onCountrySelect={handleCountrySelect}
         onBack={handleBack}
       />
+    );
+  }
+
+  if (currentModal === "complete") {
+    console.log("Rendering completion state");
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" />
+        <div className="relative z-50 bg-white rounded-xl shadow-xl max-w-md w-full mx-auto p-8 text-center">
+          <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-8 h-8 bg-green-500 rounded-full"></div>
+          </div>
+          <h2 className="text-xl font-semibold text-gray-900 mb-2">Setup Complete!</h2>
+          <p className="text-gray-600">Proceeding to application form...</p>
+        </div>
+      </div>
     );
   }
 
