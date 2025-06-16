@@ -55,14 +55,14 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
     setSelectedData(updatedData);
     console.log("Final data collected:", updatedData);
     
-    // Instead of immediately calling onTravelerTypeSelect, set state to complete
+    // Set state to complete and show completion modal briefly
     setCurrentModal("complete");
     
-    // Add a small delay to show completion, then proceed to next step
+    // After a brief delay, proceed to the application form
     setTimeout(() => {
       console.log("Proceeding to ApplicationForm with data:", updatedData);
       onTravelerTypeSelect(updatedData.travelerType, updatedData.applicationType, country);
-    }, 500);
+    }, 1500); // Show completion modal for 1.5 seconds
   };
 
   const handleBack = () => {

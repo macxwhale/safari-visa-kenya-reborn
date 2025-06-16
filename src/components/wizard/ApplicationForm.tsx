@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -128,8 +127,8 @@ export default function ApplicationForm({ travelerType, applicationType, country
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl bg-white shadow-lg mx-auto mt-12 mb-20 rounded-lg border border-gray-200 overflow-hidden animate-fade-in">
+    <div className="relative z-50 bg-gray-50 pt-8">
+      <div className="max-w-6xl bg-white shadow-lg mx-auto mb-20 rounded-lg border border-gray-200 overflow-hidden animate-fade-in">
         <div className="flex">
           {/* Left Sidebar */}
           <div className="w-80 bg-gray-50 border-r border-gray-200 p-6">
