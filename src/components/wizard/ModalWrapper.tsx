@@ -17,8 +17,8 @@ export default function ModalWrapper({ children, onClose, className = "" }: Moda
       
       {/* Modal content */}
       <div 
-        className={`relative bg-white rounded-xl shadow-2xl w-full mx-auto max-h-[90vh] overflow-hidden ${className}`}
-        style={{ zIndex: 9999 }}
+        className={`relative bg-white rounded-xl shadow-2xl w-full mx-auto overflow-hidden ${className}`}
+        style={{ zIndex: 9999, maxHeight: '90vh' }}
       >
         {children}
       </div>

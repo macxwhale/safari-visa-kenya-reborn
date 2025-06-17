@@ -55,10 +55,10 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
   };
 
   return (
-    <ModalWrapper onClose={handleClose} className="max-w-2xl">
+    <ModalWrapper onClose={handleClose} className="max-w-2xl max-h-[85vh]">
       <div className="flex flex-col h-full">
         {/* Header */}
-        <div className="flex items-start justify-between p-8 pb-0 flex-shrink-0">
+        <div className="flex items-start justify-between p-8 pb-4 flex-shrink-0">
           <div className="flex-1 pr-4">
             <h1 className="text-2xl font-semibold text-gray-900 mb-2">Country of Residence</h1>
             <p className="mb-4 text-[15px] text-gray-800 leading-relaxed">
@@ -78,21 +78,23 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
         </div>
 
         {/* Search Input */}
-        <div className="px-8 mt-6 mb-3 flex-shrink-0">
+        <div className="px-8 mb-4 flex-shrink-0">
           <CountrySearchInput searchTerm={searchTerm} onSearchChange={setSearchTerm} />
         </div>
 
-        {/* Country List - scrollable */}
-        <div className="px-8 flex-1 overflow-y-auto">
-          <CountryList 
-            searchTerm={searchTerm}
-            selectedCountry={selectedCountry}
-            onCountrySelect={handleCountrySelect}
-          />
+        {/* Country List - scrollable content */}
+        <div className="flex-1 min-h-0 px-8 overflow-hidden">
+          <div className="h-full overflow-y-auto">
+            <CountryList 
+              searchTerm={searchTerm}
+              selectedCountry={selectedCountry}
+              onCountrySelect={handleCountrySelect}
+            />
+          </div>
         </div>
 
         {/* Footer - always visible */}
-        <div className="flex justify-between items-center px-8 py-6 border-t bg-gray-50 flex-shrink-0">
+        <div className="flex justify-between items-center px-8 py-6 border-t bg-gray-50 flex-shrink-0 mt-4">
           <Button 
             variant="outline" 
             onClick={handleClose} 
