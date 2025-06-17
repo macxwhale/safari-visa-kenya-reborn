@@ -68,7 +68,7 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
     console.error('Some optional uploads failed:', error);
   });
 
-  // Submit application data
+  // Submit application data - Fixed: Execute the query to return a Promise
   const { error } = await safeAsync(async () => {
     return withTimeout(
       supabase
@@ -84,7 +84,8 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
             entry_date: form.entryDate,
             doc_url: passport_doc_url,
           },
-        ]),
+        ])
+        .then(response => response), // Execute the query to return a Promise
       SUBMIT_TIMEOUT,
       "Application submission timed out"
     );
