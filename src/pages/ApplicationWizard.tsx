@@ -15,14 +15,17 @@ export default function ApplicationWizard() {
 
   const handleTravelerTypeSelect = (type: string, applicationType?: string, country?: string) => {
     console.log("ApplicationWizard received data:", { type, applicationType, country });
-    setApplicationData({
+    const newData = {
       travelerType: type,
       applicationType: applicationType || "",
       country: country || ""
-    });
+    };
+    console.log("Setting application data:", newData);
+    setApplicationData(newData);
   };
 
   const handleReset = () => {
+    console.log("Resetting application data");
     setApplicationData({
       travelerType: "",
       applicationType: "",
@@ -34,8 +37,11 @@ export default function ApplicationWizard() {
     navigate("/");
   };
 
+  console.log("ApplicationWizard render - applicationData:", applicationData);
+
   // Show wizard modals if no traveler type is selected
   if (!applicationData.travelerType) {
+    console.log("Showing TravelerTypeSelection");
     return (
       <TravelerTypeSelection 
         onTravelerTypeSelect={handleTravelerTypeSelect}
@@ -45,6 +51,7 @@ export default function ApplicationWizard() {
   }
 
   // Show application form with Index page as background
+  console.log("Showing ApplicationForm");
   return (
     <>
       <Index />

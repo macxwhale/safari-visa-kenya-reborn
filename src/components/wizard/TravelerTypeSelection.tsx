@@ -62,7 +62,7 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
     setTimeout(() => {
       console.log("Proceeding to ApplicationForm with data:", updatedData);
       onTravelerTypeSelect(updatedData.travelerType, updatedData.applicationType, country);
-    }, 1500); // Show completion modal for 1.5 seconds
+    }, 1000); // Reduced to 1 second for faster transition
   };
 
   const handleBack = () => {
