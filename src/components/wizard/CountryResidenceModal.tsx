@@ -4,6 +4,7 @@ import { HelpCircle } from "lucide-react";
 import { useState } from "react";
 import CountrySearchInput from "./country/CountrySearchInput";
 import CountryList from "./country/CountryList";
+import ModalWrapper from "./ModalWrapper";
 
 interface CountryResidenceModalProps {
   onClose: () => void;
@@ -15,6 +16,8 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("");
 
+  console.log("CountryResidenceModal render - selectedCountry:", selectedCountry);
+
   const handleContinue = () => {
     console.log("Continue button clicked with country:", selectedCountry);
     if (selectedCountry) {
@@ -24,7 +27,7 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
         console.error("Error in handleContinue:", error);
       }
     } else {
-      console.warn("No country selected");
+      console.warn("No country selected - button should be disabled");
     }
   };
 
@@ -52,44 +55,35 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-      {/* Enhanced Modal overlay with proper blur */}
-      <div 
-        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
-        onClick={handleClose}
-        style={{ zIndex: 9998 }}
-      />
-
-      {/* Modal content with enhanced z-index */}
-      <div 
-        className="relative bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-auto max-h-[90vh] flex flex-col overflow-hidden"
-        style={{ zIndex: 9999 }}
-      >
+    <ModalWrapper onClose={handleClose} className="max-w-2xl">
+      <div className="flex flex-col h-full">
         {/* Header */}
-        <div className="flex items-start justify-between p-8 pb-0">
-          <div>
+        <div className="flex items-start justify-between p-8 pb-0 flex-shrink-0">
+          <div className="flex-1 pr-4">
             <h1 className="text-2xl font-semibold text-gray-900 mb-2">Country of Residence</h1>
-            <p className="mb-4 text-[15px] text-gray-800">Please select your country of residence. This is the country where you live and pay taxes. If you are a resident Diplomat of Kenya, please select Kenya.</p>
+            <p className="mb-4 text-[15px] text-gray-800 leading-relaxed">
+              Please select your country of residence. This is the country where you live and pay taxes. If you are a resident Diplomat of Kenya, please select Kenya.
+            </p>
           </div>
           <Button
             variant="ghost"
             size="sm"
-            className="text-gray-700 flex items-center gap-2 bg-gray-100 px-3 py-2"
+            className="text-gray-700 flex items-center gap-2 bg-gray-100 px-3 py-2 flex-shrink-0"
             tabIndex={-1}
             type="button"
           >
-            <HelpCircle className="w-5 h-5 mr-1" />
+            <HelpCircle className="w-5 h-5" />
             Help
           </Button>
         </div>
 
         {/* Search Input */}
-        <div className="px-8 mt-6 mb-3">
+        <div className="px-8 mt-6 mb-3 flex-shrink-0">
           <CountrySearchInput searchTerm={searchTerm} onSearchChange={setSearchTerm} />
         </div>
 
-        {/* Country List */}
-        <div className="px-8">
+        {/* Country List - scrollable */}
+        <div className="px-8 flex-1 overflow-y-auto">
           <CountryList 
             searchTerm={searchTerm}
             selectedCountry={selectedCountry}
@@ -97,22 +91,30 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
           />
         </div>
 
-        {/* Footer */}
-        <div className="flex justify-between items-center px-8 py-5 border-t bg-white flex-shrink-0">
-          <Button variant="outline" onClick={handleClose} className="rounded-full px-6 py-2 border-gray-300 text-gray-700">
+        {/* Footer - always visible */}
+        <div className="flex justify-between items-center px-8 py-6 border-t bg-gray-50 flex-shrink-0">
+          <Button 
+            variant="outline" 
+            onClick={handleClose} 
+            className="rounded-full px-6 py-2 border-gray-300 text-gray-700"
+          >
             Close
           </Button>
           <div className="flex gap-3">
-            <Button variant="outline" onClick={handleBack} className="rounded-full px-6 py-2 border-gray-300 text-gray-700">
+            <Button 
+              variant="outline" 
+              onClick={handleBack} 
+              className="rounded-full px-6 py-2 border-gray-300 text-gray-700"
+            >
               Back
             </Button>
             <Button
               onClick={handleContinue}
               disabled={!selectedCountry}
-              className={`rounded-full px-8 py-2 font-semibold text-white transition-colors ${
+              className={`rounded-full px-8 py-2 font-semibold text-white transition-all duration-200 ${
                 selectedCountry 
-                  ? "bg-brand-green hover:bg-brand-green/90" 
-                  : "bg-gray-300 cursor-not-allowed"
+                  ? "bg-brand-green hover:bg-brand-green/90 shadow-lg hover:shadow-xl" 
+                  : "bg-gray-300 cursor-not-allowed opacity-50"
               }`}
             >
               Continue
@@ -120,6 +122,6 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
           </div>
         </div>
       </div>
-    </div>
+    </ModalWrapper>
   );
 }

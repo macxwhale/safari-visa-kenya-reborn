@@ -18,6 +18,7 @@ import { STEP_LABELS } from "./applicationFormConfig";
 import { submitApplication } from "@/services/applicationService";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { safeAsync } from "@/utils/asyncHelpers";
+import ModalWrapper from "./ModalWrapper";
 
 interface ApplicationFormProps {
   travelerType: string;
@@ -101,20 +102,10 @@ export default function ApplicationForm({ travelerType, applicationType, country
 
   return (
     <ErrorBoundary>
-      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
-        {/* Enhanced Modal overlay with proper blur */}
-        <div 
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
-          style={{ zIndex: 9998 }}
-        />
-        
-        {/* Modal content with enhanced z-index */}
-        <div 
-          className="relative bg-white rounded-lg shadow-2xl max-w-6xl w-full mx-auto max-h-[90vh] overflow-hidden"
-          style={{ zIndex: 9999 }}
-        >
+      <ModalWrapper className="max-w-6xl">
+        <div className="flex flex-col h-full max-h-[90vh]">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b">
+          <div className="flex items-center justify-between p-6 border-b flex-shrink-0">
             <h1 className="text-2xl font-bold text-gray-900">
               {STEP_LABELS[step]}
             </h1>
@@ -135,9 +126,9 @@ export default function ApplicationForm({ travelerType, applicationType, country
           </div>
 
           {/* Main content with sidebar and form */}
-          <div className="flex max-h-[calc(90vh-140px)]">
+          <div className="flex flex-1 overflow-hidden">
             {/* Left Sidebar */}
-            <div className="w-80 bg-gray-50 border-r border-gray-200 p-6 overflow-y-auto">
+            <div className="w-80 bg-gray-50 border-r border-gray-200 p-6 overflow-y-auto flex-shrink-0">
               <ApplicationStepper currentStep={step} steps={STEP_LABELS} />
             </div>
             
@@ -174,7 +165,7 @@ export default function ApplicationForm({ travelerType, applicationType, country
             </div>
           </div>
         </div>
-      </div>
+      </ModalWrapper>
     </ErrorBoundary>
   );
 }
