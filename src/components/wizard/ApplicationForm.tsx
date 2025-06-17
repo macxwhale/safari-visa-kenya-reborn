@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +12,7 @@ import CustomsDeclarationStep from "./CustomsDeclarationStep";
 import DocumentsStep from "./DocumentsStep";
 import ReviewStep from "./ReviewStep";
 import PaymentStep from "./PaymentStep";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle, X } from "lucide-react";
 import { useApplicationForm } from "@/hooks/useApplicationForm";
 import { STEP_LABELS } from "./applicationFormConfig";
 import { submitApplication } from "@/services/applicationService";
@@ -52,6 +53,10 @@ export default function ApplicationForm({ travelerType, applicationType, country
     } finally {
       setSubmitting(false);
     }
+  };
+
+  const handleClose = () => {
+    navigate("/");
   };
 
   const renderStepContent = () => {
@@ -127,27 +132,42 @@ export default function ApplicationForm({ travelerType, applicationType, country
   };
 
   return (
-    <div className="relative z-50 bg-gray-50 pt-8">
-      <div className="max-w-6xl bg-white shadow-lg mx-auto mb-20 rounded-lg border border-gray-200 overflow-hidden animate-fade-in">
-        <div className="flex">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {/* Modal overlay */}
+      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" />
+      
+      {/* Modal content */}
+      <div className="relative z-50 bg-white rounded-lg shadow-xl max-w-6xl w-full mx-auto max-h-[90vh] overflow-hidden">
+        {/* Header */}
+        <div className="flex items-center justify-between p-6 border-b">
+          <h1 className="text-2xl font-bold text-gray-900">
+            {STEP_LABELS[step]}
+          </h1>
+          <div className="flex items-center gap-4">
+            <Button variant="ghost" size="sm" className="text-gray-600">
+              <HelpCircle className="w-4 h-4 mr-2" />
+              Help
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={handleClose}
+              className="text-gray-600"
+            >
+              <X className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+
+        {/* Main content with sidebar and form */}
+        <div className="flex max-h-[calc(90vh-140px)]">
           {/* Left Sidebar */}
-          <div className="w-80 bg-gray-50 border-r border-gray-200 p-6">
+          <div className="w-80 bg-gray-50 border-r border-gray-200 p-6 overflow-y-auto">
             <ApplicationStepper currentStep={step} steps={STEP_LABELS} />
           </div>
           
           {/* Main Content */}
-          <div className="flex-1 p-8">
-            {/* Header */}
-            <div className="flex items-center justify-between mb-8">
-              <h1 className="text-2xl font-bold text-gray-900">
-                {STEP_LABELS[step]}
-              </h1>
-              <Button variant="ghost" size="sm" className="text-gray-600">
-                <HelpCircle className="w-4 h-4 mr-2" />
-                Help
-              </Button>
-            </div>
-
+          <div className="flex-1 p-8 overflow-y-auto">
             {/* Step Content */}
             <div className="mb-8">
               {renderStepContent()}
