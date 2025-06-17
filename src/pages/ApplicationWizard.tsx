@@ -33,6 +33,7 @@ export default function ApplicationWizard() {
   };
 
   const handleClose = () => {
+    console.log("Closing application wizard");
     navigate("/");
   };
 
@@ -52,11 +53,24 @@ export default function ApplicationWizard() {
   // Show application form as modal overlay
   console.log("Showing ApplicationForm");
   return (
-    <ApplicationForm 
-      travelerType={applicationData.travelerType}
-      applicationType={applicationData.applicationType}
-      country={applicationData.country}
-      onReset={handleReset}
-    />
+    <div className="min-h-screen bg-gray-100">
+      {/* Blurred background content */}
+      <div className="blur-sm pointer-events-none">
+        <div className="h-screen flex items-center justify-center">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Kenya eTA Application</h1>
+            <p className="text-lg text-gray-600">Complete your travel authorization</p>
+          </div>
+        </div>
+      </div>
+      
+      {/* Application form overlay */}
+      <ApplicationForm 
+        travelerType={applicationData.travelerType}
+        applicationType={applicationData.applicationType}
+        country={applicationData.country}
+        onReset={handleReset}
+      />
+    </div>
   );
 }

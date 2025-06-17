@@ -33,16 +33,24 @@ export default function ApplicationForm({ travelerType, applicationType, country
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  console.log("ApplicationForm rendered with:", { travelerType, applicationType, country });
+
   const goNext = () => {
+    console.log("Going to next step from:", step);
     if (step < STEP_LABELS.length - 1) setStep(s => s + 1);
   };
 
   const goBack = () => {
+    console.log("Going back from step:", step);
     if (step > 0) setStep(s => s - 1);
-    else onReset();
+    else {
+      console.log("Resetting application form");
+      onReset();
+    }
   };
 
   const handleSubmit = async () => {
+    console.log("Submitting application with form data:", form);
     setSubmitting(true);
     setError(null);
     
@@ -52,18 +60,21 @@ export default function ApplicationForm({ travelerType, applicationType, country
     );
 
     if (submitError) {
+      console.error("Application submission failed:", submitError);
       setError(submitError);
       setSubmitting(false);
       return;
     }
 
     // Success
+    console.log("Application submitted successfully");
     alert("Application submitted successfully!");
     onReset();
     navigate("/dashboard");
   };
 
   const handleClose = () => {
+    console.log("Closing application form");
     navigate("/");
   };
 
@@ -90,12 +101,18 @@ export default function ApplicationForm({ travelerType, applicationType, country
 
   return (
     <ErrorBoundary>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-        {/* Modal overlay */}
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" />
+      <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+        {/* Enhanced Modal overlay with proper blur */}
+        <div 
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+          style={{ zIndex: 9998 }}
+        />
         
-        {/* Modal content */}
-        <div className="relative z-50 bg-white rounded-lg shadow-xl max-w-6xl w-full mx-auto max-h-[90vh] overflow-hidden">
+        {/* Modal content with enhanced z-index */}
+        <div 
+          className="relative bg-white rounded-lg shadow-2xl max-w-6xl w-full mx-auto max-h-[90vh] overflow-hidden"
+          style={{ zIndex: 9999 }}
+        >
           {/* Header */}
           <div className="flex items-center justify-between p-6 border-b">
             <h1 className="text-2xl font-bold text-gray-900">

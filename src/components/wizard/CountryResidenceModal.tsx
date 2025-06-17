@@ -16,18 +16,55 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
   const [selectedCountry, setSelectedCountry] = useState("");
 
   const handleContinue = () => {
+    console.log("Continue button clicked with country:", selectedCountry);
     if (selectedCountry) {
-      onCountrySelect(selectedCountry);
+      try {
+        onCountrySelect(selectedCountry);
+      } catch (error) {
+        console.error("Error in handleContinue:", error);
+      }
+    } else {
+      console.warn("No country selected");
+    }
+  };
+
+  const handleCountrySelect = (country: string) => {
+    console.log("Country selected in modal:", country);
+    setSelectedCountry(country);
+  };
+
+  const handleBack = () => {
+    console.log("Back button clicked in CountryResidenceModal");
+    try {
+      onBack();
+    } catch (error) {
+      console.error("Error in handleBack:", error);
+    }
+  };
+
+  const handleClose = () => {
+    console.log("Close button clicked in CountryResidenceModal");
+    try {
+      onClose();
+    } catch (error) {
+      console.error("Error in handleClose:", error);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Modal overlay */}
-      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+      {/* Enhanced Modal overlay with proper blur */}
+      <div 
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity" 
+        onClick={handleClose}
+        style={{ zIndex: 9998 }}
+      />
 
-      {/* Modal content */}
-      <div className="relative z-50 bg-white rounded-xl shadow-xl max-w-2xl w-full mx-auto max-h-[90vh] flex flex-col overflow-hidden">
+      {/* Modal content with enhanced z-index */}
+      <div 
+        className="relative bg-white rounded-xl shadow-2xl max-w-2xl w-full mx-auto max-h-[90vh] flex flex-col overflow-hidden"
+        style={{ zIndex: 9999 }}
+      >
         {/* Header */}
         <div className="flex items-start justify-between p-8 pb-0">
           <div>
@@ -56,19 +93,27 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
           <CountryList 
             searchTerm={searchTerm}
             selectedCountry={selectedCountry}
-            onCountrySelect={setSelectedCountry}
+            onCountrySelect={handleCountrySelect}
           />
         </div>
 
         {/* Footer */}
         <div className="flex justify-between items-center px-8 py-5 border-t bg-white flex-shrink-0">
-          <Button variant="outline" onClick={onClose} className="rounded-full px-6 py-2 border-gray-300 text-gray-700">Close</Button>
+          <Button variant="outline" onClick={handleClose} className="rounded-full px-6 py-2 border-gray-300 text-gray-700">
+            Close
+          </Button>
           <div className="flex gap-3">
-            <Button variant="outline" onClick={onBack} className="rounded-full px-6 py-2 border-gray-300 text-gray-700">Back</Button>
+            <Button variant="outline" onClick={handleBack} className="rounded-full px-6 py-2 border-gray-300 text-gray-700">
+              Back
+            </Button>
             <Button
               onClick={handleContinue}
               disabled={!selectedCountry}
-              className={`rounded-full px-8 py-2 font-semibold text-white ${selectedCountry ? "bg-brand-green hover:bg-brand-green/90" : "bg-gray-300"}`}
+              className={`rounded-full px-8 py-2 font-semibold text-white transition-colors ${
+                selectedCountry 
+                  ? "bg-brand-green hover:bg-brand-green/90" 
+                  : "bg-gray-300 cursor-not-allowed"
+              }`}
             >
               Continue
             </Button>

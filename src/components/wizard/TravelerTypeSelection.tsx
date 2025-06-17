@@ -16,67 +16,105 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
     country: ""
   });
 
-  // Add useEffect to log state changes
+  // Add useEffect to log state changes with error tracking
   useEffect(() => {
     console.log("Modal state changed to:", currentModal);
-  }, [currentModal]);
+    console.log("Selected data:", selectedData);
+  }, [currentModal, selectedData]);
 
   const handleTravelerTypeClick = (typeId: string) => {
     console.log("Traveler type clicked:", typeId);
-    if (typeId === "tourist") {
-      setSelectedData(prev => ({ ...prev, travelerType: typeId }));
-      setCurrentModal("howToApply");
-    } else {
-      onTravelerTypeSelect(typeId);
+    try {
+      if (typeId === "tourist") {
+        setSelectedData(prev => ({ ...prev, travelerType: typeId }));
+        setCurrentModal("howToApply");
+      } else {
+        onTravelerTypeSelect(typeId);
+      }
+    } catch (error) {
+      console.error("Error in handleTravelerTypeClick:", error);
     }
   };
 
   const handleContinueFromHowToApply = () => {
     console.log("=== CONTINUE FROM HOW TO APPLY TRIGGERED ===");
     console.log("Current state before update:", currentModal);
-    setCurrentModal("declaration");
-    console.log("State update called - should transition to declaration");
+    try {
+      setCurrentModal("declaration");
+      console.log("State update called - should transition to declaration");
+    } catch (error) {
+      console.error("Error transitioning from HowToApply:", error);
+    }
   };
 
   const handleContinueFromDeclaration = () => {
     console.log("Continuing from Declaration modal");
-    setCurrentModal("applicationType");
+    try {
+      setCurrentModal("applicationType");
+    } catch (error) {
+      console.error("Error transitioning from Declaration:", error);
+    }
   };
 
   const handleApplicationTypeSelect = (type: 'individual' | 'group') => {
     console.log("Application type selected:", type);
-    setSelectedData(prev => ({ ...prev, applicationType: type }));
-    setCurrentModal("countryResidence");
+    try {
+      setSelectedData(prev => ({ ...prev, applicationType: type }));
+      setCurrentModal("countryResidence");
+    } catch (error) {
+      console.error("Error in handleApplicationTypeSelect:", error);
+    }
   };
 
   const handleCountrySelect = (country: string) => {
     console.log("Country selected:", country);
-    const updatedData = { ...selectedData, country };
-    setSelectedData(updatedData);
-    console.log("Final data collected:", updatedData);
-    
-    // Set state to complete and show completion modal briefly
-    setCurrentModal("complete");
-    
-    // After a brief delay, proceed to the application form
-    setTimeout(() => {
-      console.log("Proceeding to ApplicationForm with data:", updatedData);
-      onTravelerTypeSelect(updatedData.travelerType, updatedData.applicationType, country);
-    }, 1000); // Reduced to 1 second for faster transition
+    try {
+      const updatedData = { ...selectedData, country };
+      setSelectedData(updatedData);
+      console.log("Final data collected:", updatedData);
+      
+      // Set state to complete and show completion modal briefly
+      setCurrentModal("complete");
+      
+      // After a brief delay, proceed to the application form
+      setTimeout(() => {
+        console.log("Proceeding to ApplicationForm with data:", updatedData);
+        try {
+          onTravelerTypeSelect(updatedData.travelerType, updatedData.applicationType, country);
+        } catch (error) {
+          console.error("Error calling onTravelerTypeSelect:", error);
+        }
+      }, 1000); // Reduced to 1 second for faster transition
+    } catch (error) {
+      console.error("Error in handleCountrySelect:", error);
+    }
   };
 
   const handleBack = () => {
     console.log("Back button clicked from:", currentModal);
-    if (currentModal === "howToApply") {
-      setCurrentModal("main");
-    } else if (currentModal === "declaration") {
-      setCurrentModal("howToApply");
-    } else if (currentModal === "applicationType") {
-      setCurrentModal("declaration");
-    } else if (currentModal === "countryResidence") {
-      setCurrentModal("applicationType");
-    } else if (currentModal === "complete") {
-      setCurrentModal("countryResidence");
+    try {
+      if (currentModal === "howToApply") {
+        setCurrentModal("main");
+      } else if (currentModal === "declaration") {
+        setCurrentModal("howToApply");
+      } else if (currentModal === "applicationType") {
+        setCurrentModal("declaration");
+      } else if (currentModal === "countryResidence") {
+        setCurrentModal("applicationType");
+      } else if (currentModal === "complete") {
+        setCurrentModal("countryResidence");
+      }
+    } catch (error) {
+      console.error("Error in handleBack:", error);
+    }
+  };
+
+  const handleClose = () => {
+    console.log("Close button clicked");
+    try {
+      onClose();
+    } catch (error) {
+      console.error("Error in handleClose:", error);
     }
   };
 
@@ -89,7 +127,7 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
     console.log("Rendering HowToApplyModal");
     return (
       <HowToApplyModal
-        onClose={onClose}
+        onClose={handleClose}
         onContinue={handleContinueFromHowToApply}
         onBack={handleBack}
       />
@@ -100,7 +138,7 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
     console.log("Rendering DeclarationModal");
     return (
       <DeclarationModal
-        onClose={onClose}
+        onClose={handleClose}
         onContinue={handleContinueFromDeclaration}
         onBack={handleBack}
       />
@@ -111,7 +149,7 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
     console.log("Rendering ApplicationTypeModal");
     return (
       <ApplicationTypeModal
-        onClose={onClose}
+        onClose={handleClose}
         onTypeSelect={handleApplicationTypeSelect}
         onBack={handleBack}
       />
@@ -122,7 +160,7 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
     console.log("Rendering CountryResidenceModal");
     return (
       <CountryResidenceModal
-        onClose={onClose}
+        onClose={handleClose}
         onCountrySelect={handleCountrySelect}
         onBack={handleBack}
       />
@@ -139,7 +177,7 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
   return (
     <TravelerTypeSelectionUI 
       onTravelerTypeClick={handleTravelerTypeClick}
-      onClose={onClose}
+      onClose={handleClose}
     />
   );
 }
