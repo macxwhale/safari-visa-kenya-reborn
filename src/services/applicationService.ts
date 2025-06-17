@@ -68,24 +68,25 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
     console.error('Some optional uploads failed:', error);
   });
 
-  // Submit application data - Fixed: Execute the query to return a Promise
+  // Submit application data - Fixed: Convert PromiseLike to proper Promise
   const { error } = await safeAsync(async () => {
     return withTimeout(
-      supabase
-        .from("eta_applications")
-        .insert([
-          {
-            user_id: null,
-            full_name: form.fullName,
-            email: form.email,
-            passport: form.passport,
-            nationality: form.nationality,
-            travel_from: form.travelFrom,
-            entry_date: form.entryDate,
-            doc_url: passport_doc_url,
-          },
-        ])
-        .then(response => response), // Execute the query to return a Promise
+      Promise.resolve(
+        supabase
+          .from("eta_applications")
+          .insert([
+            {
+              user_id: null,
+              full_name: form.fullName,
+              email: form.email,
+              passport: form.passport,
+              nationality: form.nationality,
+              travel_from: form.travelFrom,
+              entry_date: form.entryDate,
+              doc_url: passport_doc_url,
+            },
+          ])
+      ),
       SUBMIT_TIMEOUT,
       "Application submission timed out"
     );
