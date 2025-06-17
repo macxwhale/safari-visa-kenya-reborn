@@ -16,6 +16,8 @@ import { HelpCircle, X } from "lucide-react";
 import { useApplicationForm } from "@/hooks/useApplicationForm";
 import { STEP_LABELS } from "./applicationFormConfig";
 import { submitApplication } from "@/services/applicationService";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
+import { safeAsync } from "@/utils/asyncHelpers";
 
 interface ApplicationFormProps {
   travelerType: string;
@@ -43,16 +45,22 @@ export default function ApplicationForm({ travelerType, applicationType, country
   const handleSubmit = async () => {
     setSubmitting(true);
     setError(null);
-    try {
-      await submitApplication(form);
-      alert("Application submitted!");
-      onReset();
-      navigate("/dashboard");
-    } catch (e: any) {
-      setError("Unexpected error: " + (e.message || e.toString()));
-    } finally {
+    
+    const { data, error: submitError } = await safeAsync(
+      () => submitApplication(form),
+      "Failed to submit application"
+    );
+
+    if (submitError) {
+      setError(submitError);
       setSubmitting(false);
+      return;
     }
+
+    // Success
+    alert("Application submitted successfully!");
+    onReset();
+    navigate("/dashboard");
   };
 
   const handleClose = () => {
@@ -60,139 +68,96 @@ export default function ApplicationForm({ travelerType, applicationType, country
   };
 
   const renderStepContent = () => {
-    switch (step) {
-      case 0:
-        return (
-          <PassportStep 
-            form={form} 
-            onChange={handleFormChange}
-          />
-        );
-      case 1:
-        return (
-          <SelfieStep 
-            form={form} 
-            onChange={handleFormChange}
-          />
-        );
-      case 2:
-        return (
-          <ContactInfoStep 
-            form={form} 
-            onChange={handleFormChange}
-          />
-        );
-      case 3:
-        return (
-          <TripInfoStep 
-            form={form} 
-            onChange={handleFormChange}
-          />
-        );
-      case 4:
-        return (
-          <TravelInfoStep 
-            form={form} 
-            onChange={handleFormChange}
-          />
-        );
-      case 5:
-        return (
-          <CustomsDeclarationStep 
-            form={form} 
-            onChange={handleFormChange}
-          />
-        );
-      case 6:
-        return (
-          <DocumentsStep 
-            form={form} 
-            onChange={handleFormChange}
-          />
-        );
-      case 7:
-        return (
-          <ReviewStep 
-            travelerType={travelerType}
-            applicationType={applicationType}
-            country={country}
-            form={form}
-          />
-        );
-      case 8:
-        return (
-          <PaymentStep 
-            form={form} 
-            onChange={handleFormChange}
-          />
-        );
-      default:
-        return null;
-    }
+    const stepComponents = [
+      <PassportStep form={form} onChange={handleFormChange} />,
+      <SelfieStep form={form} onChange={handleFormChange} />,
+      <ContactInfoStep form={form} onChange={handleFormChange} />,
+      <TripInfoStep form={form} onChange={handleFormChange} />,
+      <TravelInfoStep form={form} onChange={handleFormChange} />,
+      <CustomsDeclarationStep form={form} onChange={handleFormChange} />,
+      <DocumentsStep form={form} onChange={handleFormChange} />,
+      <ReviewStep 
+        travelerType={travelerType}
+        applicationType={applicationType}
+        country={country}
+        form={form}
+      />,
+      <PaymentStep form={form} onChange={handleFormChange} />
+    ];
+
+    return stepComponents[step] || null;
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-      {/* Modal overlay */}
-      <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" />
-      
-      {/* Modal content */}
-      <div className="relative z-50 bg-white rounded-lg shadow-xl max-w-6xl w-full mx-auto max-h-[90vh] overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
-          <h1 className="text-2xl font-bold text-gray-900">
-            {STEP_LABELS[step]}
-          </h1>
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" className="text-gray-600">
-              <HelpCircle className="w-4 h-4 mr-2" />
-              Help
-            </Button>
-            <Button 
-              variant="ghost" 
-              size="sm"
-              onClick={handleClose}
-              className="text-gray-600"
-            >
-              <X className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-
-        {/* Main content with sidebar and form */}
-        <div className="flex max-h-[calc(90vh-140px)]">
-          {/* Left Sidebar */}
-          <div className="w-80 bg-gray-50 border-r border-gray-200 p-6 overflow-y-auto">
-            <ApplicationStepper currentStep={step} steps={STEP_LABELS} />
-          </div>
-          
-          {/* Main Content */}
-          <div className="flex-1 p-8 overflow-y-auto">
-            {/* Step Content */}
-            <div className="mb-8">
-              {renderStepContent()}
-            </div>
-
-            {error && <div className="text-red-600 text-sm mb-6">{error}</div>}
-
-            {/* Navigation */}
-            <div className="flex justify-between pt-6 border-t border-gray-200">
-              <Button variant="outline" onClick={goBack} disabled={submitting}>
-                Back
+    <ErrorBoundary>
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+        {/* Modal overlay */}
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" />
+        
+        {/* Modal content */}
+        <div className="relative z-50 bg-white rounded-lg shadow-xl max-w-6xl w-full mx-auto max-h-[90vh] overflow-hidden">
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b">
+            <h1 className="text-2xl font-bold text-gray-900">
+              {STEP_LABELS[step]}
+            </h1>
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="sm" className="text-gray-600">
+                <HelpCircle className="w-4 h-4 mr-2" />
+                Help
               </Button>
-              {step < STEP_LABELS.length - 1 ? (
-                <Button onClick={goNext} disabled={submitting} className="bg-green-600 hover:bg-green-700">
-                  Continue
-                </Button>
-              ) : (
-                <Button onClick={handleSubmit} disabled={submitting} className="bg-green-600 hover:bg-green-700">
-                  {submitting ? "Submitting..." : "Submit Application"}
-                </Button>
+              <Button 
+                variant="ghost" 
+                size="sm"
+                onClick={handleClose}
+                className="text-gray-600"
+              >
+                <X className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
+
+          {/* Main content with sidebar and form */}
+          <div className="flex max-h-[calc(90vh-140px)]">
+            {/* Left Sidebar */}
+            <div className="w-80 bg-gray-50 border-r border-gray-200 p-6 overflow-y-auto">
+              <ApplicationStepper currentStep={step} steps={STEP_LABELS} />
+            </div>
+            
+            {/* Main Content */}
+            <div className="flex-1 p-8 overflow-y-auto">
+              {/* Step Content */}
+              <div className="mb-8">
+                <ErrorBoundary fallback={<div className="text-red-600">Error loading step content</div>}>
+                  {renderStepContent()}
+                </ErrorBoundary>
+              </div>
+
+              {error && (
+                <div className="text-red-600 text-sm mb-6 p-3 bg-red-50 border border-red-200 rounded">
+                  {error}
+                </div>
               )}
+
+              {/* Navigation */}
+              <div className="flex justify-between pt-6 border-t border-gray-200">
+                <Button variant="outline" onClick={goBack} disabled={submitting}>
+                  Back
+                </Button>
+                {step < STEP_LABELS.length - 1 ? (
+                  <Button onClick={goNext} disabled={submitting} className="bg-green-600 hover:bg-green-700">
+                    Continue
+                  </Button>
+                ) : (
+                  <Button onClick={handleSubmit} disabled={submitting} className="bg-green-600 hover:bg-green-700">
+                    {submitting ? "Submitting..." : "Submit Application"}
+                  </Button>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 }
