@@ -7,7 +7,7 @@ interface ModalWrapperProps {
 
 export default function ModalWrapper({ children, onClose, className = "" }: ModalWrapperProps) {
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[9999] flex items-end sm:items-center justify-center p-0 sm:p-4">
       {/* Modal backdrop */}
       <div 
         className="fixed inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
@@ -17,7 +17,7 @@ export default function ModalWrapper({ children, onClose, className = "" }: Moda
       
       {/* Modal content */}
       <div 
-        className={`relative bg-white rounded-xl shadow-2xl w-full mx-auto ${className}`}
+        className={`relative bg-white rounded-t-xl sm:rounded-xl shadow-2xl w-full mx-auto ${className}`}
         style={{ zIndex: 9999 }}
       >
         {children}

@@ -1,3 +1,4 @@
+
 import Navbar from "@/components/Navbar";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -39,40 +40,41 @@ export default function Index() {
           <a href="/" className="shrink-0 flex items-center group">
             <span className="sr-only">Electronic Travel Authorisation</span>
             <div>
-              <h3 className="text-sm text-[#757575] font-medium leading-tight">
+              <h3 className="text-xs sm:text-sm text-[#757575] font-medium leading-tight">
                 Immigration Services
               </h3>
-              <p className="text-2xl text-black font-bold font-sans leading-tight mt-1">
+              <p className="text-lg sm:text-2xl text-black font-bold font-sans leading-tight mt-1">
                 Electronic Travel Authorisation (eTA)
               </p>
             </div>
           </a>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             {/* Language Dropdown - static */}
             <button
-              className="flex items-center px-4 py-2 text-sm font-semibold text-[#244FBB] bg-white rounded-full border border-[#d0d7e8] shadow-sm transition-colors hover:bg-gray-50"
+              className="flex items-center px-2 sm:px-4 py-2 text-xs sm:text-sm font-semibold text-[#244FBB] bg-white rounded-full border border-[#d0d7e8] shadow-sm transition-colors hover:bg-gray-50"
               style={{
-                minWidth: 110,
-                minHeight: 40,
+                minWidth: 80,
+                minHeight: 36,
               }}
               aria-haspopup="true"
             >
               <img
                 src={flags.EN}
                 alt="English"
-                className="h-4 w-5 mr-2 object-cover"
+                className="h-3 w-4 sm:h-4 sm:w-5 mr-1 sm:mr-2 object-cover"
                 loading="lazy"
               />
-              English
+              <span className="hidden sm:inline">English</span>
+              <span className="sm:hidden">EN</span>
             </button>
             {/* Settings Cog */}
             <button
               className="block p-2 rounded-full bg-white border border-[#d0d7e8] text-[#006718] hover:bg-gray-50 transition-colors"
-              style={{ minWidth: 40, minHeight: 40 }}
+              style={{ minWidth: 36, minHeight: 36 }}
               aria-label="Settings"
             >
               <svg
-                className="w-6 h-6"
+                className="w-5 h-5 sm:w-6 sm:h-6"
                 fill="currentColor"
                 viewBox="0 0 24 25"
               >

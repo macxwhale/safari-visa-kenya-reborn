@@ -1,12 +1,23 @@
 
 import { Button } from "@/components/ui/button";
 import { X, Globe, HelpCircle } from "lucide-react";
+import { FlagIcon } from "@/components/ui/flag-icon";
 import { TravelerType } from "./types";
 
 interface TravelerTypeSelectionUIProps {
   onTravelerTypeClick: (typeId: string) => void;
   onClose: () => void;
 }
+
+const eacCountries = [
+  "Kenya", 
+  "Tanzania", 
+  "Uganda", 
+  "Rwanda", 
+  "Burundi", 
+  "Democratic Republic of Congo", 
+  "South Sudan"
+];
 
 const travelerTypes: TravelerType[] = [
   {
@@ -21,7 +32,7 @@ const travelerTypes: TravelerType[] = [
     title: "Kenya & East African Partner State Passport Holders",
     description: "As of early 2025, citizens of Kenya & East African Partner States Passport Holders countries can enter Kenya without a visa",
     color: "bg-orange-500",
-    flags: ["🇰🇪", "🇹🇿", "🇺🇬", "🇷🇼", "🇧🇮", "🇨🇩", "🇸🇸"]
+    countries: eacCountries
   }
 ];
 
@@ -32,12 +43,12 @@ export default function TravelerTypeSelectionUI({ onTravelerTypeClick, onClose }
       <div className="fixed inset-0 bg-black/80 backdrop-blur-sm" />
       
       {/* Modal content */}
-      <div className="relative z-50 bg-white rounded-lg shadow-xl max-w-4xl w-full mx-auto">
+      <div className="relative z-50 bg-white rounded-lg shadow-xl max-w-4xl w-full mx-auto max-h-[90vh] overflow-y-auto">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
-          <h1 className="text-2xl font-bold text-gray-900">Start your trip to Kenya</h1>
-          <div className="flex items-center gap-4">
-            <Button variant="ghost" size="sm" className="text-gray-600">
+        <div className="flex items-start justify-between p-4 sm:p-6 border-b sticky top-0 bg-white z-10">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 pr-4">Start your trip to Kenya</h1>
+          <div className="flex items-center gap-2 sm:gap-4 flex-shrink-0">
+            <Button variant="ghost" size="sm" className="text-gray-600 hidden sm:flex">
               <HelpCircle className="w-4 h-4 mr-2" />
               Help
             </Button>
@@ -53,50 +64,52 @@ export default function TravelerTypeSelectionUI({ onTravelerTypeClick, onClose }
         </div>
 
         {/* Content */}
-        <div className="p-6">
-          <p className="text-sm text-gray-700 mb-8 leading-relaxed">
+        <div className="p-4 sm:p-6">
+          <p className="text-sm text-gray-700 mb-6 sm:mb-8 leading-relaxed">
             All foreign visitors except citizens of EAC member States planning to travel to the Republic of Kenya are required to submit Immigration forms in compliance with Section 48 of the Kenya Citizenship & Immigration Act (No. 12 of 2011). Failure to comply may lead to denied boarding and/or deportation upon arrival.
           </p>
 
           {/* Traveler Type Cards */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-6">
             {travelerTypes.map((type) => (
               <div
                 key={type.id}
                 onClick={() => onTravelerTypeClick(type.id)}
-                className={`${type.color} text-white rounded-lg p-6 cursor-pointer hover:opacity-90 transition-opacity`}
+                className={`${type.color} text-white rounded-lg p-4 sm:p-6 cursor-pointer hover:opacity-90 transition-opacity`}
               >
-                <div className="flex items-start gap-4">
-                  {type.icon && <div className="flex-shrink-0">{type.icon}</div>}
-                  {type.flags && (
-                    <div className="flex gap-1 mb-4">
-                      {type.flags.map((flag, idx) => (
-                        <span key={idx} className="text-2xl">{flag}</span>
+                <div className="flex items-start gap-4 mb-4">
+                  {type.icon && <div className="flex-shrink-0 hidden sm:block">{type.icon}</div>}
+                  {type.countries && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {type.countries.map((country, idx) => (
+                        <div key={idx} className="flex items-center">
+                          <FlagIcon country={country} size={24} />
+                        </div>
                       ))}
                     </div>
                   )}
                 </div>
-                <h3 className="text-xl font-bold mb-3">{type.title}</h3>
+                <h3 className="text-lg sm:text-xl font-bold mb-3">{type.title}</h3>
                 <p className="text-sm opacity-90 leading-relaxed">{type.description}</p>
               </div>
             ))}
           </div>
 
           {/* Diplomat Section */}
-          <div className="bg-gray-50 rounded-lg p-4 flex items-center gap-4">
-            <div className="w-12 h-12 bg-brand-green/20 rounded-lg flex items-center justify-center flex-shrink-0">
-              <div className="w-8 h-8 bg-brand-green rounded"></div>
+          <div className="bg-gray-50 rounded-lg p-4 flex items-start gap-4">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-brand-green/20 rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 bg-brand-green rounded"></div>
             </div>
-            <div>
-              <h4 className="font-semibold text-gray-900 mb-1">Diplomats and Laissez Passer Holders</h4>
-              <p className="text-sm text-gray-600">Choose this option if you are a holder of Diplomat/Service/Official Passports or a Laissez Passer holder on official duty</p>
+            <div className="flex-1">
+              <h4 className="font-semibold text-gray-900 mb-1 text-sm sm:text-base">Diplomats and Laissez Passer Holders</h4>
+              <p className="text-xs sm:text-sm text-gray-600">Choose this option if you are a holder of Diplomat/Service/Official Passports or a Laissez Passer holder on official duty</p>
             </div>
           </div>
         </div>
 
         {/* Footer */}
-        <div className="flex justify-end p-6 border-t">
-          <Button variant="outline" onClick={onClose}>
+        <div className="flex justify-end p-4 sm:p-6 border-t bg-gray-50 sticky bottom-0">
+          <Button variant="outline" onClick={onClose} className="w-full sm:w-auto">
             Close
           </Button>
         </div>

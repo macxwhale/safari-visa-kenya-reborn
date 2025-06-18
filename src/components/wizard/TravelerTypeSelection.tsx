@@ -5,7 +5,6 @@ import DeclarationModal from "./DeclarationModal";
 import ApplicationTypeModal from "./ApplicationTypeModal";
 import CountryResidenceModal from "./CountryResidenceModal";
 import TravelerTypeSelectionUI from "./TravelerTypeSelectionUI";
-import CompletionModal from "./CompletionModal";
 import { TravelerTypeSelectionProps, ModalState, ApplicationData } from "./types";
 
 export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }: TravelerTypeSelectionProps) {
@@ -73,18 +72,9 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
       setSelectedData(updatedData);
       console.log("Final data collected:", updatedData);
       
-      // Set state to complete and show completion modal briefly
-      setCurrentModal("complete");
-      
-      // After a brief delay, proceed to the application form
-      setTimeout(() => {
-        console.log("Proceeding to ApplicationForm with data:", updatedData);
-        try {
-          onTravelerTypeSelect(updatedData.travelerType, updatedData.applicationType, country);
-        } catch (error) {
-          console.error("Error calling onTravelerTypeSelect:", error);
-        }
-      }, 1000); // Reduced to 1 second for faster transition
+      // Directly proceed to the application form without completion modal
+      console.log("Proceeding to ApplicationForm with data:", updatedData);
+      onTravelerTypeSelect(updatedData.travelerType, updatedData.applicationType, country);
     } catch (error) {
       console.error("Error in handleCountrySelect:", error);
     }
@@ -101,8 +91,6 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
         setCurrentModal("declaration");
       } else if (currentModal === "countryResidence") {
         setCurrentModal("applicationType");
-      } else if (currentModal === "complete") {
-        setCurrentModal("countryResidence");
       }
     } catch (error) {
       console.error("Error in handleBack:", error);
@@ -165,11 +153,6 @@ export default function TravelerTypeSelection({ onTravelerTypeSelect, onClose }:
         onBack={handleBack}
       />
     );
-  }
-
-  if (currentModal === "complete") {
-    console.log("Rendering completion state");
-    return <CompletionModal />;
   }
 
   // Main traveler type selection
