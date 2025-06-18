@@ -102,15 +102,15 @@ export default function ApplicationForm({ travelerType, applicationType, country
 
   return (
     <ErrorBoundary>
-      <ModalWrapper className="max-w-6xl">
-        <div className="flex flex-col h-full max-h-[90vh]">
+      <ModalWrapper className="sm:max-w-6xl">
+        <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 border-b flex-shrink-0">
-            <h1 className="text-2xl font-bold text-gray-900">
+          <div className="flex items-center justify-between p-4 sm:p-6 border-b flex-shrink-0">
+            <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">
               {STEP_LABELS[step]}
             </h1>
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm" className="text-gray-600">
+            <div className="flex items-center gap-2 sm:gap-4">
+              <Button variant="ghost" size="sm" className="text-gray-600 hidden sm:flex">
                 <HelpCircle className="w-4 h-4 mr-2" />
                 Help
               </Button>
@@ -118,22 +118,22 @@ export default function ApplicationForm({ travelerType, applicationType, country
                 variant="ghost" 
                 size="sm"
                 onClick={handleClose}
-                className="text-gray-600"
+                className="text-gray-600 p-2"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </Button>
             </div>
           </div>
 
           {/* Main content with sidebar and form */}
-          <div className="flex flex-1 overflow-hidden">
-            {/* Left Sidebar */}
-            <div className="w-80 bg-gray-50 border-r border-gray-200 p-6 overflow-y-auto flex-shrink-0">
+          <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
+            {/* Left Sidebar - Hidden on mobile, shown on large screens */}
+            <div className="hidden lg:block lg:w-80 bg-gray-50 border-r border-gray-200 p-6 overflow-y-auto flex-shrink-0">
               <ApplicationStepper currentStep={step} steps={STEP_LABELS} />
             </div>
             
             {/* Main Content */}
-            <div className="flex-1 p-8 overflow-y-auto">
+            <div className="flex-1 p-4 sm:p-8 overflow-y-auto pb-20 lg:pb-8">
               {/* Step Content */}
               <div className="mb-8">
                 <ErrorBoundary fallback={<div className="text-red-600">Error loading step content</div>}>
@@ -146,23 +146,23 @@ export default function ApplicationForm({ travelerType, applicationType, country
                   {error}
                 </div>
               )}
-
-              {/* Navigation */}
-              <div className="flex justify-between pt-6 border-t border-gray-200">
-                <Button variant="outline" onClick={goBack} disabled={submitting}>
-                  Back
-                </Button>
-                {step < STEP_LABELS.length - 1 ? (
-                  <Button onClick={goNext} disabled={submitting} className="bg-green-600 hover:bg-green-700">
-                    Continue
-                  </Button>
-                ) : (
-                  <Button onClick={handleSubmit} disabled={submitting} className="bg-green-600 hover:bg-green-700">
-                    {submitting ? "Submitting..." : "Submit Application"}
-                  </Button>
-                )}
-              </div>
             </div>
+          </div>
+
+          {/* Navigation - Fixed at bottom on mobile */}
+          <div className="fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto flex justify-between p-4 sm:p-6 border-t border-gray-200 bg-white gap-3">
+            <Button variant="outline" onClick={goBack} disabled={submitting} className="flex-1 sm:flex-none">
+              Back
+            </Button>
+            {step < STEP_LABELS.length - 1 ? (
+              <Button onClick={goNext} disabled={submitting} className="bg-green-600 hover:bg-green-700 flex-1 sm:flex-none">
+                Continue
+              </Button>
+            ) : (
+              <Button onClick={handleSubmit} disabled={submitting} className="bg-green-600 hover:bg-green-700 flex-1 sm:flex-none">
+                {submitting ? "Submitting..." : "Submit Application"}
+              </Button>
+            )}
           </div>
         </div>
       </ModalWrapper>

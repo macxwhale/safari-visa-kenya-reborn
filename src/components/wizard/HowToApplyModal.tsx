@@ -24,22 +24,22 @@ const exemptionsList = [
 
 export default function HowToApplyModal({ onClose, onContinue, onBack }: HowToApplyModalProps) {
   return (
-    <ModalWrapper onClose={onClose} className="max-w-4xl max-h-[90vh] flex flex-col">
+    <ModalWrapper onClose={onClose} className="sm:max-w-4xl flex flex-col">
       {/* Header */}
       <div className="flex items-center justify-between p-4 sm:p-6 border-b flex-shrink-0">
-        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">How to Apply</h1>
+        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">How to Apply</h1>
         <Button 
           variant="ghost" 
           size="sm"
           onClick={onClose}
-          className="text-gray-600"
+          className="text-gray-600 p-2"
         >
-          <X className="w-4 h-4" />
+          <X className="w-5 h-5" />
         </Button>
       </div>
 
       {/* Content - scrollable */}
-      <div className="p-4 sm:p-6 overflow-y-auto flex-1">
+      <div className="p-4 sm:p-6 overflow-y-auto flex-1 pb-20 sm:pb-6">
         <p className="text-gray-700 mb-6 leading-relaxed text-sm sm:text-base">
           All visitors including infants and children who intend to travel to the Republic of Kenya must have an approved Electronic Travel Authorisation (eTA) before the start of their journey.
         </p>
@@ -58,12 +58,12 @@ export default function HowToApplyModal({ onClose, onContinue, onBack }: HowToAp
         </ol>
       </div>
 
-      {/* Footer */}
-      <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center p-4 sm:p-6 border-t bg-gray-50 flex-shrink-0 gap-3 sm:gap-0">
-        <Button variant="outline" onClick={onClose} className="order-1 sm:order-none">
+      {/* Footer - Fixed at bottom on mobile */}
+      <div className="fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto flex flex-col sm:flex-row justify-between items-stretch sm:items-center p-4 sm:p-6 border-t bg-white flex-shrink-0 gap-3 sm:gap-0">
+        <Button variant="outline" onClick={onClose} className="order-2 sm:order-1">
           Close
         </Button>
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div className="flex flex-col sm:flex-row gap-3 order-1 sm:order-2">
           <Button variant="outline" onClick={onBack} className="w-full sm:w-auto">
             Back
           </Button>
