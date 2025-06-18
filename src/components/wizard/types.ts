@@ -11,6 +11,7 @@ export interface TravelerType {
   color: string;
   icon?: React.ReactNode;
   flags?: string[];
+  countries?: string[];
 }
 
 export type ModalState = "main" | "howToApply" | "declaration" | "applicationType" | "countryResidence" | "complete";
