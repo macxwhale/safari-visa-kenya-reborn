@@ -74,24 +74,22 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
       Promise.resolve(
         supabase
           .from("eta_applications")
-          .insert([
-            {
-              user_id: null,
-              full_name: form.fullName,
-              email: form.email,
-              passport: form.passport,
-              nationality: form.nationality,
-              travel_from: form.travelFrom,
-              entry_date: form.entryDate,
-              doc_url: passport_doc_url,
-              // OCR extracted data
-              ocr_full_name: form.ocrFullName || null,
-              ocr_document_number: form.ocrDocumentNumber || null,
-              ocr_date_of_birth: form.ocrDateOfBirth || null,
-              ocr_validity_date: form.ocrValidityDate || null,
-              ocr_extracted_at: form.ocrExtractedAt || null,
-            },
-          ])
+          .insert({
+            user_id: null,
+            full_name: form.fullName,
+            email: form.email,
+            passport: form.passport,
+            nationality: form.nationality,
+            travel_from: form.travelFrom,
+            entry_date: form.entryDate,
+            doc_url: passport_doc_url,
+            // OCR extracted data
+            ocr_full_name: form.ocrFullName || null,
+            ocr_document_number: form.ocrDocumentNumber || null,
+            ocr_date_of_birth: form.ocrDateOfBirth || null,
+            ocr_validity_date: form.ocrValidityDate || null,
+            ocr_extracted_at: form.ocrExtractedAt ? form.ocrExtractedAt.toISOString() : null,
+          })
       ),
       SUBMIT_TIMEOUT,
       "Application submission timed out"
