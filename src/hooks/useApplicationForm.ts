@@ -49,6 +49,9 @@ export const initialFormState = {
   ocrDateOfBirth: "",
   ocrValidityDate: "",
   ocrExtractedAt: null as Date | null,
+  // Storage URLs
+  passportImageUrl: "",
+  selfieImageUrl: "",
 };
 
 export type ApplicationFormState = typeof initialFormState;
@@ -76,6 +79,11 @@ export const useApplicationForm = (initialTravelFrom: string = "") => {
       ocrDateOfBirth: ocrData.dateOfBirth,
       ocrValidityDate: ocrData.validityDate,
       ocrExtractedAt: new Date(),
+      // Auto-populate form fields
+      fullName: ocrData.fullName,
+      passport: ocrData.documentNumber,
+      dateOfBirth: ocrData.dateOfBirth,
+      passportExpiryDate: ocrData.validityDate,
     }));
   };
 

@@ -1,6 +1,6 @@
 
 import { Input } from "@/components/ui/input";
-import { Upload, Loader2, FileText } from "lucide-react";
+import { Upload, Loader2, FileText, CheckCircle } from "lucide-react";
 import { useRef, useState } from "react";
 import { useOCR } from "@/hooks/useOCR";
 import OCRResultsDisplay from "./OCRResultsDisplay";
@@ -14,6 +14,7 @@ interface PassportStepProps {
     placeOfBirth: string;
     passportIssueDate: string;
     passportExpiryDate: string;
+    fullName: string;
   };
   onChange: (field: string, value: string | File | null) => void;
 }
@@ -21,13 +22,21 @@ interface PassportStepProps {
 export default function PassportStep({ form, onChange }: PassportStepProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { ocrState, processPassportImage, clearOCRResult } = useOCR();
-  const [showManualForm, setShowManualForm] = useState(false);
+  const [ocrProcessed, setOcrProcessed] = useState(false);
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     if (file) {
       onChange('passportDoc', file);
-      await processPassportImage(file);
+      const result = await processPassportImage(file);
+      if (result.success && result.data) {
+        // Auto-populate form fields
+        onChange('fullName', result.data.fullName);
+        onChange('passport', result.data.documentNumber);
+        onChange('dateOfBirth', result.data.dateOfBirth);
+        onChange('passportExpiryDate', result.data.validityDate);
+        setOcrProcessed(true);
+      }
     }
   };
 
@@ -36,7 +45,15 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
     const file = event.dataTransfer.files?.[0] || null;
     if (file && (file.type.startsWith('image/') || file.type === 'application/pdf')) {
       onChange('passportDoc', file);
-      await processPassportImage(file);
+      const result = await processPassportImage(file);
+      if (result.success && result.data) {
+        // Auto-populate form fields
+        onChange('fullName', result.data.fullName);
+        onChange('passport', result.data.documentNumber);
+        onChange('dateOfBirth', result.data.dateOfBirth);
+        onChange('passportExpiryDate', result.data.validityDate);
+        setOcrProcessed(true);
+      }
     }
   };
 
@@ -44,24 +61,15 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
     event.preventDefault();
   };
 
-  const handleAcceptOCR = () => {
-    if (ocrState.result) {
-      // Auto-fill form fields with OCR data
-      onChange('passport', ocrState.result.documentNumber);
-      onChange('nationality', form.nationality || ''); // Keep existing or empty
-      onChange('dateOfBirth', ocrState.result.dateOfBirth);
-      onChange('passportExpiryDate', ocrState.result.validityDate);
-      
-      // For full name, we might want to split it or let user handle it
-      // This could be enhanced based on your form structure
-      
-      setShowManualForm(true);
-    }
-  };
-
   const handleRejectOCR = () => {
     clearOCRResult();
     onChange('passportDoc', null);
+    setOcrProcessed(false);
+    // Reset form fields
+    onChange('fullName', '');
+    onChange('passport', '');
+    onChange('dateOfBirth', '');
+    onChange('passportExpiryDate', '');
     // Reset file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
@@ -102,7 +110,7 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
           </div>
         )}
         
-        {form.passportDoc && !ocrState.isProcessing && !ocrState.result && !ocrState.error && (
+        {form.passportDoc && !ocrState.isProcessing && !ocrState.result && !ocrState.error && !ocrProcessed && (
           <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
             <div className="flex items-center gap-3">
               <FileText className="w-6 h-6 text-blue-600" />
@@ -131,6 +139,27 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
           </div>
         )}
 
+        {/* OCR Success State */}
+        {ocrProcessed && form.passportDoc && (
+          <div className="bg-green-50 border border-green-200 rounded-xl p-6">
+            <div className="flex items-center gap-3">
+              <CheckCircle className="w-6 h-6 text-green-600" />
+              <div>
+                <p className="font-medium text-green-900">Information extracted successfully!</p>
+                <p className="text-sm text-green-700">
+                  Your passport details have been automatically filled in the form below.
+                </p>
+                <button
+                  onClick={handleRejectOCR}
+                  className="text-sm text-green-600 hover:text-green-800 underline mt-2"
+                >
+                  Upload a different document
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* OCR Error State */}
         {ocrState.error && (
           <div className="bg-red-50 border border-red-200 rounded-xl p-6">
@@ -152,12 +181,18 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
           </div>
         )}
 
-        {/* OCR Results */}
-        {ocrState.result && !showManualForm && (
+        {/* OCR Results Display (for review before auto-population) */}
+        {ocrState.result && !ocrProcessed && (
           <OCRResultsDisplay
             result={ocrState.result}
             isValidated={ocrState.isValidated}
-            onAccept={handleAcceptOCR}
+            onAccept={() => {
+              onChange('fullName', ocrState.result!.fullName);
+              onChange('passport', ocrState.result!.documentNumber);
+              onChange('dateOfBirth', ocrState.result!.dateOfBirth);
+              onChange('passportExpiryDate', ocrState.result!.validityDate);
+              setOcrProcessed(true);
+            }}
             onReject={handleRejectOCR}
           />
         )}
@@ -171,98 +206,109 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
         />
       </div>
 
-      {/* Manual Form - Show after OCR acceptance or if user wants to fill manually */}
-      {(showManualForm || (!form.passportDoc && !ocrState.isProcessing)) && (
-        <div className="space-y-6">
-          <div className="flex items-center justify-between">
-            <h3 className="text-lg font-semibold text-gray-900">
-              {ocrState.result ? 'Verify & Complete Information' : 'Passport Details'}
-            </h3>
-            {ocrState.result && (
-              <span className="text-sm text-green-600 bg-green-50 px-3 py-1 rounded-full">
-                Auto-filled from OCR
-              </span>
-            )}
+      {/* Manual Form - Show always for editing */}
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h3 className="text-lg font-semibold text-gray-900">
+            Passport Details
+          </h3>
+          {ocrProcessed && (
+            <span className="text-sm text-green-600 bg-green-50 px-3 py-1 rounded-full">
+              Auto-filled from document
+            </span>
+          )}
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Full Name *
+            </label>
+            <Input
+              required
+              placeholder="e.g. John Michael Smith"
+              value={form.fullName}
+              onChange={(e) => onChange('fullName', e.target.value)}
+              className={ocrProcessed ? 'bg-green-50 border-green-200' : ''}
+            />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Passport Number *
-              </label>
-              <Input
-                required
-                placeholder="e.g. A1234567"
-                value={form.passport}
-                onChange={(e) => onChange('passport', e.target.value)}
-                className={ocrState.result ? 'bg-green-50 border-green-200' : ''}
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Nationality *
-              </label>
-              <Input
-                required
-                placeholder="e.g. United States"
-                value={form.nationality}
-                onChange={(e) => onChange('nationality', e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Date of Birth *
-              </label>
-              <Input
-                type="date"
-                required
-                value={form.dateOfBirth}
-                onChange={(e) => onChange('dateOfBirth', e.target.value)}
-                className={ocrState.result ? 'bg-green-50 border-green-200' : ''}
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Place of Birth *
-              </label>
-              <Input
-                required
-                placeholder="e.g. New York, USA"
-                value={form.placeOfBirth}
-                onChange={(e) => onChange('placeOfBirth', e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Passport Issue Date *
-              </label>
-              <Input
-                type="date"
-                required
-                value={form.passportIssueDate}
-                onChange={(e) => onChange('passportIssueDate', e.target.value)}
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Passport Expiry Date *
-              </label>
-              <Input
-                type="date"
-                required
-                value={form.passportExpiryDate}
-                onChange={(e) => onChange('passportExpiryDate', e.target.value)}
-                className={ocrState.result ? 'bg-green-50 border-green-200' : ''}
-              />
-            </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Passport Number *
+            </label>
+            <Input
+              required
+              placeholder="e.g. A1234567"
+              value={form.passport}
+              onChange={(e) => onChange('passport', e.target.value)}
+              className={ocrProcessed ? 'bg-green-50 border-green-200' : ''}
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Nationality *
+            </label>
+            <Input
+              required
+              placeholder="e.g. United States"
+              value={form.nationality}
+              onChange={(e) => onChange('nationality', e.target.value)}
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Date of Birth *
+            </label>
+            <Input
+              type="date"
+              required
+              value={form.dateOfBirth}
+              onChange={(e) => onChange('dateOfBirth', e.target.value)}
+              className={ocrProcessed ? 'bg-green-50 border-green-200' : ''}
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Place of Birth *
+            </label>
+            <Input
+              required
+              placeholder="e.g. New York, USA"
+              value={form.placeOfBirth}
+              onChange={(e) => onChange('placeOfBirth', e.target.value)}
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Passport Issue Date *
+            </label>
+            <Input
+              type="date"
+              required
+              value={form.passportIssueDate}
+              onChange={(e) => onChange('passportIssueDate', e.target.value)}
+            />
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Passport Expiry Date *
+            </label>
+            <Input
+              type="date"
+              required
+              value={form.passportExpiryDate}
+              onChange={(e) => onChange('passportExpiryDate', e.target.value)}
+              className={ocrProcessed ? 'bg-green-50 border-green-200' : ''}
+            />
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -8,14 +8,16 @@ const SUBMIT_TIMEOUT = 15000; // 15 seconds
 
 export const submitApplication = async (form: ApplicationFormState): Promise<void> => {
   let passport_doc_url: string | undefined;
+  let selfie_doc_url: string | undefined;
 
   // Passport upload (critical)
   if (form.passportDoc) {
+    const fileName = `${Date.now()}_passport_${form.passportDoc.name}`;
     const { data, error } = await safeAsync(async () => {
       return withTimeout(
         supabase.storage
           .from("eta-documents")
-          .upload(`public/${Date.now()}_passport_${form.passportDoc!.name}`, form.passportDoc!),
+          .upload(`public/${fileName}`, form.passportDoc!),
         UPLOAD_TIMEOUT,
         "Passport upload timed out"
       );
@@ -29,27 +31,30 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
 
   // Selfie upload (critical)
   if (form.selfieDoc) {
-    const { error } = await safeAsync(async () => {
+    const fileName = `${Date.now()}_selfie_${form.selfieDoc.name}`;
+    const { data, error } = await safeAsync(async () => {
       return withTimeout(
         supabase.storage
           .from("eta-documents")
-          .upload(`public/${Date.now()}_selfie_${form.selfieDoc!.name}`, form.selfieDoc!),
+          .upload(`public/${fileName}`, form.selfieDoc!),
         UPLOAD_TIMEOUT,
         "Selfie upload timed out"
       );
     }, "Failed to upload selfie document");
 
-    if (error) {
-      throw new Error(error);
+    if (error || !data.data) {
+      throw new Error(error || "Failed to upload selfie document");
     }
+    selfie_doc_url = data.data.path;
   }
 
   // Optional documents upload (non-critical, fire-and-forget with error logging)
   const uploadOptionalFile = async (file: File, type: string) => {
+    const fileName = `${Date.now()}_${type}_${file.name}`;
     const { error } = await safeAsync(async () => {
       return supabase.storage
         .from("eta-documents")
-        .upload(`public/${Date.now()}_${type}_${file.name}`, file);
+        .upload(`public/${fileName}`, file);
     });
 
     if (error) {
@@ -68,7 +73,7 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
     console.error('Some optional uploads failed:', error);
   });
 
-  // Submit application data with OCR information
+  // Submit application data with OCR information and contact details
   const { error } = await safeAsync(async () => {
     return withTimeout(
       Promise.resolve(
@@ -78,6 +83,9 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
             user_id: null,
             full_name: form.fullName,
             email: form.email,
+            phone: form.phone,
+            home_address: form.homeAddress,
+            occupation: form.occupation,
             passport: form.passport,
             nationality: form.nationality,
             travel_from: form.travelFrom,
