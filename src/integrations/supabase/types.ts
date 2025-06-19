@@ -17,6 +17,11 @@ export type Database = {
           full_name: string
           id: string
           nationality: string
+          ocr_date_of_birth: string | null
+          ocr_document_number: string | null
+          ocr_extracted_at: string | null
+          ocr_full_name: string | null
+          ocr_validity_date: string | null
           passport: string
           status: string
           submitted_at: string | null
@@ -30,6 +35,11 @@ export type Database = {
           full_name: string
           id?: string
           nationality: string
+          ocr_date_of_birth?: string | null
+          ocr_document_number?: string | null
+          ocr_extracted_at?: string | null
+          ocr_full_name?: string | null
+          ocr_validity_date?: string | null
           passport: string
           status?: string
           submitted_at?: string | null
@@ -43,6 +53,11 @@ export type Database = {
           full_name?: string
           id?: string
           nationality?: string
+          ocr_date_of_birth?: string | null
+          ocr_document_number?: string | null
+          ocr_extracted_at?: string | null
+          ocr_full_name?: string | null
+          ocr_validity_date?: string | null
           passport?: string
           status?: string
           submitted_at?: string | null

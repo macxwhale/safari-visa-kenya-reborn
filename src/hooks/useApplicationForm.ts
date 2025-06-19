@@ -43,6 +43,12 @@ export const initialFormState = {
   deniedEntryToKenya: null as boolean | null,
   maritalStatus: "",
   previouslyTravelledToKenya: null as boolean | null,
+  // OCR extracted data
+  ocrFullName: "",
+  ocrDocumentNumber: "",
+  ocrDateOfBirth: "",
+  ocrValidityDate: "",
+  ocrExtractedAt: null as Date | null,
 };
 
 export type ApplicationFormState = typeof initialFormState;
@@ -57,5 +63,21 @@ export const useApplicationForm = (initialTravelFrom: string = "") => {
     setForm(prev => ({ ...prev, [field]: value }));
   };
 
-  return { form, handleFormChange };
+  const setOCRData = (ocrData: {
+    fullName: string;
+    documentNumber: string;
+    dateOfBirth: string;
+    validityDate: string;
+  }) => {
+    setForm(prev => ({
+      ...prev,
+      ocrFullName: ocrData.fullName,
+      ocrDocumentNumber: ocrData.documentNumber,
+      ocrDateOfBirth: ocrData.dateOfBirth,
+      ocrValidityDate: ocrData.validityDate,
+      ocrExtractedAt: new Date(),
+    }));
+  };
+
+  return { form, handleFormChange, setOCRData };
 };
