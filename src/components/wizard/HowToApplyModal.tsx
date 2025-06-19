@@ -1,6 +1,6 @@
 
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, HelpCircle } from "lucide-react";
 import ModalWrapper from "./ModalWrapper";
 
 interface HowToApplyModalProps {
@@ -24,52 +24,82 @@ const exemptionsList = [
 
 export default function HowToApplyModal({ onClose, onContinue, onBack }: HowToApplyModalProps) {
   return (
-    <ModalWrapper onClose={onClose} className="sm:max-w-4xl flex flex-col">
+    <ModalWrapper onClose={onClose} className="sm:max-w-5xl flex flex-col">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 sm:p-6 border-b flex-shrink-0">
-        <h1 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900">How to Apply</h1>
-        <Button 
-          variant="ghost" 
-          size="sm"
-          onClick={onClose}
-          className="text-gray-600 p-2"
-        >
-          <X className="w-5 h-5" />
-        </Button>
+      <div className="flex items-center justify-between p-6 sm:p-8 border-b border-gray-100 flex-shrink-0">
+        <div className="flex-1 pr-6">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">How to Apply</h1>
+        </div>
+        <div className="flex items-center gap-3 flex-shrink-0">
+          <Button
+            variant="ghost"
+            size="sm"
+            className="text-gray-500 hover:text-gray-700 flex items-center gap-2 px-3 py-2 hidden sm:flex"
+          >
+            <HelpCircle className="w-4 h-4" />
+            <span className="text-sm">Help</span>
+          </Button>
+          <Button 
+            variant="ghost" 
+            size="sm"
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100 transition-colors"
+          >
+            <X className="w-5 h-5" />
+          </Button>
+        </div>
       </div>
 
       {/* Content - scrollable */}
-      <div className="p-4 sm:p-6 overflow-y-auto flex-1 pb-20 sm:pb-6">
-        <p className="text-gray-700 mb-6 leading-relaxed text-sm sm:text-base">
-          All visitors including infants and children who intend to travel to the Republic of Kenya must have an approved Electronic Travel Authorisation (eTA) before the start of their journey.
-        </p>
+      <div className="flex-1 overflow-y-auto p-6 sm:p-8 pb-24 sm:pb-8">
+        <div className="max-w-4xl space-y-8">
+          <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6">
+            <p className="text-gray-800 leading-relaxed text-sm sm:text-base">
+              All visitors including infants and children who intend to travel to the Republic of Kenya must have an approved Electronic Travel Authorisation (eTA) before the start of their journey.
+            </p>
+          </div>
 
-        <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-4">
-          Persons who are exempt from obtaining the Electronic Travel Authorisation (eTA)
-        </h3>
+          <div className="space-y-6">
+            <h3 className="text-lg sm:text-xl font-bold text-gray-900">
+              Persons who are exempt from obtaining the Electronic Travel Authorisation (eTA)
+            </h3>
 
-        <ol className="space-y-3">
-          {exemptionsList.map((exemption, index) => (
-            <li key={index} className="flex gap-3 text-gray-700 text-xs sm:text-sm leading-relaxed">
-              <span className="text-gray-400 font-medium min-w-[20px]">{index + 1}.</span>
-              <span>{exemption}</span>
-            </li>
-          ))}
-        </ol>
+            <div className="bg-white border border-gray-200 rounded-2xl p-6">
+              <ol className="space-y-4">
+                {exemptionsList.map((exemption, index) => (
+                  <li key={index} className="flex gap-4 text-gray-700 text-sm sm:text-base leading-relaxed">
+                    <span className="flex-shrink-0 w-8 h-8 bg-gray-100 text-gray-600 font-semibold rounded-full flex items-center justify-center text-sm">
+                      {index + 1}
+                    </span>
+                    <span className="pt-1">{exemption}</span>
+                  </li>
+                ))}
+              </ol>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Footer - Fixed at bottom on mobile */}
-      <div className="fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto flex flex-col sm:flex-row justify-between items-stretch sm:items-center p-4 sm:p-6 border-t bg-white flex-shrink-0 gap-3 sm:gap-0">
-        <Button variant="outline" onClick={onClose} className="order-2 sm:order-1">
+      {/* Footer - Fixed at bottom */}
+      <div className="fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto flex flex-col sm:flex-row justify-between items-stretch sm:items-center p-6 sm:p-8 border-t border-gray-100 bg-white flex-shrink-0 gap-4 sm:gap-6">
+        <Button 
+          variant="outline" 
+          onClick={onClose} 
+          className="order-2 sm:order-1 w-full sm:w-auto px-6 py-3 font-medium border-gray-300 hover:bg-gray-50"
+        >
           Close
         </Button>
         <div className="flex flex-col sm:flex-row gap-3 order-1 sm:order-2">
-          <Button variant="outline" onClick={onBack} className="w-full sm:w-auto">
+          <Button 
+            variant="outline" 
+            onClick={onBack} 
+            className="w-full sm:w-auto px-6 py-3 font-medium border-gray-300 hover:bg-gray-50"
+          >
             Back
           </Button>
           <Button 
             onClick={onContinue}
-            className="bg-brand-green hover:bg-brand-green/90 text-white w-full sm:w-auto"
+            className="bg-brand-green hover:bg-brand-green/90 text-white w-full sm:w-auto px-8 py-3 font-semibold"
           >
             Continue
           </Button>
