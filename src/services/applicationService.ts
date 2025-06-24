@@ -73,7 +73,7 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
     console.error('Some optional uploads failed:', error);
   });
 
-  // Submit application data with all passport and contact details
+  // Submit application data with all passport, contact, and trip details
   const { error } = await safeAsync(async () => {
     return withTimeout(
       Promise.resolve(
@@ -88,9 +88,17 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
             occupation: form.occupation,
             passport: form.passport,
             nationality: form.nationality,
+            date_of_birth: form.dateOfBirth,
+            place_of_birth: form.placeOfBirth,
+            passport_issue_date: form.passportIssueDate,
+            passport_expiry_date: form.passportExpiryDate,
             travel_from: form.travelFrom,
             entry_date: form.entryDate,
+            exit_date: form.exitDate,
+            purpose_of_visit: form.purposeOfVisit,
+            accommodation_address: form.accommodationAddress,
             doc_url: passport_doc_url,
+            selfie_url: selfie_doc_url,
           })
       ),
       SUBMIT_TIMEOUT,

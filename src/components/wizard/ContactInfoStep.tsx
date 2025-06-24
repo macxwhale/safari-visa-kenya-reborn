@@ -71,28 +71,26 @@ export default function ContactInfoStep({ form, onChange }: ContactInfoStepProps
           <label className="block text-sm font-medium text-gray-700 mb-2">
             Occupation
           </label>
-          <div className="relative z-50">
-            <Select onValueChange={(value) => onChange('occupation', value)} value={form.occupation}>
-              <SelectTrigger className="relative z-50">
-                <SelectValue placeholder="Select your occupation" />
-              </SelectTrigger>
-              <SelectContent className="relative z-[60] bg-white border shadow-lg">
-                <SelectItem value="Actor">Actor</SelectItem>
-                <SelectItem value="Architect">Architect</SelectItem>
-                <SelectItem value="Artist">Artist</SelectItem>
-                <SelectItem value="Business Person">Business Person</SelectItem>
-                <SelectItem value="Consultant">Consultant</SelectItem>
-                <SelectItem value="Doctor">Doctor</SelectItem>
-                <SelectItem value="Engineer">Engineer</SelectItem>
-                <SelectItem value="Lawyer">Lawyer</SelectItem>
-                <SelectItem value="Student">Student</SelectItem>
-                <SelectItem value="Teacher">Teacher</SelectItem>
-                <SelectItem value="Technician">Technician</SelectItem>
-                <SelectItem value="Unemployed">Unemployed</SelectItem>
-                <SelectItem value="Other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+          <Select onValueChange={(value) => onChange('occupation', value)} value={form.occupation}>
+            <SelectTrigger>
+              <SelectValue placeholder="Select your occupation" />
+            </SelectTrigger>
+            <SelectContent className="z-[9999] bg-white border shadow-lg max-h-60 overflow-auto">
+              <SelectItem value="Actor">Actor</SelectItem>
+              <SelectItem value="Architect">Architect</SelectItem>
+              <SelectItem value="Artist">Artist</SelectItem>
+              <SelectItem value="Business Person">Business Person</SelectItem>
+              <SelectItem value="Consultant">Consultant</SelectItem>
+              <SelectItem value="Doctor">Doctor</SelectItem>
+              <SelectItem value="Engineer">Engineer</SelectItem>
+              <SelectItem value="Lawyer">Lawyer</SelectItem>
+              <SelectItem value="Student">Student</SelectItem>
+              <SelectItem value="Teacher">Teacher</SelectItem>
+              <SelectItem value="Technician">Technician</SelectItem>
+              <SelectItem value="Unemployed">Unemployed</SelectItem>
+              <SelectItem value="Other">Other</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
       </div>
     </div>
