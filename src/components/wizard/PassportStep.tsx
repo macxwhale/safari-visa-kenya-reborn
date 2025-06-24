@@ -1,9 +1,7 @@
 
 import { Input } from "@/components/ui/input";
-import { Upload, Loader2, FileText, CheckCircle } from "lucide-react";
-import { useRef, useState } from "react";
-import { useOCR } from "@/hooks/useOCR";
-import OCRResultsDisplay from "./OCRResultsDisplay";
+import { Upload, FileText, CheckCircle } from "lucide-react";
+import { useRef } from "react";
 
 interface PassportStepProps {
   form: {
@@ -21,39 +19,19 @@ interface PassportStepProps {
 
 export default function PassportStep({ form, onChange }: PassportStepProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const { ocrState, processPassportImage, clearOCRResult } = useOCR();
-  const [ocrProcessed, setOcrProcessed] = useState(false);
 
-  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0] || null;
     if (file) {
       onChange('passportDoc', file);
-      const result = await processPassportImage(file);
-      if (result.success && result.data) {
-        // Auto-populate form fields
-        onChange('fullName', result.data.fullName);
-        onChange('passport', result.data.documentNumber);
-        onChange('dateOfBirth', result.data.dateOfBirth);
-        onChange('passportExpiryDate', result.data.validityDate);
-        setOcrProcessed(true);
-      }
     }
   };
 
-  const handleDrop = async (event: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = (event: React.DragEvent<HTMLDivElement>) => {
     event.preventDefault();
     const file = event.dataTransfer.files?.[0] || null;
     if (file && (file.type.startsWith('image/') || file.type === 'application/pdf')) {
       onChange('passportDoc', file);
-      const result = await processPassportImage(file);
-      if (result.success && result.data) {
-        // Auto-populate form fields
-        onChange('fullName', result.data.fullName);
-        onChange('passport', result.data.documentNumber);
-        onChange('dateOfBirth', result.data.dateOfBirth);
-        onChange('passportExpiryDate', result.data.validityDate);
-        setOcrProcessed(true);
-      }
     }
   };
 
@@ -61,16 +39,8 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
     event.preventDefault();
   };
 
-  const handleRejectOCR = () => {
-    clearOCRResult();
+  const handleRemoveFile = () => {
     onChange('passportDoc', null);
-    setOcrProcessed(false);
-    // Reset form fields
-    onChange('fullName', '');
-    onChange('passport', '');
-    onChange('dateOfBirth', '');
-    onChange('passportExpiryDate', '');
-    // Reset file input
     if (fileInputRef.current) {
       fileInputRef.current.value = '';
     }
@@ -95,9 +65,6 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
                 <p className="text-gray-700 mb-2 text-base">
                   Drag & drop a photo or scan of the travel document or passport bio data page or click here to manually select
                 </p>
-                <p className="text-sm text-gray-500">
-                  We'll automatically extract your passport information using OCR technology
-                </p>
               </div>
               <button 
                 type="button"
@@ -110,91 +77,26 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
           </div>
         )}
         
-        {form.passportDoc && !ocrState.isProcessing && !ocrState.result && !ocrState.error && !ocrProcessed && (
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
-            <div className="flex items-center gap-3">
-              <FileText className="w-6 h-6 text-blue-600" />
-              <div>
-                <p className="font-medium text-blue-900">File uploaded successfully</p>
-                <p className="text-sm text-blue-700">
-                  Selected: {form.passportDoc.name}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* OCR Processing State */}
-        {ocrState.isProcessing && (
-          <div className="bg-blue-50 border border-blue-200 rounded-xl p-6">
-            <div className="flex items-center gap-3">
-              <Loader2 className="w-6 h-6 text-blue-600 animate-spin" />
-              <div>
-                <p className="font-medium text-blue-900">Processing passport image...</p>
-                <p className="text-sm text-blue-700">
-                  Extracting information from your document. This may take a few moments.
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* OCR Success State */}
-        {ocrProcessed && form.passportDoc && (
+        {form.passportDoc && (
           <div className="bg-green-50 border border-green-200 rounded-xl p-6">
-            <div className="flex items-center gap-3">
-              <CheckCircle className="w-6 h-6 text-green-600" />
-              <div>
-                <p className="font-medium text-green-900">Information extracted successfully!</p>
-                <p className="text-sm text-green-700">
-                  Your passport details have been automatically filled in the form below.
-                </p>
-                <button
-                  onClick={handleRejectOCR}
-                  className="text-sm text-green-600 hover:text-green-800 underline mt-2"
-                >
-                  Upload a different document
-                </button>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <CheckCircle className="w-6 h-6 text-green-600" />
+                <div>
+                  <p className="font-medium text-green-900">File uploaded successfully!</p>
+                  <p className="text-sm text-green-700">
+                    Selected: {form.passportDoc.name}
+                  </p>
+                </div>
               </div>
+              <button
+                onClick={handleRemoveFile}
+                className="text-sm text-green-600 hover:text-green-800 underline"
+              >
+                Remove file
+              </button>
             </div>
           </div>
-        )}
-
-        {/* OCR Error State */}
-        {ocrState.error && (
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6">
-            <div className="flex items-center gap-3">
-              <div className="w-6 h-6 bg-red-100 rounded-full flex items-center justify-center">
-                <span className="text-red-600 text-sm font-bold">!</span>
-              </div>
-              <div>
-                <p className="font-medium text-red-900">Processing failed</p>
-                <p className="text-sm text-red-700">{ocrState.error}</p>
-                <button
-                  onClick={handleRejectOCR}
-                  className="text-sm text-red-600 hover:text-red-800 underline mt-2"
-                >
-                  Try uploading again
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* OCR Results Display (for review before auto-population) */}
-        {ocrState.result && !ocrProcessed && (
-          <OCRResultsDisplay
-            result={ocrState.result}
-            isValidated={ocrState.isValidated}
-            onAccept={() => {
-              onChange('fullName', ocrState.result!.fullName);
-              onChange('passport', ocrState.result!.documentNumber);
-              onChange('dateOfBirth', ocrState.result!.dateOfBirth);
-              onChange('passportExpiryDate', ocrState.result!.validityDate);
-              setOcrProcessed(true);
-            }}
-            onReject={handleRejectOCR}
-          />
         )}
         
         <input
@@ -206,17 +108,12 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
         />
       </div>
 
-      {/* Manual Form - Show always for editing */}
+      {/* Manual Form */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h3 className="text-lg font-semibold text-gray-900">
             Passport Details
           </h3>
-          {ocrProcessed && (
-            <span className="text-sm text-green-600 bg-green-50 px-3 py-1 rounded-full">
-              Auto-filled from document
-            </span>
-          )}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -229,7 +126,6 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
               placeholder="e.g. John Michael Smith"
               value={form.fullName}
               onChange={(e) => onChange('fullName', e.target.value)}
-              className={ocrProcessed ? 'bg-green-50 border-green-200' : ''}
             />
           </div>
 
@@ -242,7 +138,6 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
               placeholder="e.g. A1234567"
               value={form.passport}
               onChange={(e) => onChange('passport', e.target.value)}
-              className={ocrProcessed ? 'bg-green-50 border-green-200' : ''}
             />
           </div>
           
@@ -267,7 +162,6 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
               required
               value={form.dateOfBirth}
               onChange={(e) => onChange('dateOfBirth', e.target.value)}
-              className={ocrProcessed ? 'bg-green-50 border-green-200' : ''}
             />
           </div>
           
@@ -304,7 +198,6 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
               required
               value={form.passportExpiryDate}
               onChange={(e) => onChange('passportExpiryDate', e.target.value)}
-              className={ocrProcessed ? 'bg-green-50 border-green-200' : ''}
             />
           </div>
         </div>

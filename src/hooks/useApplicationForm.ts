@@ -43,12 +43,6 @@ export const initialFormState = {
   deniedEntryToKenya: null as boolean | null,
   maritalStatus: "",
   previouslyTravelledToKenya: null as boolean | null,
-  // OCR extracted data
-  ocrFullName: "",
-  ocrDocumentNumber: "",
-  ocrDateOfBirth: "",
-  ocrValidityDate: "",
-  ocrExtractedAt: null as Date | null,
   // Storage URLs
   passportImageUrl: "",
   selfieImageUrl: "",
@@ -66,26 +60,5 @@ export const useApplicationForm = (initialTravelFrom: string = "") => {
     setForm(prev => ({ ...prev, [field]: value }));
   };
 
-  const setOCRData = (ocrData: {
-    fullName: string;
-    documentNumber: string;
-    dateOfBirth: string;
-    validityDate: string;
-  }) => {
-    setForm(prev => ({
-      ...prev,
-      ocrFullName: ocrData.fullName,
-      ocrDocumentNumber: ocrData.documentNumber,
-      ocrDateOfBirth: ocrData.dateOfBirth,
-      ocrValidityDate: ocrData.validityDate,
-      ocrExtractedAt: new Date(),
-      // Auto-populate form fields
-      fullName: ocrData.fullName,
-      passport: ocrData.documentNumber,
-      dateOfBirth: ocrData.dateOfBirth,
-      passportExpiryDate: ocrData.validityDate,
-    }));
-  };
-
-  return { form, handleFormChange, setOCRData };
+  return { form, handleFormChange };
 };

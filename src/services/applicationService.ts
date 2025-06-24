@@ -73,7 +73,7 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
     console.error('Some optional uploads failed:', error);
   });
 
-  // Submit application data with OCR information and contact details
+  // Submit application data with contact details
   const { error } = await safeAsync(async () => {
     return withTimeout(
       Promise.resolve(
@@ -91,12 +91,6 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
             travel_from: form.travelFrom,
             entry_date: form.entryDate,
             doc_url: passport_doc_url,
-            // OCR extracted data
-            ocr_full_name: form.ocrFullName || null,
-            ocr_document_number: form.ocrDocumentNumber || null,
-            ocr_date_of_birth: form.ocrDateOfBirth || null,
-            ocr_validity_date: form.ocrValidityDate || null,
-            ocr_extracted_at: form.ocrExtractedAt ? form.ocrExtractedAt.toISOString() : null,
           })
       ),
       SUBMIT_TIMEOUT,
