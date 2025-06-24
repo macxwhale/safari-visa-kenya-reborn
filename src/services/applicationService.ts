@@ -73,7 +73,7 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
     console.error('Some optional uploads failed:', error);
   });
 
-  // Submit application data with contact details
+  // Submit application data with all passport and contact details
   const { error } = await safeAsync(async () => {
     return withTimeout(
       Promise.resolve(
