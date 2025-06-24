@@ -8,7 +8,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { Plane, Bus, Ship, Calendar as CalendarIcon, Search } from "lucide-react";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
-import { ScrollArea } from "@/components/ui/scroll-area";
 
 type Mode = 'air' | 'sea' | 'land';
 
@@ -115,15 +114,15 @@ export default function TripInfoStep({ form, onChange, country = 'Kenya' }: Trip
   const countryData = getCountrySpecificData(country);
 
   return (
-    <ScrollArea className="h-full max-h-[80vh] w-full">
-      <div className="space-y-8 animate-fade-in max-w-3xl p-1">
+    <div className="max-h-[70vh] overflow-y-auto px-1">
+      <div className="space-y-8 animate-fade-in max-w-3xl">
         <div>
           <h2 className="text-xl font-semibold text-gray-800 mb-2">Provide details about your trip</h2>
           <Select onValueChange={(value) => onChange('purposeOfVisit', value)} value={form.purposeOfVisit}>
             <SelectTrigger>
               <SelectValue placeholder="Select purpose of visit" />
             </SelectTrigger>
-            <SelectContent className="z-[9999] bg-white border shadow-lg">
+            <SelectContent className="z-[99999] bg-white border shadow-lg">
               <SelectItem value="Tourism">Tourism</SelectItem>
               <SelectItem value="Business">Business</SelectItem>
               <SelectItem value="Transit">Transit</SelectItem>
@@ -156,7 +155,7 @@ export default function TripInfoStep({ form, onChange, country = 'Kenya' }: Trip
             <div className="space-y-4 p-4 border rounded-md">
               <Select onValueChange={(value) => onChange('arrivalPort', value)} value={form.arrivalPort}>
                 <SelectTrigger><SelectValue placeholder="Select arrival airport" /></SelectTrigger>
-                <SelectContent className="z-[9999] bg-white border shadow-lg">
+                <SelectContent className="z-[99999] bg-white border shadow-lg">
                   {countryData.airports.map((airport: any) => (
                     <SelectItem key={airport.code} value={airport.code}>
                       {airport.code} - {airport.name}
@@ -177,7 +176,7 @@ export default function TripInfoStep({ form, onChange, country = 'Kenya' }: Trip
             <div className="space-y-4 p-4 border rounded-md">
               <Select onValueChange={(value) => onChange('arrivalPort', value)} value={form.arrivalPort}>
                 <SelectTrigger><SelectValue placeholder="Select arrival port" /></SelectTrigger>
-                <SelectContent className="z-[9999] bg-white border shadow-lg">
+                <SelectContent className="z-[99999] bg-white border shadow-lg">
                   {countryData.seaPorts.map((port: any) => (
                     <SelectItem key={port.code} value={port.code}>
                       {port.code} - {port.name}
@@ -191,7 +190,7 @@ export default function TripInfoStep({ form, onChange, country = 'Kenya' }: Trip
             <div className="space-y-4 p-4 border rounded-md">
               <Select onValueChange={(value) => onChange('arrivalPort', value)} value={form.arrivalPort}>
                 <SelectTrigger><SelectValue placeholder="Select border crossing" /></SelectTrigger>
-                <SelectContent className="z-[9999] bg-white border shadow-lg">
+                <SelectContent className="z-[99999] bg-white border shadow-lg">
                   {countryData.landBorders.map((border: any) => (
                     <SelectItem key={border.code} value={border.code}>
                       {border.code} - {border.name}
@@ -226,7 +225,7 @@ export default function TripInfoStep({ form, onChange, country = 'Kenya' }: Trip
             <div className="space-y-4 p-4 border rounded-md">
               <Select onValueChange={(value) => onChange('departurePort', value)} value={form.departurePort}>
                 <SelectTrigger><SelectValue placeholder="Select departure airport" /></SelectTrigger>
-                <SelectContent className="z-[9999] bg-white border shadow-lg">
+                <SelectContent className="z-[99999] bg-white border shadow-lg">
                   {countryData.airports.map((airport: any) => (
                     <SelectItem key={airport.code} value={airport.code}>
                       {airport.code} - {airport.name}
@@ -247,7 +246,7 @@ export default function TripInfoStep({ form, onChange, country = 'Kenya' }: Trip
             <div className="space-y-4 p-4 border rounded-md">
               <Select onValueChange={(value) => onChange('departurePort', value)} value={form.departurePort}>
                 <SelectTrigger><SelectValue placeholder="Select departure port" /></SelectTrigger>
-                <SelectContent className="z-[9999] bg-white border shadow-lg">
+                <SelectContent className="z-[99999] bg-white border shadow-lg">
                   {countryData.seaPorts.map((port: any) => (
                     <SelectItem key={port.code} value={port.code}>
                       {port.code} - {port.name}
@@ -261,7 +260,7 @@ export default function TripInfoStep({ form, onChange, country = 'Kenya' }: Trip
             <div className="space-y-4 p-4 border rounded-md">
               <Select onValueChange={(value) => onChange('departurePort', value)} value={form.departurePort}>
                 <SelectTrigger><SelectValue placeholder="Select border crossing" /></SelectTrigger>
-                <SelectContent className="z-[9999] bg-white border shadow-lg">
+                <SelectContent className="z-[99999] bg-white border shadow-lg">
                   {countryData.landBorders.map((border: any) => (
                     <SelectItem key={border.code} value={border.code}>
                       {border.code} - {border.name}
@@ -273,7 +272,7 @@ export default function TripInfoStep({ form, onChange, country = 'Kenya' }: Trip
           )}
           <Select onValueChange={(value) => onChange('finalDestinationCountry', value)} value={form.finalDestinationCountry}>
             <SelectTrigger><SelectValue placeholder="Select the country where you will travel to as your final destination" /></SelectTrigger>
-            <SelectContent className="z-[9999] bg-white border shadow-lg">
+            <SelectContent className="z-[99999] bg-white border shadow-lg">
               <SelectItem value="USA">United States</SelectItem>
               <SelectItem value="GBR">United Kingdom</SelectItem>
               <SelectItem value="DNK">Denmark</SelectItem>
@@ -289,7 +288,7 @@ export default function TripInfoStep({ form, onChange, country = 'Kenya' }: Trip
         </div>
 
         {/* Accommodation Details */}
-        <div className="space-y-4">
+        <div className="space-y-4 pb-8">
           <h3 className="text-lg font-semibold text-gray-700">Address(es) in {country}</h3>
           <p className="text-sm text-gray-600">Name of hotel/guesthouse or address of residence.</p>
           <div className="relative">
@@ -316,6 +315,6 @@ export default function TripInfoStep({ form, onChange, country = 'Kenya' }: Trip
           <Button variant="link" className="p-0 h-auto text-green-600">+ Add Address</Button>
         </div>
       </div>
-    </ScrollArea>
+    </div>
   );
 }
