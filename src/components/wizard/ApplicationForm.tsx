@@ -84,7 +84,7 @@ export default function ApplicationForm({ travelerType, applicationType, country
       <PassportStep form={form} onChange={handleFormChange} />,
       <SelfieStep form={form} onChange={handleFormChange} />,
       <ContactInfoStep form={form} onChange={handleFormChange} />,
-      <TripInfoStep form={form} onChange={handleFormChange} />,
+      <TripInfoStep form={form} onChange={handleFormChange} country={country} onNext={goNext} />,
       <TravelInfoStep form={form} onChange={handleFormChange} />,
       <CustomsDeclarationStep form={form} onChange={handleFormChange} />,
       <DocumentsStep form={form} onChange={handleFormChange} />,
@@ -174,34 +174,36 @@ export default function ApplicationForm({ travelerType, applicationType, country
             </div>
           </div>
 
-          {/* Navigation - Fixed at bottom */}
-          <div className="fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto flex justify-between p-6 sm:p-8 border-t border-gray-100 bg-white gap-4">
-            <Button 
-              variant="outline" 
-              onClick={goBack} 
-              disabled={submitting} 
-              className="flex-1 sm:flex-none px-6 py-3 font-medium border-gray-300 hover:bg-gray-50"
-            >
-              Back
-            </Button>
-            {step < STEP_LABELS.length - 1 ? (
+          {/* Navigation - Fixed at bottom - Only show for non-TripInfo steps */}
+          {step !== 3 && (
+            <div className="fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto flex justify-between p-6 sm:p-8 border-t border-gray-100 bg-white gap-4">
               <Button 
-                onClick={goNext} 
+                variant="outline" 
+                onClick={goBack} 
                 disabled={submitting} 
-                className="bg-brand-green hover:bg-brand-green/90 text-white flex-1 sm:flex-none px-8 py-3 font-semibold"
+                className="flex-1 sm:flex-none px-6 py-3 font-medium border-gray-300 hover:bg-gray-50"
               >
-                Continue
+                Back
               </Button>
-            ) : (
-              <Button 
-                onClick={handleSubmit} 
-                disabled={submitting} 
-                className="bg-brand-green hover:bg-brand-green/90 text-white flex-1 sm:flex-none px-8 py-3 font-semibold"
-              >
-                {submitting ? "Submitting..." : "Submit Application"}
-              </Button>
-            )}
-          </div>
+              {step < STEP_LABELS.length - 1 ? (
+                <Button 
+                  onClick={goNext} 
+                  disabled={submitting} 
+                  className="bg-brand-green hover:bg-brand-green/90 text-white flex-1 sm:flex-none px-8 py-3 font-semibold"
+                >
+                  Continue
+                </Button>
+              ) : (
+                <Button 
+                  onClick={handleSubmit} 
+                  disabled={submitting} 
+                  className="bg-brand-green hover:bg-brand-green/90 text-white flex-1 sm:flex-none px-8 py-3 font-semibold"
+                >
+                  {submitting ? "Submitting..." : "Submit Application"}
+                </Button>
+              )}
+            </div>
+          )}
         </div>
       </ModalWrapper>
     </ErrorBoundary>
