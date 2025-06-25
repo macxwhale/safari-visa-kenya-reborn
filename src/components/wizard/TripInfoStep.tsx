@@ -47,10 +47,10 @@ export default function TripInfoStep({ form, onChange, country = 'Kenya', onNext
         <div className="space-y-6 animate-fade-in max-w-3xl pb-6">
           <div>
             <h2 className="text-xl font-semibold text-gray-800 mb-2">
-              Provide details about your trip to {country}
+              Provide details about your trip to Kenya
             </h2>
             <p className="text-sm text-gray-600 mb-4">
-              Traveling from {originCountry} to {country}
+              Traveling from {originCountry} to Kenya
             </p>
             <Select onValueChange={(value) => onChange('purposeOfVisit', value)} value={form.purposeOfVisit}>
               <SelectTrigger>
@@ -70,21 +70,21 @@ export default function TripInfoStep({ form, onChange, country = 'Kenya', onNext
             form={form}
             onChange={onChange}
             originCountry={originCountry}
-            destinationCountry={country}
+            destinationCountry="Kenya"
             handleDateChange={handleDateChange}
           />
 
           <DepartureSection 
             form={form}
             onChange={onChange}
-            country={country} // Kenya
+            country="Kenya"
             handleDateChange={handleDateChange}
           />
 
           <AccommodationSection 
             form={form}
             onChange={onChange}
-            country={country} // Kenya
+            country="Kenya"
             handleDateChange={handleDateChange}
           />
         </div>

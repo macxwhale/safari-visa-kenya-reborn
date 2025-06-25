@@ -32,12 +32,12 @@ export const DepartureSection: React.FC<DepartureSectionProps> = ({
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-700">Departure Details from {country}</h3>
-      <p className="text-sm text-gray-600">Select your departure details from {country}</p>
+      <h3 className="text-lg font-semibold text-gray-700">Departure Details from Kenya</h3>
+      <p className="text-sm text-gray-600">Select your departure details from Kenya</p>
       <DatePicker
         date={form.exitDate}
         onSelect={handleDateChange('exitDate')}
-        placeholder={`Your expected departure date from ${country}`}
+        placeholder="Your expected departure date from Kenya"
       />
       <div className="flex space-x-2">
         <ModeButton label="Departing by Air" value="air" currentValue={form.departureMode} onClick={(v) => onChange('departureMode', v)}>
@@ -53,7 +53,7 @@ export const DepartureSection: React.FC<DepartureSectionProps> = ({
       {form.departureMode === 'air' && (
         <div className="space-y-4 p-4 border rounded-md">
           <Select onValueChange={(value) => onChange('departurePort', value)} value={form.departurePort}>
-            <SelectTrigger><SelectValue placeholder={`Select departure airport in ${country}`} /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder="Select departure airport in Kenya" /></SelectTrigger>
             <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
               {kenyaData.airports.map((airport: any) => (
                 <SelectItem key={airport.code} value={airport.code}>
@@ -74,7 +74,7 @@ export const DepartureSection: React.FC<DepartureSectionProps> = ({
       {form.departureMode === 'sea' && (
         <div className="space-y-4 p-4 border rounded-md">
           <Select onValueChange={(value) => onChange('departurePort', value)} value={form.departurePort}>
-            <SelectTrigger><SelectValue placeholder={`Select departure port in ${country}`} /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder="Select departure port in Kenya" /></SelectTrigger>
             <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
               {kenyaData.seaPorts.map((port: any) => (
                 <SelectItem key={port.code} value={port.code}>
@@ -88,7 +88,7 @@ export const DepartureSection: React.FC<DepartureSectionProps> = ({
       {form.departureMode === 'land' && (
         <div className="space-y-4 p-4 border rounded-md">
           <Select onValueChange={(value) => onChange('departurePort', value)} value={form.departurePort}>
-            <SelectTrigger><SelectValue placeholder={`Select border crossing from ${country}`} /></SelectTrigger>
+            <SelectTrigger><SelectValue placeholder="Select border crossing from Kenya" /></SelectTrigger>
             <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
               {kenyaData.landBorders.map((border: any) => (
                 <SelectItem key={border.code} value={border.code}>

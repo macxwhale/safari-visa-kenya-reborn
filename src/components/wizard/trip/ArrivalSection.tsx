@@ -33,12 +33,12 @@ export const ArrivalSection: React.FC<ArrivalSectionProps> = ({
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-700">Arrival Details to {destinationCountry}</h3>
+      <h3 className="text-lg font-semibold text-gray-700">Arrival Details to Kenya</h3>
       <p className="text-sm text-gray-600">Select your departure details from {originCountry}</p>
       <DatePicker
         date={form.entryDate}
         onSelect={handleDateChange('entryDate')}
-        placeholder={`Your expected arrival date in ${destinationCountry}`}
+        placeholder="Your expected arrival date in Kenya"
       />
       <div className="flex space-x-2">
         <ModeButton label="Arriving by Air" value="air" currentValue={form.arrivalMode} onClick={(v) => onChange('arrivalMode', v)}>
@@ -69,7 +69,7 @@ export const ArrivalSection: React.FC<ArrivalSectionProps> = ({
             </div>
             <Input placeholder="Flight No." value={form.flightNumber} onChange={(e) => onChange('flightNumber', e.target.value)} />
           </div>
-          <p className="text-sm text-gray-500">Provide information on your flight from {originCountry} to {destinationCountry}.</p>
+          <p className="text-sm text-gray-500">Provide information on your flight from {originCountry} to Kenya.</p>
         </div>
       )}
       {form.arrivalMode === 'sea' && (

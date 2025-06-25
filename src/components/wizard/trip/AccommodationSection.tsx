@@ -23,12 +23,12 @@ export const AccommodationSection: React.FC<AccommodationSectionProps> = ({
 }) => {
   return (
     <div className="space-y-4 pb-8">
-      <h3 className="text-lg font-semibold text-gray-700">Address(es) in {country}</h3>
+      <h3 className="text-lg font-semibold text-gray-700">Address(es) in Kenya</h3>
       <p className="text-sm text-gray-600">Name of hotel/guesthouse or address of residence.</p>
       <div className="relative">
         <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
         <Input 
-          placeholder={`Hotel Boulevard ${country === 'Kenya' ? 'Nairobi, City Centre CBD, Harry Thuku Road, Nairobi' : `${country} City Centre`}, ${country}`}
+          placeholder="Hotel Boulevard Nairobi, City Centre CBD, Harry Thuku Road, Nairobi, Kenya"
           value={form.accommodationAddress}
           onChange={(e) => onChange('accommodationAddress', e.target.value)}
           className="pl-10"
