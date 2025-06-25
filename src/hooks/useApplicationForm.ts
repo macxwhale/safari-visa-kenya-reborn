@@ -58,6 +58,7 @@ export const useApplicationForm = (initialTravelFrom: string = "") => {
 
   const handleFormChange = (field: keyof ApplicationFormState, value: any) => {
     setForm(prev => ({ ...prev, [field]: value }));
+    console.log(`Form field ${field} changed to:`, value);
   };
 
   return { form, handleFormChange };

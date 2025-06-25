@@ -17,25 +17,28 @@ interface ArrivalSectionProps {
     flightNumber: string;
   };
   onChange: (field: string, value: any) => void;
-  country: string;
+  originCountry: string; // Country user is traveling FROM
+  destinationCountry: string; // Kenya - where they're going TO
   handleDateChange: (field: string) => (date: Date | undefined) => void;
 }
 
 export const ArrivalSection: React.FC<ArrivalSectionProps> = ({ 
   form, 
   onChange, 
-  country, 
+  originCountry,
+  destinationCountry,
   handleDateChange 
 }) => {
-  const countryData = getCountrySpecificData(country);
+  const originCountryData = getCountrySpecificData(originCountry);
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-700">Arrival Details to {country}</h3>
+      <h3 className="text-lg font-semibold text-gray-700">Arrival Details to {destinationCountry}</h3>
+      <p className="text-sm text-gray-600">Select your departure details from {originCountry}</p>
       <DatePicker
         date={form.entryDate}
         onSelect={handleDateChange('entryDate')}
-        placeholder={`Your expected arrival date in ${country}`}
+        placeholder={`Your expected arrival date in ${destinationCountry}`}
       />
       <div className="flex space-x-2">
         <ModeButton label="Arriving by Air" value="air" currentValue={form.arrivalMode} onClick={(v) => onChange('arrivalMode', v)}>
@@ -51,9 +54,9 @@ export const ArrivalSection: React.FC<ArrivalSectionProps> = ({
       {form.arrivalMode === 'air' && (
         <div className="space-y-4 p-4 border rounded-md">
           <Select onValueChange={(value) => onChange('arrivalPort', value)} value={form.arrivalPort}>
-            <SelectTrigger><SelectValue placeholder={`Select arrival airport in ${country}`} /></SelectTrigger>
-            <SelectContent className="z-[99999] bg-white border shadow-lg">
-              {countryData.airports.map((airport: any) => (
+            <SelectTrigger><SelectValue placeholder={`Select departure airport from ${originCountry}`} /></SelectTrigger>
+            <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
+              {originCountryData.airports.map((airport: any) => (
                 <SelectItem key={airport.code} value={airport.code}>
                   {airport.code} - {airport.name}
                 </SelectItem>
@@ -66,37 +69,37 @@ export const ArrivalSection: React.FC<ArrivalSectionProps> = ({
             </div>
             <Input placeholder="Flight No." value={form.flightNumber} onChange={(e) => onChange('flightNumber', e.target.value)} />
           </div>
-          <p className="text-sm text-gray-500">Provide information on your flight to {country}.</p>
+          <p className="text-sm text-gray-500">Provide information on your flight from {originCountry} to {destinationCountry}.</p>
         </div>
       )}
       {form.arrivalMode === 'sea' && (
         <div className="space-y-4 p-4 border rounded-md">
           <Select onValueChange={(value) => onChange('arrivalPort', value)} value={form.arrivalPort}>
-            <SelectTrigger><SelectValue placeholder={`Select arrival port in ${country}`} /></SelectTrigger>
-            <SelectContent className="z-[99999] bg-white border shadow-lg">
-              {countryData.seaPorts.map((port: any) => (
+            <SelectTrigger><SelectValue placeholder={`Select departure port from ${originCountry}`} /></SelectTrigger>
+            <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
+              {originCountryData.seaPorts.map((port: any) => (
                 <SelectItem key={port.code} value={port.code}>
                   {port.code} - {port.name}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <p className="text-sm text-gray-500">Select the sea port where you will arrive in {country}.</p>
+          <p className="text-sm text-gray-500">Select the sea port where you will depart from {originCountry}.</p>
         </div>
       )}
       {form.arrivalMode === 'land' && (
         <div className="space-y-4 p-4 border rounded-md">
           <Select onValueChange={(value) => onChange('arrivalPort', value)} value={form.arrivalPort}>
-            <SelectTrigger><SelectValue placeholder={`Select border crossing to ${country}`} /></SelectTrigger>
-            <SelectContent className="z-[99999] bg-white border shadow-lg">
-              {countryData.landBorders.map((border: any) => (
+            <SelectTrigger><SelectValue placeholder={`Select border crossing from ${originCountry}`} /></SelectTrigger>
+            <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
+              {originCountryData.landBorders.map((border: any) => (
                 <SelectItem key={border.code} value={border.code}>
                   {border.code} - {border.name}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
-          <p className="text-sm text-gray-500">Select the land border crossing you will use to enter {country}.</p>
+          <p className="text-sm text-gray-500">Select the land border crossing you will use to leave {originCountry}.</p>
         </div>
       )}
     </div>

@@ -20,15 +20,16 @@ interface TripInfoStepProps {
     departurePort: string;
     arrivalAirline: string;
     departureAirline: string;
-    flightNumber: string; // arrival flight number
+    flightNumber: string;
     departureFlightNumber: string;
     finalDestinationCountry: string;
     accommodationAddress: string;
     accommodationCheckInDate: string;
     accommodationCheckOutDate: string;
+    travelFrom: string; // This is the origin country
   };
   onChange: (field: string, value: any) => void;
-  country?: string;
+  country?: string; // This is Kenya (destination)
   onNext?: () => void;
 }
 
@@ -37,14 +38,20 @@ export default function TripInfoStep({ form, onChange, country = 'Kenya', onNext
     onChange(field, date ? format(date, "yyyy-MM-dd") : "");
   };
 
+  // Use travelFrom as origin country, fallback to a default
+  const originCountry = form.travelFrom || 'United States';
+
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 max-h-[60vh] overflow-y-auto px-1">
-        <div className="space-y-8 animate-fade-in max-w-3xl">
+    <div className="flex flex-col h-full min-h-0">
+      <div className="flex-1 overflow-y-auto px-1">
+        <div className="space-y-6 animate-fade-in max-w-3xl pb-6">
           <div>
             <h2 className="text-xl font-semibold text-gray-800 mb-2">
               Provide details about your trip to {country}
             </h2>
+            <p className="text-sm text-gray-600 mb-4">
+              Traveling from {originCountry} to {country}
+            </p>
             <Select onValueChange={(value) => onChange('purposeOfVisit', value)} value={form.purposeOfVisit}>
               <SelectTrigger>
                 <SelectValue placeholder="Select purpose of visit" />
@@ -62,33 +69,34 @@ export default function TripInfoStep({ form, onChange, country = 'Kenya', onNext
           <ArrivalSection 
             form={form}
             onChange={onChange}
-            country={country}
+            originCountry={originCountry}
+            destinationCountry={country}
             handleDateChange={handleDateChange}
           />
 
           <DepartureSection 
             form={form}
             onChange={onChange}
-            country={country}
+            country={country} // Kenya
             handleDateChange={handleDateChange}
           />
 
           <AccommodationSection 
             form={form}
             onChange={onChange}
-            country={country}
+            country={country} // Kenya
             handleDateChange={handleDateChange}
           />
         </div>
       </div>
 
-      {/* Next Button */}
+      {/* Next Button - Always visible */}
       {onNext && (
-        <div className="flex-shrink-0 border-t border-gray-200 p-6 bg-white">
-          <div className="flex justify-end">
+        <div className="flex-shrink-0 border-t border-gray-200 p-4 sm:p-6 bg-white">
+          <div className="flex justify-end max-w-3xl">
             <Button 
               onClick={onNext}
-              className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 font-semibold"
+              className="bg-green-600 hover:bg-green-700 text-white px-6 sm:px-8 py-2 sm:py-3 font-semibold text-sm sm:text-base"
             >
               Next: Traveller Information
             </Button>

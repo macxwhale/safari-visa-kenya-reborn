@@ -85,7 +85,7 @@ export default function ApplicationForm({ travelerType, applicationType, country
       <SelfieStep form={form} onChange={handleFormChange} />,
       <ContactInfoStep form={form} onChange={handleFormChange} />,
       <TripInfoStep form={form} onChange={handleFormChange} country={country} onNext={goNext} />,
-      <TravelInfoStep form={form} onChange={handleFormChange} />,
+      <TravelInfoStep form={form} onChange={handleFormChange} onNext={goNext} />,
       <CustomsDeclarationStep form={form} onChange={handleFormChange} />,
       <DocumentsStep form={form} onChange={handleFormChange} />,
       <ReviewStep 
@@ -105,9 +105,9 @@ export default function ApplicationForm({ travelerType, applicationType, country
       <ModalWrapper className="sm:max-w-7xl">
         <div className="flex flex-col h-full">
           {/* Header */}
-          <div className="flex items-center justify-between p-6 sm:p-8 border-b border-gray-100 flex-shrink-0">
+          <div className="flex items-center justify-between p-4 sm:p-6 lg:p-8 border-b border-gray-100 flex-shrink-0">
             <div className="flex-1">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+              <h1 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gray-900">
                 {STEP_LABELS[step]}
               </h1>
               <div className="hidden sm:block mt-2">
@@ -133,7 +133,7 @@ export default function ApplicationForm({ travelerType, applicationType, country
           </div>
 
           {/* Main content with sidebar and form */}
-          <div className="flex flex-col lg:flex-row flex-1 overflow-hidden">
+          <div className="flex flex-col lg:flex-row flex-1 overflow-hidden min-h-0">
             {/* Left Sidebar - Hidden on mobile, shown on large screens */}
             <div className="hidden lg:block lg:w-80 xl:w-96 bg-gray-50 border-r border-gray-200 overflow-y-auto flex-shrink-0">
               <div className="p-6 xl:p-8">
@@ -142,46 +142,48 @@ export default function ApplicationForm({ travelerType, applicationType, country
             </div>
             
             {/* Main Content */}
-            <div className="flex-1 overflow-y-auto pb-24 lg:pb-8">
-              <div className="p-6 sm:p-8 xl:p-12 max-w-4xl mx-auto">
-                {/* Mobile Progress Indicator */}
-                <div className="lg:hidden mb-6">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm font-medium text-gray-700">Progress</span>
-                    <span className="text-sm text-gray-500">{step + 1} of {STEP_LABELS.length}</span>
+            <div className="flex-1 overflow-hidden flex flex-col min-h-0">
+              <div className="flex-1 overflow-y-auto">
+                <div className="p-4 sm:p-6 lg:p-8 xl:p-12 max-w-4xl mx-auto">
+                  {/* Mobile Progress Indicator */}
+                  <div className="lg:hidden mb-4 sm:mb-6">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-medium text-gray-700">Progress</span>
+                      <span className="text-sm text-gray-500">{step + 1} of {STEP_LABELS.length}</span>
+                    </div>
+                    <div className="w-full bg-gray-200 rounded-full h-2">
+                      <div 
+                        className="bg-brand-green h-2 rounded-full transition-all duration-300" 
+                        style={{ width: `${((step + 1) / STEP_LABELS.length) * 100}%` }}
+                      ></div>
+                    </div>
                   </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div 
-                      className="bg-brand-green h-2 rounded-full transition-all duration-300" 
-                      style={{ width: `${((step + 1) / STEP_LABELS.length) * 100}%` }}
-                    ></div>
-                  </div>
-                </div>
 
-                {/* Step Content */}
-                <div className="mb-8">
-                  <ErrorBoundary fallback={<div className="text-red-600 p-4 bg-red-50 border border-red-200 rounded-lg">Error loading step content</div>}>
-                    {renderStepContent()}
-                  </ErrorBoundary>
-                </div>
-
-                {error && (
-                  <div className="text-red-600 text-sm mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
-                    {error}
+                  {/* Step Content */}
+                  <div className="h-full">
+                    <ErrorBoundary fallback={<div className="text-red-600 p-4 bg-red-50 border border-red-200 rounded-lg">Error loading step content</div>}>
+                      {renderStepContent()}
+                    </ErrorBoundary>
                   </div>
-                )}
+
+                  {error && (
+                    <div className="text-red-600 text-sm mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                      {error}
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Navigation - Fixed at bottom - Only show for non-TripInfo steps */}
-          {step !== 3 && (
-            <div className="fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto flex justify-between p-6 sm:p-8 border-t border-gray-100 bg-white gap-4">
+          {/* Navigation - Fixed at bottom - Hide for steps with custom navigation */}
+          {![3, 4].includes(step) && ( // Hide for TripInfo (3) and TravelInfo (4) steps
+            <div className="fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto flex justify-between p-4 sm:p-6 lg:p-8 border-t border-gray-100 bg-white gap-4">
               <Button 
                 variant="outline" 
                 onClick={goBack} 
                 disabled={submitting} 
-                className="flex-1 sm:flex-none px-6 py-3 font-medium border-gray-300 hover:bg-gray-50"
+                className="flex-1 sm:flex-none px-4 sm:px-6 py-2 sm:py-3 font-medium border-gray-300 hover:bg-gray-50 text-sm sm:text-base"
               >
                 Back
               </Button>
@@ -189,7 +191,7 @@ export default function ApplicationForm({ travelerType, applicationType, country
                 <Button 
                   onClick={goNext} 
                   disabled={submitting} 
-                  className="bg-brand-green hover:bg-brand-green/90 text-white flex-1 sm:flex-none px-8 py-3 font-semibold"
+                  className="bg-brand-green hover:bg-brand-green/90 text-white flex-1 sm:flex-none px-6 sm:px-8 py-2 sm:py-3 font-semibold text-sm sm:text-base"
                 >
                   Continue
                 </Button>
@@ -197,7 +199,7 @@ export default function ApplicationForm({ travelerType, applicationType, country
                 <Button 
                   onClick={handleSubmit} 
                   disabled={submitting} 
-                  className="bg-brand-green hover:bg-brand-green/90 text-white flex-1 sm:flex-none px-8 py-3 font-semibold"
+                  className="bg-brand-green hover:bg-brand-green/90 text-white flex-1 sm:flex-none px-6 sm:px-8 py-2 sm:py-3 font-semibold text-sm sm:text-base"
                 >
                   {submitting ? "Submitting..." : "Submit Application"}
                 </Button>

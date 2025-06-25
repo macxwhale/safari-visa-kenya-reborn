@@ -1,5 +1,5 @@
 
-// Country-specific data - Updated to be more comprehensive
+// Country-specific data - Updated to support origin/destination flow
 export const getCountrySpecificData = (country: string) => {
   const countryData: Record<string, any> = {
     'Kenya': {
@@ -58,8 +58,43 @@ export const getCountrySpecificData = (country: string) => {
         { code: 'BUS', name: 'Busia Border (Kenya)' },
         { code: 'KAS', name: 'Kasese Border (DRC)' },
       ]
+    },
+    'United States': {
+      airports: [
+        { code: 'JFK', name: 'John F. Kennedy International Airport' },
+        { code: 'LAX', name: 'Los Angeles International Airport' },
+        { code: 'ORD', name: 'Chicago O\'Hare International Airport' },
+        { code: 'MIA', name: 'Miami International Airport' },
+      ],
+      seaPorts: [
+        { code: 'LAX', name: 'Port of Los Angeles' },
+        { code: 'NYC', name: 'Port of New York and New Jersey' },
+        { code: 'MIA', name: 'Port of Miami' },
+      ],
+      landBorders: [
+        { code: 'JFK', name: 'John F. Kennedy International Airport Border' },
+      ]
+    },
+    'United Kingdom': {
+      airports: [
+        { code: 'LHR', name: 'London Heathrow Airport' },
+        { code: 'LGW', name: 'London Gatwick Airport' },
+        { code: 'MAN', name: 'Manchester Airport' },
+        { code: 'EDI', name: 'Edinburgh Airport' },
+      ],
+      seaPorts: [
+        { code: 'LON', name: 'Port of London' },
+        { code: 'DVR', name: 'Port of Dover' },
+        { code: 'LIV', name: 'Port of Liverpool' },
+      ],
+      landBorders: [
+        { code: 'DVR', name: 'Dover-Calais Channel Tunnel' },
+      ]
     }
   };
   
   return countryData[country] || countryData['Kenya']; // Default to Kenya if country not found
 };
+
+// Get Kenya data specifically for departure
+export const getKenyaData = () => getCountrySpecificData('Kenya');

@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Plane, Bus, Ship } from "lucide-react";
 import { ModeButton } from "./ModeButton";
 import { DatePicker } from "./DatePicker";
-import { getCountrySpecificData } from "./countryData";
+import { getKenyaData } from "./countryData";
 
 type Mode = 'air' | 'sea' | 'land';
 
@@ -18,7 +18,7 @@ interface DepartureSectionProps {
     finalDestinationCountry: string;
   };
   onChange: (field: string, value: any) => void;
-  country: string;
+  country: string; // Kenya - where they're departing FROM
   handleDateChange: (field: string) => (date: Date | undefined) => void;
 }
 
@@ -28,11 +28,12 @@ export const DepartureSection: React.FC<DepartureSectionProps> = ({
   country, 
   handleDateChange 
 }) => {
-  const countryData = getCountrySpecificData(country);
+  const kenyaData = getKenyaData();
 
   return (
     <div className="space-y-4">
       <h3 className="text-lg font-semibold text-gray-700">Departure Details from {country}</h3>
+      <p className="text-sm text-gray-600">Select your departure details from {country}</p>
       <DatePicker
         date={form.exitDate}
         onSelect={handleDateChange('exitDate')}
@@ -53,8 +54,8 @@ export const DepartureSection: React.FC<DepartureSectionProps> = ({
         <div className="space-y-4 p-4 border rounded-md">
           <Select onValueChange={(value) => onChange('departurePort', value)} value={form.departurePort}>
             <SelectTrigger><SelectValue placeholder={`Select departure airport in ${country}`} /></SelectTrigger>
-            <SelectContent className="z-[99999] bg-white border shadow-lg">
-              {countryData.airports.map((airport: any) => (
+            <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
+              {kenyaData.airports.map((airport: any) => (
                 <SelectItem key={airport.code} value={airport.code}>
                   {airport.code} - {airport.name}
                 </SelectItem>
@@ -74,8 +75,8 @@ export const DepartureSection: React.FC<DepartureSectionProps> = ({
         <div className="space-y-4 p-4 border rounded-md">
           <Select onValueChange={(value) => onChange('departurePort', value)} value={form.departurePort}>
             <SelectTrigger><SelectValue placeholder={`Select departure port in ${country}`} /></SelectTrigger>
-            <SelectContent className="z-[99999] bg-white border shadow-lg">
-              {countryData.seaPorts.map((port: any) => (
+            <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
+              {kenyaData.seaPorts.map((port: any) => (
                 <SelectItem key={port.code} value={port.code}>
                   {port.code} - {port.name}
                 </SelectItem>
@@ -88,8 +89,8 @@ export const DepartureSection: React.FC<DepartureSectionProps> = ({
         <div className="space-y-4 p-4 border rounded-md">
           <Select onValueChange={(value) => onChange('departurePort', value)} value={form.departurePort}>
             <SelectTrigger><SelectValue placeholder={`Select border crossing from ${country}`} /></SelectTrigger>
-            <SelectContent className="z-[99999] bg-white border shadow-lg">
-              {countryData.landBorders.map((border: any) => (
+            <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
+              {kenyaData.landBorders.map((border: any) => (
                 <SelectItem key={border.code} value={border.code}>
                   {border.code} - {border.name}
                 </SelectItem>
@@ -100,7 +101,7 @@ export const DepartureSection: React.FC<DepartureSectionProps> = ({
       )}
       <Select onValueChange={(value) => onChange('finalDestinationCountry', value)} value={form.finalDestinationCountry}>
         <SelectTrigger><SelectValue placeholder="Select the country where you will travel to as your final destination" /></SelectTrigger>
-        <SelectContent className="z-[99999] bg-white border shadow-lg">
+        <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
           <SelectItem value="USA">United States</SelectItem>
           <SelectItem value="GBR">United Kingdom</SelectItem>
           <SelectItem value="DNK">Denmark</SelectItem>

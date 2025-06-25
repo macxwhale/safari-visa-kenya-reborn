@@ -73,7 +73,7 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
     console.error('Some optional uploads failed:', error);
   });
 
-  // Submit application data with all passport, contact, and trip details
+  // Submit application data with all passport, contact, trip, and traveller details
   const { error } = await safeAsync(async () => {
     return withTimeout(
       Promise.resolve(
@@ -99,6 +99,29 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
             accommodation_address: form.accommodationAddress,
             doc_url: passport_doc_url,
             selfie_url: selfie_doc_url,
+            // Additional trip data
+            arrival_mode: form.arrivalMode,
+            departure_mode: form.departureMode,
+            arrival_port: form.arrivalPort,
+            departure_port: form.departurePort,
+            arrival_airline: form.arrivalAirline,
+            departure_airline: form.departureAirline,
+            flight_number: form.flightNumber,
+            departure_flight_number: form.departureFlightNumber,
+            final_destination_country: form.finalDestinationCountry,
+            accommodation_check_in_date: form.accommodationCheckInDate,
+            accommodation_check_out_date: form.accommodationCheckOutDate,
+            // Traveller information
+            trip_financed_by_third_party: form.tripFinancedByThirdParty,
+            country_of_birth: form.countryOfBirth,
+            nationality_at_birth: form.nationalityAtBirth,
+            convicted_in_past_5_years: form.convictedInPast5Years,
+            denied_entry_to_kenya: form.deniedEntryToKenya,
+            marital_status: form.maritalStatus,
+            previously_travelled_to_kenya: form.previouslyTravelledToKenya,
+            // Customs declaration
+            customs_declaration: form.customsDeclaration,
+            bringing_currency_over_5000: form.bringingCurrencyOver5000,
           })
       ),
       SUBMIT_TIMEOUT,
