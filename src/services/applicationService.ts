@@ -2,65 +2,22 @@
 import { supabase } from "@/integrations/supabase/client";
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
 import { safeAsync, withTimeout } from "@/utils/asyncHelpers";
+import { uploadCriticalFile, uploadOptionalFile } from "./fileUploadService";
 
-const UPLOAD_TIMEOUT = 30000; // 30 seconds
 const SUBMIT_TIMEOUT = 15000; // 15 seconds
 
 export const submitApplication = async (form: ApplicationFormState): Promise<void> => {
   let passport_doc_url: string | undefined;
   let selfie_doc_url: string | undefined;
 
-  // Passport upload (critical)
+  // Upload critical documents
   if (form.passportDoc) {
-    const fileName = `${Date.now()}_passport_${form.passportDoc.name}`;
-    const { data, error } = await safeAsync(async () => {
-      return withTimeout(
-        supabase.storage
-          .from("eta-documents")
-          .upload(`public/${fileName}`, form.passportDoc!),
-        UPLOAD_TIMEOUT,
-        "Passport upload timed out"
-      );
-    }, "Failed to upload passport document");
-
-    if (error || !data.data) {
-      throw new Error(error || "Failed to upload passport document");
-    }
-    passport_doc_url = data.data.path;
+    passport_doc_url = await uploadCriticalFile(form.passportDoc, 'passport');
   }
 
-  // Selfie upload (critical)
   if (form.selfieDoc) {
-    const fileName = `${Date.now()}_selfie_${form.selfieDoc.name}`;
-    const { data, error } = await safeAsync(async () => {
-      return withTimeout(
-        supabase.storage
-          .from("eta-documents")
-          .upload(`public/${fileName}`, form.selfieDoc!),
-        UPLOAD_TIMEOUT,
-        "Selfie upload timed out"
-      );
-    }, "Failed to upload selfie document");
-
-    if (error || !data.data) {
-      throw new Error(error || "Failed to upload selfie document");
-    }
-    selfie_doc_url = data.data.path;
+    selfie_doc_url = await uploadCriticalFile(form.selfieDoc, 'selfie');
   }
-
-  // Optional documents upload (non-critical, fire-and-forget with error logging)
-  const uploadOptionalFile = async (file: File, type: string) => {
-    const fileName = `${Date.now()}_${type}_${file.name}`;
-    const { error } = await safeAsync(async () => {
-      return supabase.storage
-        .from("eta-documents")
-        .upload(`public/${fileName}`, file);
-    });
-
-    if (error) {
-      console.error(`Failed to upload optional document (${type}):`, error);
-    }
-  };
 
   // Fire-and-forget optional uploads
   const uploadPromises = [
@@ -73,7 +30,7 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
     console.error('Some optional uploads failed:', error);
   });
 
-  // Submit application data with all passport, contact, trip, and traveller details
+  // Submit application data
   const { error } = await safeAsync(async () => {
     return withTimeout(
       Promise.resolve(
