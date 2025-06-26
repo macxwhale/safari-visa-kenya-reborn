@@ -1,5 +1,4 @@
 
-import { Input } from "@/components/ui/input";
 import { Upload, Camera } from "lucide-react";
 import { useRef } from "react";
 
@@ -31,10 +30,10 @@ export default function SelfieStep({ form, onChange }: SelfieStepProps) {
   };
 
   return (
-    <div className="space-y-6 animate-fade-in max-w-2xl">
-      <div className="mb-4">
-        <h3 className="text-lg font-semibold mb-2">Upload Your Photo</h3>
-        <p className="text-gray-600 text-sm">
+    <div className="max-w-2xl mx-auto">
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold mb-2 text-gray-900">Upload Your Photo</h3>
+        <p className="text-gray-600 text-sm leading-relaxed">
           Please upload a clear photo of yourself or take a selfie. Make sure your face is clearly visible and the image is well-lit.
         </p>
       </div>
@@ -57,7 +56,10 @@ export default function SelfieStep({ form, onChange }: SelfieStepProps) {
               </p>
             )}
           </div>
-          <button className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2">
+          <button 
+            type="button"
+            className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
+          >
             <Upload className="w-5 h-5" />
             <span>Upload Photo</span>
           </button>

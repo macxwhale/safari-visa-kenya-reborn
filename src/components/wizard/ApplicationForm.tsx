@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PassportStep from "./PassportStep";
@@ -68,7 +67,7 @@ export default function ApplicationForm({ travelerType, applicationType, country
   };
 
   const useModalForStep = (stepIndex: number) => {
-    return [0, 3, 4, 5].includes(stepIndex); // Passport, Trip Info, Traveler Info, Documents
+    return [0, 1, 2, 3, 4, 5, 6].includes(stepIndex); // All main steps use modals
   };
 
   const renderStepContent = () => {

@@ -1,8 +1,11 @@
 
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
 import { PassportModal } from "./PassportModal";
+import { SelfieModal } from "./SelfieModal";
+import { ContactModal } from "./ContactModal";
 import { TripModal } from "./TripModal";
 import { TravelerModal } from "./TravelerModal";
+import { CustomsModal } from "./CustomsModal";
 import { DocumentsModal } from "./DocumentsModal";
 
 interface ModalManagerProps {
@@ -37,6 +40,24 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         onChange={onChange}
       />
       
+      <SelfieModal
+        isOpen={currentStep === 1}
+        onClose={onClose}
+        onNext={onNext}
+        onBack={onBack}
+        form={form}
+        onChange={onChange}
+      />
+      
+      <ContactModal
+        isOpen={currentStep === 2}
+        onClose={onClose}
+        onNext={onNext}
+        onBack={onBack}
+        form={form}
+        onChange={onChange}
+      />
+      
       <TripModal
         isOpen={currentStep === 3}
         onClose={onClose}
@@ -49,6 +70,15 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
       
       <TravelerModal
         isOpen={currentStep === 4}
+        onClose={onClose}
+        onNext={onNext}
+        onBack={onBack}
+        form={form}
+        onChange={onChange}
+      />
+
+      <CustomsModal
+        isOpen={currentStep === 5}
         onClose={onClose}
         onNext={onNext}
         onBack={onBack}
