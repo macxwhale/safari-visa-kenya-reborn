@@ -80,7 +80,7 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
       .select();
 
     return withTimeout(
-      insertOperation.then(result => result),
+      Promise.resolve(insertOperation),
       SUBMIT_TIMEOUT,
       "Application submission timed out"
     );
