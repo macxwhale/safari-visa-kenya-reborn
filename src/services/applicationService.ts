@@ -34,7 +34,7 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
 
   // Submit application data
   const { error } = await safeAsync(async () => {
-    const insertQuery = supabase
+    const insertPromise = supabase
       .from("eta_applications")
       .insert({
         user_id: null,
@@ -79,7 +79,7 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
       });
 
     return withTimeout(
-      insertQuery,
+      insertPromise,
       SUBMIT_TIMEOUT,
       "Application submission timed out"
     );
