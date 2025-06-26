@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PassportStep from "./PassportStep";
@@ -69,9 +68,9 @@ export default function ApplicationForm({ travelerType, applicationType, country
     }
 
     console.log("Application submitted successfully");
-    alert("Application submitted successfully!");
-    onReset();
-    navigate("/dashboard");
+    // Navigate to payment step
+    setStep(8); // Payment step
+    setSubmitting(false);
   };
 
   const handleClose = () => {
@@ -81,7 +80,7 @@ export default function ApplicationForm({ travelerType, applicationType, country
 
   // Use modals for specific steps
   const useModalForStep = (stepIndex: number) => {
-    return [0, 3, 4].includes(stepIndex); // Passport, Trip Info, Traveler Info
+    return [0, 3, 4, 6].includes(stepIndex); // Passport, Trip Info, Traveler Info, Documents
   };
 
   const renderStepContent = () => {
@@ -115,6 +114,7 @@ export default function ApplicationForm({ travelerType, applicationType, country
         onNext={goNext}
         onBack={goBack}
         onClose={handleClose}
+        onSubmit={handleSubmit}
         originCountry={form.travelFrom || country || ""}
       />
 

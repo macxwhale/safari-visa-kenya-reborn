@@ -3,6 +3,7 @@ import { ApplicationFormState } from "@/hooks/useApplicationForm";
 import { PassportModal } from "./PassportModal";
 import { TripModal } from "./TripModal";
 import { TravelerModal } from "./TravelerModal";
+import { DocumentsModal } from "./DocumentsModal";
 
 interface ModalManagerProps {
   currentStep: number;
@@ -11,6 +12,7 @@ interface ModalManagerProps {
   onNext: () => void;
   onBack: () => void;
   onClose: () => void;
+  onSubmit: () => void;
   originCountry: string;
 }
 
@@ -21,6 +23,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   onNext,
   onBack,
   onClose,
+  onSubmit,
   originCountry
 }) => {
   return (
@@ -51,6 +54,16 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         onBack={onBack}
         form={form}
         onChange={onChange}
+      />
+
+      <DocumentsModal
+        isOpen={currentStep === 6}
+        onClose={onClose}
+        onNext={onNext}
+        onBack={onBack}
+        form={form}
+        onChange={onChange}
+        onSubmit={onSubmit}
       />
     </>
   );
