@@ -2,7 +2,6 @@
 import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { X, ArrowLeft } from "lucide-react";
-import { ModalProgressBar } from "./ModalProgressBar";
 
 interface BaseModalProps {
   children: ReactNode;
@@ -49,7 +48,28 @@ export const BaseModal: React.FC<BaseModalProps> = ({
       <div className={`relative bg-white rounded-2xl shadow-2xl w-full max-w-6xl max-h-[90vh] flex overflow-hidden ${className}`}>
         {/* Progress Bar */}
         {showProgressBar && progressSteps.length > 0 && (
-          <ModalProgressBar steps={progressSteps} />
+          <div className="w-80 bg-gray-50 border-r border-gray-200 p-6 flex-shrink-0">
+            <div className="space-y-4">
+              {progressSteps.map((step, index) => (
+                <div key={index} className="flex items-center space-x-3">
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
+                    step.completed 
+                      ? 'bg-green-500 text-white' 
+                      : step.current 
+                        ? 'bg-blue-500 text-white' 
+                        : 'bg-gray-200 text-gray-500'
+                  }`}>
+                    {step.completed ? '✓' : index + 1}
+                  </div>
+                  <span className={`text-sm font-medium ${
+                    step.current ? 'text-blue-600' : step.completed ? 'text-green-600' : 'text-gray-500'
+                  }`}>
+                    {step.label}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
         
         {/* Main Content */}
