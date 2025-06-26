@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import PassportStep from "./PassportStep";
@@ -34,53 +35,40 @@ export default function ApplicationForm({ travelerType, applicationType, country
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  console.log("ApplicationForm rendered with:", { travelerType, applicationType, country });
-
   const goNext = () => {
-    console.log("Going to next step from:", step);
     if (step < STEP_LABELS.length - 1) setStep(s => s + 1);
   };
 
   const goBack = () => {
-    console.log("Going back from step:", step);
     if (step > 0) setStep(s => s - 1);
-    else {
-      console.log("Resetting application form");
-      onReset();
-    }
+    else onReset();
   };
 
   const handleSubmit = async () => {
-    console.log("Submitting application with form data:", form);
     setSubmitting(true);
     setError(null);
     
-    const { data, error: submitError } = await safeAsync(
+    const { error: submitError } = await safeAsync(
       () => submitApplication(form),
       "Failed to submit application"
     );
 
     if (submitError) {
-      console.error("Application submission failed:", submitError);
       setError(submitError);
       setSubmitting(false);
       return;
     }
 
-    console.log("Application submitted successfully");
-    // Navigate to payment step
     setStep(8); // Payment step
     setSubmitting(false);
   };
 
   const handleClose = () => {
-    console.log("Closing application form");
     navigate("/");
   };
 
-  // Use modals for specific steps
   const useModalForStep = (stepIndex: number) => {
-    return [0, 3, 4, 6].includes(stepIndex); // Passport, Trip Info, Traveler Info, Documents
+    return [0, 3, 4, 5].includes(stepIndex); // Passport, Trip Info, Traveler Info, Documents
   };
 
   const renderStepContent = () => {
@@ -106,7 +94,6 @@ export default function ApplicationForm({ travelerType, applicationType, country
 
   return (
     <ErrorBoundary>
-      {/* Modal System for specific steps */}
       <ModalManager
         currentStep={step}
         form={form}
@@ -118,7 +105,6 @@ export default function ApplicationForm({ travelerType, applicationType, country
         originCountry={form.travelFrom || country || ""}
       />
 
-      {/* Regular Modal for other steps */}
       {!useModalForStep(step) && (
         <ModalWrapper className="sm:max-w-7xl">
           <div className="flex flex-col h-full">

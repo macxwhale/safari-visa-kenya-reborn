@@ -14,18 +14,15 @@ export default function ApplicationWizard() {
   const navigate = useNavigate();
 
   const handleTravelerTypeSelect = (type: string, applicationType?: string, country?: string) => {
-    console.log("ApplicationWizard received data:", { type, applicationType, country });
     const newData = {
       travelerType: type,
       applicationType: applicationType || "",
       country: country || ""
     };
-    console.log("Setting application data:", newData);
     setApplicationData(newData);
   };
 
   const handleReset = () => {
-    console.log("Resetting application data");
     setApplicationData({
       travelerType: "",
       applicationType: "",
@@ -34,20 +31,15 @@ export default function ApplicationWizard() {
   };
 
   const handleClose = () => {
-    console.log("Closing application wizard");
     navigate("/");
   };
 
-  console.log("ApplicationWizard render - applicationData:", applicationData);
-
   return (
     <div className="relative min-h-screen">
-      {/* Main page background - always rendered */}
       <div className={`${applicationData.travelerType ? 'blur-sm' : ''} transition-all duration-300`}>
         <Index />
       </div>
       
-      {/* Modal overlays */}
       {!applicationData.travelerType && (
         <TravelerTypeSelection 
           onTravelerTypeSelect={handleTravelerTypeSelect}
