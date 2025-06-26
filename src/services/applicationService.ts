@@ -1,3 +1,4 @@
+
 import { supabase } from "@/integrations/supabase/client";
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
 import { safeAsync, withTimeout } from "@/utils/asyncHelpers";
@@ -76,7 +77,8 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
           previously_travelled_to_kenya: cleanForm.previouslyTravelledToKenya,
           customs_declaration: cleanForm.customsDeclaration,
           bringing_currency_over_5000: cleanForm.bringingCurrencyOver5000,
-        }),
+        })
+        .select(),
       SUBMIT_TIMEOUT,
       "Application submission timed out"
     );
