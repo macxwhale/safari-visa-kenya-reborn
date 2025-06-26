@@ -1,7 +1,6 @@
 
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import * as React from "react";
 import { ButtonRadioGroup } from "./ButtonRadioGroup";
 
@@ -16,10 +15,9 @@ interface TravelInfoStepProps {
     previouslyTravelledToKenya: boolean | null;
   };
   onChange: (field: string, value: any) => void;
-  onNext?: () => void;
 }
 
-export default function TravelInfoStep({ form, onChange, onNext }: TravelInfoStepProps) {
+export default function TravelInfoStep({ form, onChange }: TravelInfoStepProps) {
   const maritalStatusOptions = [
     { value: 'single', label: 'Single' },
     { value: 'married', label: 'Married' },
@@ -33,101 +31,87 @@ export default function TravelInfoStep({ form, onChange, onNext }: TravelInfoSte
   ];
 
   return (
-    <div className="flex flex-col h-full min-h-0">
-      <div className="flex-1 overflow-y-auto px-1">
-        <div className="space-y-6 sm:space-y-8 animate-fade-in max-w-2xl pb-6">
-          <div>
-            <h2 className="text-lg sm:text-xl font-semibold text-gray-800">Traveller Information</h2>
-            <p className="text-sm text-gray-600 mt-1">Answer a few questions related to the traveller.</p>
-          </div>
-          
-          <div className="space-y-4 sm:space-y-6">
-            <ButtonRadioGroup
-              label="Is your trip financed by a third party, which is not your employer nor a government?"
-              options={yesNoOptions}
-              value={form.tripFinancedByThirdParty}
-              onChange={(value) => onChange('tripFinancedByThirdParty', value === 'yes')}
-              idPrefix="financed"
-            />
-
-            <ButtonRadioGroup
-              label="What is your marital status?"
-              options={maritalStatusOptions}
-              value={form.maritalStatus}
-              onChange={(value) => onChange('maritalStatus', value)}
-              idPrefix="marital"
-            />
-
-            <ButtonRadioGroup
-              label="Have you previously travelled to Kenya?"
-              options={yesNoOptions}
-              value={form.previouslyTravelledToKenya}
-              onChange={(value) => onChange('previouslyTravelledToKenya', value === 'yes')}
-              idPrefix="travelled"
-            />
-            
-            <div className="space-y-2">
-              <Label htmlFor="countryOfBirth" className="font-normal text-gray-700 text-sm sm:text-base">What is your country of birth?</Label>
-              <Select onValueChange={(value) => onChange('countryOfBirth', value)} value={form.countryOfBirth}>
-                <SelectTrigger id="countryOfBirth"><SelectValue placeholder="Select country" /></SelectTrigger>
-                <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
-                    <SelectItem value="SWE">Sweden</SelectItem>
-                    <SelectItem value="DNK">Denmark</SelectItem>
-                    <SelectItem value="DEU">Germany</SelectItem>
-                    <SelectItem value="USA">United States</SelectItem>
-                    <SelectItem value="GBR">United Kingdom</SelectItem>
-                    <SelectItem value="KEN">Kenya</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="nationalityAtBirth" className="font-normal text-gray-700 text-sm sm:text-base">What was your nationality at birth?</Label>
-              <Select onValueChange={(value) => onChange('nationalityAtBirth', value)} value={form.nationalityAtBirth}>
-                <SelectTrigger id="nationalityAtBirth"><SelectValue placeholder="Select nationality" /></SelectTrigger>
-                <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
-                    <SelectItem value="Swedish">Swedish</SelectItem>
-                    <SelectItem value="Danish">Danish</SelectItem>
-                    <SelectItem value="German">German</SelectItem>
-                    <SelectItem value="American">American</SelectItem>
-                    <SelectItem value="British">British</SelectItem>
-                    <SelectItem value="Kenyan">Kenyan</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            <ButtonRadioGroup
-              label="Have you ever been convicted of any offence, under any system of law, in the past 5 years?"
-              options={yesNoOptions}
-              value={form.convictedInPast5Years}
-              onChange={(value) => onChange('convictedInPast5Years', value === 'yes')}
-              idPrefix="convicted"
-            />
-
-            <ButtonRadioGroup
-              label="Have you ever been previously denied entry to Kenya?"
-              options={yesNoOptions}
-              value={form.deniedEntryToKenya}
-              onChange={(value) => onChange('deniedEntryToKenya', value === 'yes')}
-              idPrefix="denied"
-            />
-          </div>
-        </div>
+    <div className="space-y-8 max-w-3xl mx-auto">
+      <div>
+        <h2 className="text-xl font-semibold text-gray-800 mb-2">Traveler Information</h2>
+        <p className="text-sm text-gray-600">Answer a few questions related to the traveler.</p>
       </div>
+      
+      <div className="space-y-6">
+        <ButtonRadioGroup
+          label="Is your trip financed by a third party, which is not your employer nor a government?"
+          options={yesNoOptions}
+          value={form.tripFinancedByThirdParty}
+          onChange={(value) => onChange('tripFinancedByThirdParty', value === 'yes')}
+          idPrefix="financed"
+        />
 
-      {/* Next Button - Always visible */}
-      {onNext && (
-        <div className="flex-shrink-0 border-t border-gray-200 p-4 sm:p-6 bg-white">
-          <div className="flex justify-end max-w-2xl">
-            <Button 
-              onClick={onNext}
-              className="bg-green-600 hover:bg-green-700 text-white px-6 sm:px-8 py-2 sm:py-3 font-semibold text-sm sm:text-base"
-            >
-              Next: Customs Declaration
-            </Button>
-          </div>
+        <ButtonRadioGroup
+          label="What is your marital status?"
+          options={maritalStatusOptions}
+          value={form.maritalStatus}
+          onChange={(value) => onChange('maritalStatus', value)}
+          idPrefix="marital"
+        />
+
+        <ButtonRadioGroup
+          label="Have you previously travelled to Kenya?"
+          options={yesNoOptions}
+          value={form.previouslyTravelledToKenya}
+          onChange={(value) => onChange('previouslyTravelledToKenya', value === 'yes')}
+          idPrefix="travelled"
+        />
+        
+        <div className="space-y-2">
+          <Label htmlFor="countryOfBirth" className="font-normal text-gray-700 text-base">What is your country of birth?</Label>
+          <Select onValueChange={(value) => onChange('countryOfBirth', value)} value={form.countryOfBirth}>
+            <SelectTrigger id="countryOfBirth">
+              <SelectValue placeholder="Select country" />
+            </SelectTrigger>
+            <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
+              <SelectItem value="SWE">Sweden</SelectItem>
+              <SelectItem value="DNK">Denmark</SelectItem>
+              <SelectItem value="DEU">Germany</SelectItem>
+              <SelectItem value="USA">United States</SelectItem>
+              <SelectItem value="GBR">United Kingdom</SelectItem>
+              <SelectItem value="KEN">Kenya</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
-      )}
+        
+        <div className="space-y-2">
+          <Label htmlFor="nationalityAtBirth" className="font-normal text-gray-700 text-base">What was your nationality at birth?</Label>
+          <Select onValueChange={(value) => onChange('nationalityAtBirth', value)} value={form.nationalityAtBirth}>
+            <SelectTrigger id="nationalityAtBirth">
+              <SelectValue placeholder="Select nationality" />
+            </SelectTrigger>
+            <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
+              <SelectItem value="Swedish">Swedish</SelectItem>
+              <SelectItem value="Danish">Danish</SelectItem>
+              <SelectItem value="German">German</SelectItem>
+              <SelectItem value="American">American</SelectItem>
+              <SelectItem value="British">British</SelectItem>
+              <SelectItem value="Kenyan">Kenyan</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        <ButtonRadioGroup
+          label="Have you ever been convicted of any offence, under any system of law, in the past 5 years?"
+          options={yesNoOptions}
+          value={form.convictedInPast5Years}
+          onChange={(value) => onChange('convictedInPast5Years', value === 'yes')}
+          idPrefix="convicted"
+        />
+
+        <ButtonRadioGroup
+          label="Have you ever been previously denied entry to Kenya?"
+          options={yesNoOptions}
+          value={form.deniedEntryToKenya}
+          onChange={(value) => onChange('deniedEntryToKenya', value === 'yes')}
+          idPrefix="denied"
+        />
+      </div>
     </div>
   );
 }

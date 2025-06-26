@@ -19,6 +19,7 @@ import ModalWrapper from "./ModalWrapper";
 import { ApplicationFormHeader } from "./ApplicationFormHeader";
 import { ApplicationFormContent } from "./ApplicationFormContent";
 import { ApplicationFormNavigation } from "./ApplicationFormNavigation";
+import { ModalManager } from "./ModalManager";
 
 interface ApplicationFormProps {
   travelerType: string;
@@ -67,7 +68,6 @@ export default function ApplicationForm({ travelerType, applicationType, country
       return;
     }
 
-    // Success
     console.log("Application submitted successfully");
     alert("Application submitted successfully!");
     onReset();
@@ -79,13 +79,18 @@ export default function ApplicationForm({ travelerType, applicationType, country
     navigate("/");
   };
 
+  // Use modals for specific steps
+  const useModalForStep = (stepIndex: number) => {
+    return [0, 3, 4].includes(stepIndex); // Passport, Trip Info, Traveler Info
+  };
+
   const renderStepContent = () => {
     const stepComponents = [
       <PassportStep form={form} onChange={handleFormChange} />,
       <SelfieStep form={form} onChange={handleFormChange} />,
       <ContactInfoStep form={form} onChange={handleFormChange} />,
-      <TripInfoStep form={form} onChange={handleFormChange} country={country} onNext={goNext} />,
-      <TravelInfoStep form={form} onChange={handleFormChange} onNext={goNext} />,
+      <TripInfoStep form={form} onChange={handleFormChange} country={country} />,
+      <TravelInfoStep form={form} onChange={handleFormChange} />,
       <CustomsDeclarationStep form={form} onChange={handleFormChange} />,
       <DocumentsStep form={form} onChange={handleFormChange} />,
       <ReviewStep 
@@ -102,25 +107,36 @@ export default function ApplicationForm({ travelerType, applicationType, country
 
   return (
     <ErrorBoundary>
-      <ModalWrapper className="sm:max-w-7xl">
-        <div className="flex flex-col h-full">
-          <ApplicationFormHeader
-            currentStep={step}
-            totalSteps={STEP_LABELS.length}
-            stepLabel={STEP_LABELS[step]}
-            onClose={handleClose}
-          />
+      {/* Modal System for specific steps */}
+      <ModalManager
+        currentStep={step}
+        form={form}
+        onChange={handleFormChange}
+        onNext={goNext}
+        onBack={goBack}
+        onClose={handleClose}
+        originCountry={form.travelFrom || country || ""}
+      />
 
-          <ApplicationFormContent
-            currentStep={step}
-            stepLabels={STEP_LABELS}
-            error={error}
-          >
-            {renderStepContent()}
-          </ApplicationFormContent>
+      {/* Regular Modal for other steps */}
+      {!useModalForStep(step) && (
+        <ModalWrapper className="sm:max-w-7xl">
+          <div className="flex flex-col h-full">
+            <ApplicationFormHeader
+              currentStep={step}
+              totalSteps={STEP_LABELS.length}
+              stepLabel={STEP_LABELS[step]}
+              onClose={handleClose}
+            />
 
-          {/* Navigation - Hide for steps with custom navigation */}
-          {![3, 4].includes(step) && (
+            <ApplicationFormContent
+              currentStep={step}
+              stepLabels={STEP_LABELS}
+              error={error}
+            >
+              {renderStepContent()}
+            </ApplicationFormContent>
+
             <ApplicationFormNavigation
               currentStep={step}
               totalSteps={STEP_LABELS.length}
@@ -129,9 +145,9 @@ export default function ApplicationForm({ travelerType, applicationType, country
               onBack={goBack}
               onSubmit={handleSubmit}
             />
-          )}
-        </div>
-      </ModalWrapper>
+          </div>
+        </ModalWrapper>
+      )}
     </ErrorBoundary>
   );
 }
