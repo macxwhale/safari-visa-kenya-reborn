@@ -2,6 +2,7 @@
 import { BaseModal } from "./BaseModal";
 import DocumentsStep from "./DocumentsStep";
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
+import { getProgressSteps } from "./ModalProgressSteps";
 
 interface DocumentsModalProps {
   isOpen: boolean;
@@ -24,15 +25,7 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
 }) => {
   if (!isOpen) return null;
 
-  const progressSteps = [
-    { label: "Passport Information", completed: true, current: false },
-    { label: "Selfie Verification", completed: true, current: false },
-    { label: "Contact Information", completed: true, current: false },
-    { label: "Trip Information", completed: true, current: false },
-    { label: "Traveler Information", completed: true, current: false },
-    { label: "Documents & Review", completed: false, current: true },
-    { label: "Payment", completed: false, current: false }
-  ];
+  const progressSteps = getProgressSteps(5);
 
   return (
     <BaseModal

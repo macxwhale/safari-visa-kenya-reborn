@@ -2,10 +2,11 @@
 import { useState, useEffect } from "react";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Input } from "@/components/ui/input";
-import { Plane, Bus, Ship, Loader2 } from "lucide-react";
+import { Plane, Bus, Ship, Loader2, AlertCircle } from "lucide-react";
 import { ModeButton } from "./ModeButton";
 import { DatePicker } from "./DatePicker";
-import { getCountryPortData, Port } from "@/services/countryPortService";
+import { getCountryPortData, Port, hasPortsForCountry } from "@/services/countryPortService";
+import { Button } from "@/components/ui/button";
 
 type Mode = 'air' | 'sea' | 'land';
 
@@ -32,6 +33,8 @@ export const ArrivalSection: React.FC<ArrivalSectionProps> = ({
 }) => {
   const [ports, setPorts] = useState<Port[]>([]);
   const [loading, setLoading] = useState(false);
+  const [showManualInput, setShowManualInput] = useState(false);
+  const [hasPortData, setHasPortData] = useState(true);
 
   useEffect(() => {
     const loadPorts = async () => {
@@ -39,7 +42,13 @@ export const ArrivalSection: React.FC<ArrivalSectionProps> = ({
       
       setLoading(true);
       try {
-        const portData = await getCountryPortData(originCountry);
+        const [portData, hasData] = await Promise.all([
+          getCountryPortData(originCountry),
+          hasPortsForCountry(originCountry)
+        ]);
+        
+        setHasPortData(hasData);
+        
         let relevantPorts: Port[] = [];
         
         switch (form.arrivalMode) {
@@ -55,9 +64,12 @@ export const ArrivalSection: React.FC<ArrivalSectionProps> = ({
         }
         
         setPorts(relevantPorts);
+        setShowManualInput(relevantPorts.length === 0);
       } catch (error) {
         console.error('Failed to load ports:', error);
         setPorts([]);
+        setHasPortData(false);
+        setShowManualInput(true);
       } finally {
         setLoading(false);
       }
@@ -72,6 +84,13 @@ export const ArrivalSection: React.FC<ArrivalSectionProps> = ({
       case 'sea': return 'seaport';
       case 'land': return 'border crossing';
       default: return 'port';
+    }
+  };
+
+  const handleManualInputToggle = () => {
+    setShowManualInput(!showManualInput);
+    if (!showManualInput) {
+      onChange('arrivalPort', '');
     }
   };
 
@@ -134,39 +153,90 @@ export const ArrivalSection: React.FC<ArrivalSectionProps> = ({
               <label className="block text-sm font-medium text-gray-700 mb-2">
                 Departure {getModeText()} in {originCountry} *
               </label>
-              <Select onValueChange={(value) => onChange('arrivalPort', value)} value={form.arrivalPort}>
-                <SelectTrigger className="w-full">
-                  <SelectValue 
-                    placeholder={
-                      loading 
-                        ? "Loading ports..." 
-                        : `Select departure ${getModeText()} from ${originCountry}`
-                    } 
-                  />
-                </SelectTrigger>
-                <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
-                  {loading ? (
-                    <div className="flex items-center justify-center py-4">
-                      <Loader2 className="w-4 h-4 animate-spin mr-2" />
-                      Loading ports...
+              
+              {!hasPortData && (
+                <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 mb-3">
+                  <div className="flex items-start space-x-2">
+                    <AlertCircle className="w-4 h-4 text-amber-600 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-amber-800 font-medium">
+                        No ports available for {originCountry}
+                      </p>
+                      <p className="text-xs text-amber-700 mt-1">
+                        Please enter your departure location manually below.
+                      </p>
                     </div>
-                  ) : ports.length > 0 ? (
-                    ports.map((port) => (
-                      <SelectItem key={port.code} value={port.code}>
-                        <div className="flex flex-col">
-                          <span className="font-medium">{port.code}</span>
-                          <span className="text-sm text-gray-500">{port.name}</span>
-                          {port.city && <span className="text-xs text-gray-400">{port.city}</span>}
+                  </div>
+                </div>
+              )}
+
+              {!showManualInput && hasPortData ? (
+                <div className="space-y-2">
+                  <Select onValueChange={(value) => onChange('arrivalPort', value)} value={form.arrivalPort}>
+                    <SelectTrigger className="w-full">
+                      <SelectValue 
+                        placeholder={
+                          loading 
+                            ? "Loading ports..." 
+                            : `Select departure ${getModeText()} from ${originCountry}`
+                        } 
+                      />
+                    </SelectTrigger>
+                    <SelectContent className="z-[99999] bg-white border shadow-lg max-h-48 overflow-y-auto">
+                      {loading ? (
+                        <div className="flex items-center justify-center py-4">
+                          <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                          Loading ports...
                         </div>
-                      </SelectItem>
-                    ))
-                  ) : (
-                    <div className="py-4 text-center text-gray-500">
-                      No ports found for {originCountry}
-                    </div>
+                      ) : ports.length > 0 ? (
+                        ports.map((port) => (
+                          <SelectItem key={port.code} value={port.code}>
+                            <div className="flex flex-col">
+                              <span className="font-medium">{port.code}</span>
+                              <span className="text-sm text-gray-500">{port.name}</span>
+                              {port.city && <span className="text-xs text-gray-400">{port.city}</span>}
+                            </div>
+                          </SelectItem>
+                        ))
+                      ) : (
+                        <div className="py-4 text-center text-gray-500">
+                          No ports found for {originCountry}
+                        </div>
+                      )}
+                    </SelectContent>
+                  </Select>
+                  {ports.length === 0 && !loading && (
+                    <Button
+                      type="button"
+                      variant="link"
+                      size="sm"
+                      onClick={handleManualInputToggle}
+                      className="p-0 h-auto text-blue-600 text-sm"
+                    >
+                      Enter manually instead
+                    </Button>
                   )}
-                </SelectContent>
-              </Select>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <Input
+                    placeholder={`Enter departure ${getModeText()} name`}
+                    value={form.arrivalPort}
+                    onChange={(e) => onChange('arrivalPort', e.target.value)}
+                  />
+                  {hasPortData && (
+                    <Button
+                      type="button"
+                      variant="link"
+                      size="sm"
+                      onClick={handleManualInputToggle}
+                      className="p-0 h-auto text-blue-600 text-sm"
+                    >
+                      Choose from list instead
+                    </Button>
+                  )}
+                </div>
+              )}
             </div>
 
             {form.arrivalMode === 'air' && (

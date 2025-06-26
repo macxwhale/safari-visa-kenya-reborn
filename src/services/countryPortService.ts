@@ -1,5 +1,5 @@
 
-// Enhanced country-port service with real data
+// Enhanced country-port service with real data and fallback support
 export interface Port {
   code: string;
   name: string;
@@ -24,17 +24,45 @@ const COUNTRY_PORT_DATA: Record<string, CountryPortData> = {
       { code: 'ORD', name: 'Chicago O\'Hare International Airport', type: 'airport', city: 'Chicago', iata: 'ORD', icao: 'KORD' },
       { code: 'MIA', name: 'Miami International Airport', type: 'airport', city: 'Miami', iata: 'MIA', icao: 'KMIA' },
       { code: 'SFO', name: 'San Francisco International Airport', type: 'airport', city: 'San Francisco', iata: 'SFO', icao: 'KSFO' },
-      { code: 'ATL', name: 'Hartsfield-Jackson Atlanta International Airport', type: 'airport', city: 'Atlanta', iata: 'ATL', icao: 'KATL' }
+      { code: 'ATL', name: 'Hartsfield-Jackson Atlanta International Airport', type: 'airport', city: 'Atlanta', iata: 'ATL', icao: 'KATL' },
+      { code: 'DEN', name: 'Denver International Airport', type: 'airport', city: 'Denver', iata: 'DEN', icao: 'KDEN' },
+      { code: 'SEA', name: 'Seattle-Tacoma International Airport', type: 'airport', city: 'Seattle', iata: 'SEA', icao: 'KSEA' }
     ],
     seaPorts: [
       { code: 'LAX-PORT', name: 'Port of Los Angeles', type: 'seaport', city: 'Los Angeles' },
       { code: 'NYC-PORT', name: 'Port of New York and New Jersey', type: 'seaport', city: 'New York' },
       { code: 'MIA-PORT', name: 'Port of Miami', type: 'seaport', city: 'Miami' },
-      { code: 'LBC-PORT', name: 'Port of Long Beach', type: 'seaport', city: 'Long Beach' }
+      { code: 'LBC-PORT', name: 'Port of Long Beach', type: 'seaport', city: 'Long Beach' },
+      { code: 'SEA-PORT', name: 'Port of Seattle', type: 'seaport', city: 'Seattle' }
     ],
     landBorders: [
       { code: 'TIJ-USD', name: 'San Diego-Tijuana Border', type: 'border', city: 'San Diego' },
-      { code: 'ELP-JRZ', name: 'El Paso-Ciudad Juárez Border', type: 'border', city: 'El Paso' }
+      { code: 'ELP-JRZ', name: 'El Paso-Ciudad Juárez Border', type: 'border', city: 'El Paso' },
+      { code: 'DET-WIN', name: 'Detroit-Windsor Border', type: 'border', city: 'Detroit' }
+    ]
+  },
+  'United States of America': {
+    airports: [
+      { code: 'JFK', name: 'John F. Kennedy International Airport', type: 'airport', city: 'New York', iata: 'JFK', icao: 'KJFK' },
+      { code: 'LAX', name: 'Los Angeles International Airport', type: 'airport', city: 'Los Angeles', iata: 'LAX', icao: 'KLAX' },
+      { code: 'ORD', name: 'Chicago O\'Hare International Airport', type: 'airport', city: 'Chicago', iata: 'ORD', icao: 'KORD' },
+      { code: 'MIA', name: 'Miami International Airport', type: 'airport', city: 'Miami', iata: 'MIA', icao: 'KMIA' },
+      { code: 'SFO', name: 'San Francisco International Airport', type: 'airport', city: 'San Francisco', iata: 'SFO', icao: 'KSFO' },
+      { code: 'ATL', name: 'Hartsfield-Jackson Atlanta International Airport', type: 'airport', city: 'Atlanta', iata: 'ATL', icao: 'KATL' },
+      { code: 'DEN', name: 'Denver International Airport', type: 'airport', city: 'Denver', iata: 'DEN', icao: 'KDEN' },
+      { code: 'SEA', name: 'Seattle-Tacoma International Airport', type: 'airport', city: 'Seattle', iata: 'SEA', icao: 'KSEA' }
+    ],
+    seaPorts: [
+      { code: 'LAX-PORT', name: 'Port of Los Angeles', type: 'seaport', city: 'Los Angeles' },
+      { code: 'NYC-PORT', name: 'Port of New York and New Jersey', type: 'seaport', city: 'New York' },
+      { code: 'MIA-PORT', name: 'Port of Miami', type: 'seaport', city: 'Miami' },
+      { code: 'LBC-PORT', name: 'Port of Long Beach', type: 'seaport', city: 'Long Beach' },
+      { code: 'SEA-PORT', name: 'Port of Seattle', type: 'seaport', city: 'Seattle' }
+    ],
+    landBorders: [
+      { code: 'TIJ-USD', name: 'San Diego-Tijuana Border', type: 'border', city: 'San Diego' },
+      { code: 'ELP-JRZ', name: 'El Paso-Ciudad Juárez Border', type: 'border', city: 'El Paso' },
+      { code: 'DET-WIN', name: 'Detroit-Windsor Border', type: 'border', city: 'Detroit' }
     ]
   },
   'United Kingdom': {
@@ -92,7 +120,28 @@ export const getCountryPortData = async (country: string): Promise<CountryPortDa
   // Simulate API call delay
   await new Promise(resolve => setTimeout(resolve, 300));
   
-  return COUNTRY_PORT_DATA[country] || {
+  // Try exact match first
+  let data = COUNTRY_PORT_DATA[country];
+  
+  // If no exact match, try alternative names
+  if (!data) {
+    const normalizedCountry = country.toLowerCase();
+    const alternativeNames: Record<string, string> = {
+      'usa': 'United States',
+      'us': 'United States',
+      'america': 'United States',
+      'uk': 'United Kingdom',
+      'britain': 'United Kingdom',
+      'great britain': 'United Kingdom'
+    };
+    
+    const alternativeName = alternativeNames[normalizedCountry];
+    if (alternativeName) {
+      data = COUNTRY_PORT_DATA[alternativeName];
+    }
+  }
+  
+  return data || {
     airports: [],
     seaPorts: [],
     landBorders: []
@@ -110,4 +159,9 @@ export const searchPorts = async (country: string, query: string): Promise<Port[
     port.code.toLowerCase().includes(query.toLowerCase()) ||
     port.city?.toLowerCase().includes(query.toLowerCase())
   );
+};
+
+export const hasPortsForCountry = async (country: string): Promise<boolean> => {
+  const data = await getCountryPortData(country);
+  return data.airports.length > 0 || data.seaPorts.length > 0 || data.landBorders.length > 0;
 };

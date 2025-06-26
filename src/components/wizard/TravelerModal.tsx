@@ -2,6 +2,7 @@
 import { BaseModal } from "./BaseModal";
 import TravelInfoStep from "./TravelInfoStep";
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
+import { getProgressSteps } from "./ModalProgressSteps";
 
 interface TravelerModalProps {
   isOpen: boolean;
@@ -28,15 +29,7 @@ export const TravelerModal: React.FC<TravelerModalProps> = ({
                      form.deniedEntryToKenya !== null && form.maritalStatus &&
                      form.previouslyTravelledToKenya !== null;
 
-  const progressSteps = [
-    { label: "Passport Information", completed: true, current: false },
-    { label: "Selfie Verification", completed: true, current: false },
-    { label: "Contact Information", completed: true, current: false },
-    { label: "Trip Information", completed: true, current: false },
-    { label: "Traveler Information", completed: false, current: true },
-    { label: "Documents & Review", completed: false, current: false },
-    { label: "Payment", completed: false, current: false }
-  ];
+  const progressSteps = getProgressSteps(4);
 
   return (
     <BaseModal
