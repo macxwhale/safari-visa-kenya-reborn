@@ -1,8 +1,12 @@
 
+import { useState } from "react";
 import { BaseModal } from "./BaseModal";
 import DocumentsStep from "./DocumentsStep";
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
 import { getProgressSteps } from "./ModalProgressSteps";
+import { submitApplication, autoSaveFormData } from "@/services/applicationService";
+import { useToast } from "@/hooks/useToast";
+import { Loader2, CheckCircle } from "lucide-react";
 
 interface DocumentsModalProps {
   isOpen: boolean;
@@ -23,9 +27,102 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
   onChange,
   onSubmit
 }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
+  const { toast } = useToast();
+
   if (!isOpen) return null;
 
-  const progressSteps = getProgressSteps(5);
+  const handleConfirmAndProceed = async () => {
+    console.log("Confirm & Proceed button clicked");
+    setIsSubmitting(true);
+    setIsSaved(false);
+
+    try {
+      // First, auto-save the current form data
+      await autoSaveFormData(form, 'documents');
+      console.log("Form data auto-saved successfully");
+
+      // Validate required fields
+      const requiredFields = {
+        fullName: form.fullName,
+        email: form.email,
+        phone: form.phone,
+        passport: form.passport,
+        nationality: form.nationality,
+        entryDate: form.entryDate,
+        exitDate: form.exitDate,
+        purposeOfVisit: form.purposeOfVisit,
+        accommodationAddress: form.accommodationAddress
+      };
+
+      const missingFields = Object.entries(requiredFields)
+        .filter(([_, value]) => !value || value.trim() === '')
+        .map(([key, _]) => key);
+
+      if (missingFields.length > 0) {
+        toast({
+          title: "Missing Required Information",
+          description: `Please complete: ${missingFields.join(', ')}`,
+          variant: "destructive"
+        });
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Submit the application to database
+      console.log("Submitting application to database...");
+      await submitApplication(form);
+      
+      setIsSaved(true);
+      console.log("Application submitted successfully");
+      
+      // Show success message
+      toast({
+        title: "Application Saved Successfully",
+        description: "Your details have been saved. Redirecting to payment..."
+      });
+
+      // Wait a moment to show the success state
+      setTimeout(() => {
+        onSubmit();
+      }, 1500);
+
+    } catch (error) {
+      console.error("Failed to save application:", error);
+      toast({
+        title: "Save Failed",
+        description: "There was an error saving your application. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const progressSteps = getProgressSteps(6);
+
+  const getButtonContent = () => {
+    if (isSubmitting) {
+      return (
+        <>
+          <Loader2 className="w-4 h-4 animate-spin mr-2" />
+          Saving Application...
+        </>
+      );
+    }
+    
+    if (isSaved) {
+      return (
+        <>
+          <CheckCircle className="w-4 h-4 mr-2 text-green-600" />
+          Saved! Redirecting...
+        </>
+      );
+    }
+    
+    return "Confirm & Proceed to Payment";
+  };
 
   return (
     <BaseModal
@@ -33,9 +130,9 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
       subtitle="Upload supporting documents and review your application before proceeding to payment"
       onClose={onClose}
       onBack={onBack}
-      onNext={onSubmit}
-      nextButtonText="Confirm & Proceed to Payment"
-      nextButtonDisabled={false}
+      onNext={handleConfirmAndProceed}
+      nextButtonText={getButtonContent()}
+      nextButtonDisabled={isSubmitting || isSaved}
       className="max-w-7xl"
       showProgressBar={true}
       progressSteps={progressSteps}

@@ -6,6 +6,7 @@ import { Plane, Bus, Ship, Loader2 } from "lucide-react";
 import { ModeButton } from "./ModeButton";
 import { DatePicker } from "./DatePicker";
 import { getCountryPortData, Port } from "@/services/countryPortService";
+import { getAllKenyaPorts, KenyaPort } from "@/data/kenyaPorts";
 
 type Mode = 'air' | 'sea' | 'land';
 
@@ -29,7 +30,7 @@ export const DepartureSection: React.FC<DepartureSectionProps> = ({
   country, 
   handleDateChange 
 }) => {
-  const [ports, setPorts] = useState<Port[]>([]);
+  const [ports, setPorts] = useState<(Port | KenyaPort)[]>([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -38,22 +39,46 @@ export const DepartureSection: React.FC<DepartureSectionProps> = ({
       
       setLoading(true);
       try {
-        const portData = await getCountryPortData(country);
+        // Get hardcoded Kenya ports first as fallback
+        let fallbackPorts: KenyaPort[] = [];
         
-        let relevantPorts: Port[] = [];
-        switch (form.departureMode) {
-          case 'air':
-            relevantPorts = portData.airports;
-            break;
-          case 'sea':
-            relevantPorts = portData.seaPorts;
-            break;
-          case 'land':
-            relevantPorts = portData.landBorders;
-            break;
+        if (country.toLowerCase() === 'kenya') {
+          switch (form.departureMode) {
+            case 'air':
+              fallbackPorts = getAllKenyaPorts('airport');
+              break;
+            case 'sea':
+              fallbackPorts = getAllKenyaPorts('seaport');
+              break;
+            case 'land':
+              fallbackPorts = getAllKenyaPorts('border');
+              break;
+          }
         }
-        
-        setPorts(relevantPorts);
+
+        // Try to get API data, but use fallback if it fails
+        try {
+          const portData = await getCountryPortData(country);
+          
+          let apiPorts: Port[] = [];
+          switch (form.departureMode) {
+            case 'air':
+              apiPorts = portData.airports;
+              break;
+            case 'sea':
+              apiPorts = portData.seaPorts;
+              break;
+            case 'land':
+              apiPorts = portData.landBorders;
+              break;
+          }
+          
+          // Use API data if available, otherwise use fallback
+          setPorts(apiPorts.length > 0 ? apiPorts : fallbackPorts);
+        } catch (error) {
+          console.error('Failed to load ports from API, using fallback:', error);
+          setPorts(fallbackPorts);
+        }
       } catch (error) {
         console.error('Failed to load ports:', error);
         setPorts([]);
