@@ -10,7 +10,7 @@ interface BaseModalProps {
   onClose: () => void;
   onBack?: () => void;
   onNext?: () => void;
-  nextButtonText?: string;
+  nextButtonText?: ReactNode;
   showNextButton?: boolean;
   nextButtonDisabled?: boolean;
   className?: string;
