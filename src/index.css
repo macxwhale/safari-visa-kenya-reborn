@@ -6,6 +6,7 @@
 
 @layer base {
   :root {
+    /* Base colors */
     --background: 0 0% 100%;
     --foreground: 222.2 84% 4.9%;
 
@@ -36,22 +37,59 @@
 
     --radius: 0.5rem;
 
+    /* Brand colors - Enhanced Kenya green palette */
     --brand-green: 130 48% 21%;
+    --brand-green-hover: 130 48% 18%;
+    --brand-green-light: 130 35% 45%;
+    --brand-green-lighter: 130 25% 85%;
+    --brand-green-dark: 130 55% 15%;
 
+    /* Semantic colors */
+    --success: 142 76% 36%;
+    --success-foreground: 0 0% 100%;
+    --success-light: 142 50% 92%;
+    
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --warning-light: 38 100% 95%;
+    
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
+    --info-light: 217 100% 97%;
+
+    /* Gray scale with better contrast */
+    --gray-50: 0 0% 98%;
+    --gray-100: 240 5% 96%;
+    --gray-200: 240 6% 90%;
+    --gray-300: 240 5% 84%;
+    --gray-400: 240 5% 65%;
+    --gray-500: 240 4% 46%;
+    --gray-600: 240 5% 34%;
+    --gray-700: 240 5% 26%;
+    --gray-800: 240 4% 16%;
+    --gray-900: 240 6% 10%;
+
+    /* Touch & interaction */
+    --touch-target-min: 44px;
+    --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
+
+    /* Shadows */
+    --shadow-xs: 0 1px 2px 0 hsl(240 5% 26% / 0.05);
+    --shadow-sm: 0 1px 3px 0 hsl(240 5% 26% / 0.1), 0 1px 2px -1px hsl(240 5% 26% / 0.1);
+    --shadow-md: 0 4px 6px -1px hsl(240 5% 26% / 0.1), 0 2px 4px -2px hsl(240 5% 26% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(240 5% 26% / 0.1), 0 4px 6px -4px hsl(240 5% 26% / 0.1);
+    --shadow-xl: 0 20px 25px -5px hsl(240 5% 26% / 0.1), 0 8px 10px -6px hsl(240 5% 26% / 0.1);
+
+    /* Sidebar */
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
   }
 
@@ -101,5 +139,132 @@
 
   body {
     @apply bg-background text-foreground;
+    /* Improved font rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
+
+  /* Fluid typography */
+  h1 {
+    font-size: clamp(1.75rem, 4vw, 3rem);
+    line-height: 1.2;
+    font-weight: 700;
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    line-height: 1.25;
+    font-weight: 600;
+  }
+
+  h3 {
+    font-size: clamp(1.25rem, 2.5vw, 1.875rem);
+    line-height: 1.3;
+    font-weight: 600;
+  }
+
+  h4 {
+    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    line-height: 1.35;
+    font-weight: 500;
+  }
+
+  /* Improved focus styles */
+  :focus-visible {
+    outline: 2px solid hsl(var(--brand-green));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Better button and interactive element focus */
+  button:focus-visible,
+  a:focus-visible,
+  [role="button"]:focus-visible {
+    outline: 2px solid hsl(var(--brand-green));
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Touch-friendly utilities */
+  .touch-target {
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+  }
+
+  /* Semantic color utilities */
+  .text-success {
+    color: hsl(var(--success));
+  }
+  
+  .text-warning {
+    color: hsl(var(--warning));
+  }
+  
+  .text-info {
+    color: hsl(var(--info));
+  }
+
+  .bg-success {
+    background-color: hsl(var(--success));
+  }
+  
+  .bg-success-light {
+    background-color: hsl(var(--success-light));
+  }
+  
+  .bg-warning {
+    background-color: hsl(var(--warning));
+  }
+  
+  .bg-warning-light {
+    background-color: hsl(var(--warning-light));
+  }
+  
+  .bg-info {
+    background-color: hsl(var(--info));
+  }
+  
+  .bg-info-light {
+    background-color: hsl(var(--info-light));
+  }
+
+  /* Gray scale utilities */
+  .text-gray-50 { color: hsl(var(--gray-50)); }
+  .text-gray-100 { color: hsl(var(--gray-100)); }
+  .text-gray-200 { color: hsl(var(--gray-200)); }
+  .text-gray-300 { color: hsl(var(--gray-300)); }
+  .text-gray-400 { color: hsl(var(--gray-400)); }
+  .text-gray-500 { color: hsl(var(--gray-500)); }
+  .text-gray-600 { color: hsl(var(--gray-600)); }
+  .text-gray-700 { color: hsl(var(--gray-700)); }
+  .text-gray-800 { color: hsl(var(--gray-800)); }
+  .text-gray-900 { color: hsl(var(--gray-900)); }
+
+  .bg-gray-50 { background-color: hsl(var(--gray-50)); }
+  .bg-gray-100 { background-color: hsl(var(--gray-100)); }
+  .bg-gray-200 { background-color: hsl(var(--gray-200)); }
+  .bg-gray-300 { background-color: hsl(var(--gray-300)); }
+  .bg-gray-400 { background-color: hsl(var(--gray-400)); }
+  .bg-gray-500 { background-color: hsl(var(--gray-500)); }
+  .bg-gray-600 { background-color: hsl(var(--gray-600)); }
+  .bg-gray-700 { background-color: hsl(var(--gray-700)); }
+  .bg-gray-800 { background-color: hsl(var(--gray-800)); }
+  .bg-gray-900 { background-color: hsl(var(--gray-900)); }
+
+  /* Brand color utilities */
+  .text-brand-green { color: hsl(var(--brand-green)); }
+  .text-brand-green-light { color: hsl(var(--brand-green-light)); }
+  .bg-brand-green { background-color: hsl(var(--brand-green)); }
+  .bg-brand-green-hover { background-color: hsl(var(--brand-green-hover)); }
+  .bg-brand-green-light { background-color: hsl(var(--brand-green-light)); }
+  .bg-brand-green-lighter { background-color: hsl(var(--brand-green-lighter)); }
+
+  /* Shadow utilities */
+  .shadow-xs { box-shadow: var(--shadow-xs); }
+  .shadow-sm { box-shadow: var(--shadow-sm); }
+  .shadow-md { box-shadow: var(--shadow-md); }
+  .shadow-lg { box-shadow: var(--shadow-lg); }
+  .shadow-xl { box-shadow: var(--shadow-xl); }
 }
