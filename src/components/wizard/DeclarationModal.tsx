@@ -45,7 +45,7 @@ export default function DeclarationModal({ onClose, onContinue, onBack }: Declar
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6 sm:p-8 pb-24 sm:pb-8">
+        <div className="flex-1 overflow-y-auto p-6 sm:p-8 pb-32 sm:pb-8">
           <div className="max-w-4xl space-y-8">
             <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6">
               <h3 className="font-bold text-blue-900 mb-3 text-base sm:text-lg">Important Information</h3>
@@ -95,7 +95,7 @@ export default function DeclarationModal({ onClose, onContinue, onBack }: Declar
         </div>
 
         {/* Footer - Fixed at bottom */}
-        <div className="fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto flex flex-col sm:flex-row justify-between items-stretch sm:items-center p-6 sm:p-8 border-t border-gray-100 bg-white flex-shrink-0 gap-4 sm:gap-6">
+        <div className="fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto flex flex-col sm:flex-row justify-between items-stretch sm:items-center p-6 sm:p-8 border-t border-gray-100 bg-white flex-shrink-0 gap-4 sm:gap-6 pb-safe">
           <Button 
             variant="outline" 
             onClick={onBack} 

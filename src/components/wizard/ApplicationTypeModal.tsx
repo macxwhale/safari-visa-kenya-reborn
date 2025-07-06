@@ -79,7 +79,7 @@ export default function ApplicationTypeModal({ onBack, onClose, onTypeSelect }: 
         </div>
 
         {/* Content: Select cards */}
-        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pb-24 sm:pb-8">
+        <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pb-32 sm:pb-8">
           <div className="space-y-3 sm:space-y-4 lg:space-y-6">
             {cards.map(card => {
               const selectedStyle = selected === card.value
@@ -108,7 +108,7 @@ export default function ApplicationTypeModal({ onBack, onClose, onTypeSelect }: 
         </div>
 
         {/* Footer - Fixed at bottom */}
-        <div className="fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto flex flex-col sm:flex-row justify-between items-stretch sm:items-center p-4 sm:p-6 lg:p-8 border-t border-border bg-background gap-3 sm:gap-4 lg:gap-6">
+        <div className="fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto flex flex-col sm:flex-row justify-between items-stretch sm:items-center p-4 sm:p-6 lg:p-8 border-t border-border bg-background gap-3 sm:gap-4 lg:gap-6 pb-safe">
           <Button 
             variant="outline" 
             onClick={onClose} 

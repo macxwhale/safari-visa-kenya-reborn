@@ -19,7 +19,7 @@ export const ApplicationFormNavigation: React.FC<ApplicationFormNavigationProps>
   onSubmit
 }) => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto flex justify-between p-4 sm:p-6 lg:p-8 border-t border-border bg-white gap-4 shadow-lg lg:shadow-none">
+    <div className="fixed bottom-0 left-0 right-0 lg:relative lg:bottom-auto flex justify-between p-4 sm:p-6 lg:p-8 border-t border-border bg-white gap-4 shadow-lg lg:shadow-none pb-safe">
       <Button 
         variant="outline" 
         onClick={onBack} 

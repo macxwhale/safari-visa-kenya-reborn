@@ -65,7 +65,7 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
       </div>
 
       {/* Scrollable Content Area */}
-      <div className="flex-1 overflow-y-auto px-6 sm:px-8 py-6 pb-24 sm:pb-6">
+      <div className="flex-1 overflow-y-auto px-6 sm:px-8 py-6 pb-32 sm:pb-6">
         <CountryList 
           searchTerm={searchTerm}
           selectedCountry={selectedCountry}
@@ -74,7 +74,7 @@ export default function CountryResidenceModal({ onClose, onCountrySelect, onBack
       </div>
 
       {/* Footer - Fixed at bottom */}
-      <div className="fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto px-6 sm:px-8 py-6 border-t border-gray-100 bg-white flex-shrink-0">
+      <div className="fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto px-6 sm:px-8 py-6 border-t border-gray-100 bg-white flex-shrink-0 pb-safe">
         <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-4 sm:gap-6">
           <Button 
             variant="outline" 

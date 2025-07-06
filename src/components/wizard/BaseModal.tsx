@@ -119,12 +119,12 @@ export const BaseModal: React.FC<BaseModalProps> = ({
           </div>
 
           {/* Scrollable Content */}
-          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 pb-20 sm:pb-4">
+          <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-4 pb-32 sm:pb-4">
             {children}
           </div>
 
           {/* Footer Navigation - Fixed on mobile, relative on desktop */}
-          <div className="fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto flex flex-col sm:flex-row justify-between items-stretch sm:items-center p-4 sm:p-6 border-t border-border flex-shrink-0 bg-background gap-3 sm:gap-4">
+          <div className="fixed bottom-0 left-0 right-0 sm:relative sm:bottom-auto flex flex-col sm:flex-row justify-between items-stretch sm:items-center p-4 sm:p-6 border-t border-border flex-shrink-0 bg-background gap-3 sm:gap-4 pb-safe">
             {onBack ? (
               <Button 
                 variant="outline" 
