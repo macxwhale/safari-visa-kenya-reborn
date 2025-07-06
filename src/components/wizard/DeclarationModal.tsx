@@ -45,7 +45,7 @@ export default function DeclarationModal({ onClose, onContinue, onBack }: Declar
         </div>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto p-6 sm:p-8 pb-32 sm:pb-8">
+        <div className="flex-1 overflow-y-auto p-6 sm:p-8 pb-48 sm:pb-8">
           <div className="max-w-4xl space-y-8">
             <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6">
               <h3 className="font-bold text-blue-900 mb-3 text-base sm:text-lg">Important Information</h3>
@@ -71,7 +71,7 @@ export default function DeclarationModal({ onClose, onContinue, onBack }: Declar
               </div>
             </div>
 
-            <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6">
+            <div className="bg-gray-50 border border-gray-200 rounded-2xl p-6 mb-8">
               <label className="flex items-start gap-4 cursor-pointer touch-manipulation">
                 <div className="relative mt-1 flex-shrink-0">
                   <input
