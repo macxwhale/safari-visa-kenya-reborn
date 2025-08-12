@@ -1,4 +1,3 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
 import { safeAsync, withTimeout } from "@/utils/asyncHelpers";
@@ -7,7 +6,7 @@ import { sanitizeFormData } from "./dataValidationService";
 
 const SUBMIT_TIMEOUT = 15000;
 
-export const submitApplication = async (form: ApplicationFormState): Promise<void> => {
+export const submitApplication = async (form: ApplicationFormState): Promise<{ id: string }> => {
   const cleanForm = sanitizeFormData(form);
   
   let passport_doc_url: string | undefined;
@@ -33,7 +32,7 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
   });
 
   // Submit application data
-  const { error } = await safeAsync(async () => {
+  const { data, error } = await safeAsync(async () => {
     const insertOperation = supabase
       .from("eta_applications")
       .insert({
@@ -77,7 +76,8 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
         customs_declaration: cleanForm.customsDeclaration,
         bringing_currency_over_5000: cleanForm.bringingCurrencyOver5000,
       })
-      .select();
+      .select('id')
+      .single();
 
     return withTimeout(
       Promise.resolve(insertOperation),
@@ -89,6 +89,12 @@ export const submitApplication = async (form: ApplicationFormState): Promise<voi
   if (error) {
     throw new Error(error);
   }
+
+  if (!data?.id) {
+    throw new Error("Failed to get application ID");
+  }
+
+  return { id: data.id };
 };
 
 export const autoSaveFormData = async (form: ApplicationFormState, stepName: string): Promise<void> => {

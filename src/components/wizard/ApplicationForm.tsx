@@ -33,6 +33,7 @@ export default function ApplicationForm({ travelerType, applicationType, country
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [applicationId, setApplicationId] = useState<string | null>(null);
 
   const goNext = () => {
     if (step < STEP_LABELS.length - 1) setStep(s => s + 1);
@@ -47,7 +48,7 @@ export default function ApplicationForm({ travelerType, applicationType, country
     setSubmitting(true);
     setError(null);
     
-    const { error: submitError } = await safeAsync(
+    const { error: submitError, data: submissionData } = await safeAsync(
       () => submitApplication(form),
       "Failed to submit application"
     );
@@ -56,6 +57,11 @@ export default function ApplicationForm({ travelerType, applicationType, country
       setError(submitError);
       setSubmitting(false);
       return;
+    }
+
+    // Store the application ID for payment step
+    if (submissionData && submissionData.id) {
+      setApplicationId(submissionData.id);
     }
 
     setStep(8); // Payment step
@@ -85,7 +91,7 @@ export default function ApplicationForm({ travelerType, applicationType, country
         country={country}
         form={form}
       />,
-      <PaymentStep form={form} onChange={handleFormChange} />
+      <PaymentStep form={form} onChange={handleFormChange} applicationId={applicationId} />
     ];
 
     return stepComponents[step] || null;
