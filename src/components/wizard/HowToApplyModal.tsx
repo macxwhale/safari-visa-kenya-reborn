@@ -51,7 +51,7 @@ export default function HowToApplyModal({ onClose, onContinue, onBack }: HowToAp
       </div>
 
       {/* Content - scrollable */}
-      <div className="flex-1 overflow-y-auto p-6 sm:p-8 pb-32 sm:pb-8">
+      <div className="flex-1 overflow-y-auto p-6 sm:p-8 pb-48 sm:pb-8">
         <div className="max-w-4xl space-y-8">
           <div className="bg-blue-50 border border-blue-200 rounded-2xl p-6">
             <p className="text-gray-800 leading-relaxed text-sm sm:text-base">
@@ -64,7 +64,7 @@ export default function HowToApplyModal({ onClose, onContinue, onBack }: HowToAp
               Persons who are exempt from obtaining the Electronic Travel Authorisation (eTA)
             </h3>
 
-            <div className="bg-white border border-gray-200 rounded-2xl p-6">
+            <div className="bg-white border border-gray-200 rounded-2xl p-6 mb-8">
               <ol className="space-y-4">
                 {exemptionsList.map((exemption, index) => (
                   <li key={index} className="flex gap-4 text-gray-700 text-sm sm:text-base leading-relaxed">
