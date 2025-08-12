@@ -90,11 +90,11 @@ export const submitApplication = async (form: ApplicationFormState): Promise<{ i
     throw new Error(error);
   }
 
-  if (!data?.id) {
+  if (!data?.data?.id) {
     throw new Error("Failed to get application ID");
   }
 
-  return { id: data.id };
+  return { id: data.data.id };
 };
 
 export const autoSaveFormData = async (form: ApplicationFormState, stepName: string): Promise<void> => {
