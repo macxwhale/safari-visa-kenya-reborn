@@ -29,6 +29,13 @@ export default function SelfieStep({ form, onChange }: SelfieStepProps) {
     event.preventDefault();
   };
 
+  const handleCameraCapture = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.setAttribute('capture', 'user'); // Front camera for selfie
+      fileInputRef.current.click();
+    }
+  };
+
   return (
     <div className="max-w-2xl mx-auto">
       <div className="mb-6">
@@ -41,28 +48,41 @@ export default function SelfieStep({ form, onChange }: SelfieStepProps) {
       <div
         onDrop={handleDrop}
         onDragOver={handleDragOver}
-        onClick={() => fileInputRef.current?.click()}
-        className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center cursor-pointer hover:border-gray-400 transition-colors bg-gray-50"
+        className="border-2 border-dashed border-gray-300 rounded-lg p-8 sm:p-12 text-center bg-gray-50"
       >
-        <div className="flex flex-col items-center space-y-4">
+        <div className="flex flex-col items-center space-y-6">
           <Camera className="w-16 h-16 text-gray-400" />
           <div>
-            <p className="text-gray-700 mb-2">
-              Drag & drop your photo here or click to select from your device
+            <p className="text-gray-700 mb-4 text-base">
+              Take a selfie or upload a photo from your device
             </p>
             {form.selfieDoc && (
-              <p className="text-sm text-green-600 font-medium">
+              <p className="text-sm text-green-600 font-medium mb-4">
                 Selected: {form.selfieDoc.name}
               </p>
             )}
           </div>
-          <button 
-            type="button"
-            className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
-          >
-            <Upload className="w-5 h-5" />
-            <span>Upload Photo</span>
-          </button>
+          
+          {/* Mobile-optimized buttons */}
+          <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+            <button 
+              type="button"
+              onClick={handleCameraCapture}
+              className="bg-green-600 text-white px-6 py-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2 min-h-[48px] text-base w-full sm:w-auto"
+            >
+              <Camera className="w-5 h-5" />
+              <span>Take Selfie</span>
+            </button>
+            
+            <button 
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="bg-blue-600 text-white px-6 py-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2 min-h-[48px] text-base w-full sm:w-auto"
+            >
+              <Upload className="w-5 h-5" />
+              <span>Upload Photo</span>
+            </button>
+          </div>
         </div>
       </div>
       

@@ -16,6 +16,11 @@ export default function PaymentStep({ form, onChange, applicationId }: PaymentSt
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'bank' | null>(null);
   const { toast } = useToast();
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const handlePayment = async (method: 'card' | 'bank') => {
     if (!applicationId) {
       toast({
@@ -28,8 +33,17 @@ export default function PaymentStep({ form, onChange, applicationId }: PaymentSt
 
     if (!form.email) {
       toast({
-        title: "Error",
-        description: "Email is required for payment. Please complete your application details.",
+        title: "Email Required",
+        description: "Please complete your contact information with a valid email address.",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!validateEmail(form.email)) {
+      toast({
+        title: "Invalid Email",
+        description: "Please enter a valid email address (e.g., user@example.com) to proceed with payment.",
         variant: "destructive"
       });
       return;
@@ -49,7 +63,7 @@ export default function PaymentStep({ form, onChange, applicationId }: PaymentSt
       const { data, error } = await supabase.functions.invoke('create-paystack-payment', {
         body: {
           applicationId: applicationId,
-          email: form.email, // Pass email from form data
+          email: form.email,
           amount: 6800, // KES amount (equivalent to $53 USD)
           currency: 'KES'
         }
@@ -70,9 +84,15 @@ export default function PaymentStep({ form, onChange, applicationId }: PaymentSt
 
     } catch (error) {
       console.error('Payment error:', error);
+      let errorMessage = "Unable to process payment. Please try again.";
+      
+      if (error.message.includes('email')) {
+        errorMessage = "Please check your email address and try again.";
+      }
+      
       toast({
         title: "Payment Failed",
-        description: error.message || "Unable to process payment. Please try again.",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -91,7 +111,7 @@ export default function PaymentStep({ form, onChange, applicationId }: PaymentSt
 
   return (
     <div className="space-y-6 animate-fade-in max-w-2xl">
-      <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+      <div className="bg-green-50 border border-green-200 rounded-lg p-4 sm:p-6">
         <h3 className="text-lg font-semibold mb-4 text-green-900">Payment Information</h3>
         
         <div className="mb-6">
@@ -117,6 +137,19 @@ export default function PaymentStep({ form, onChange, applicationId }: PaymentSt
             </div>
           </div>
         </div>
+
+        {/* Email validation notice */}
+        {form.email && !validateEmail(form.email) && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
+            <div className="flex items-center space-x-2">
+              <AlertCircle className="w-5 h-5 text-red-600" />
+              <div>
+                <p className="text-sm font-medium text-red-900">Invalid Email Address</p>
+                <p className="text-xs text-red-700">Please correct your email address to proceed with payment</p>
+              </div>
+            </div>
+          </div>
+        )}
         
         <div className="space-y-4">
           <h4 className="font-medium text-gray-900">Select Payment Method</h4>
@@ -131,12 +164,12 @@ export default function PaymentStep({ form, onChange, applicationId }: PaymentSt
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <Button 
               variant="outline" 
-              className="h-16 flex items-center justify-center space-x-3 relative"
+              className="h-16 flex items-center justify-center space-x-3 relative min-h-[48px] text-base"
               onClick={() => handlePayment('card')}
-              disabled={isProcessing}
+              disabled={isProcessing || !form.email || !validateEmail(form.email)}
             >
               {isProcessing && paymentMethod === 'card' ? (
                 <Loader2 className="w-6 h-6 animate-spin" />
@@ -151,9 +184,9 @@ export default function PaymentStep({ form, onChange, applicationId }: PaymentSt
             
             <Button 
               variant="outline" 
-              className="h-16 flex items-center justify-center space-x-3 relative"
+              className="h-16 flex items-center justify-center space-x-3 relative min-h-[48px] text-base"
               onClick={() => handlePayment('bank')}
-              disabled={isProcessing}
+              disabled={isProcessing || !form.email || !validateEmail(form.email)}
             >
               {isProcessing && paymentMethod === 'bank' ? (
                 <Loader2 className="w-6 h-6 animate-spin" />

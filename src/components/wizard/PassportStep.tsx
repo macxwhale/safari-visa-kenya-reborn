@@ -1,6 +1,6 @@
 
 import { Input } from "@/components/ui/input";
-import { Upload, FileText, CheckCircle } from "lucide-react";
+import { Upload, FileText, CheckCircle, Camera } from "lucide-react";
 import { useRef } from "react";
 
 interface PassportStepProps {
@@ -46,6 +46,13 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
     }
   };
 
+  const handleCameraCapture = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.setAttribute('capture', 'environment');
+      fileInputRef.current.click();
+    }
+  };
+
   return (
     <div className="space-y-8 animate-fade-in max-w-2xl">
       {/* Upload Area */}
@@ -54,25 +61,38 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
           <div
             onDrop={handleDrop}
             onDragOver={handleDragOver}
-            onClick={() => fileInputRef.current?.click()}
-            className="border-2 border-dashed border-gray-300 rounded-xl p-12 text-center cursor-pointer hover:border-gray-400 transition-colors bg-gray-50"
+            className="border-2 border-dashed border-gray-300 rounded-xl p-8 sm:p-12 text-center bg-gray-50"
           >
             <div className="flex flex-col items-center space-y-4">
               <div className="w-16 h-16 border-2 border-gray-400 rounded-lg flex items-center justify-center">
                 <FileText className="w-8 h-8 text-gray-600" />
               </div>
               <div>
-                <p className="text-gray-700 mb-2 text-base">
-                  Drag & drop a photo or scan of the travel document or passport bio data page or click here to manually select
+                <p className="text-gray-700 mb-4 text-base">
+                  Upload a photo or scan of your passport bio data page
                 </p>
               </div>
-              <button 
-                type="button"
-                className="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center space-x-2"
-              >
-                <Upload className="w-5 h-5" />
-                <span>Upload passport page</span>
-              </button>
+              
+              {/* Mobile-optimized buttons */}
+              <div className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
+                <button 
+                  type="button"
+                  onClick={handleCameraCapture}
+                  className="bg-green-600 text-white px-6 py-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center space-x-2 min-h-[48px] text-base w-full sm:w-auto"
+                >
+                  <Camera className="w-5 h-5" />
+                  <span>Take Photo</span>
+                </button>
+                
+                <button 
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="bg-blue-600 text-white px-6 py-4 rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center space-x-2 min-h-[48px] text-base w-full sm:w-auto"
+                >
+                  <Upload className="w-5 h-5" />
+                  <span>Upload File</span>
+                </button>
+              </div>
             </div>
           </div>
         )}
@@ -91,7 +111,7 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
               </div>
               <button
                 onClick={handleRemoveFile}
-                className="text-sm text-green-600 hover:text-green-800 underline"
+                className="text-sm text-green-600 hover:text-green-800 underline min-h-[44px] px-3"
               >
                 Remove file
               </button>
@@ -116,7 +136,7 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
           </h3>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Full Name *
@@ -126,6 +146,7 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
               placeholder="e.g. John Michael Smith"
               value={form.fullName}
               onChange={(e) => onChange('fullName', e.target.value)}
+              className="min-h-[48px] text-base"
             />
           </div>
 
@@ -138,6 +159,7 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
               placeholder="e.g. A1234567"
               value={form.passport}
               onChange={(e) => onChange('passport', e.target.value)}
+              className="min-h-[48px] text-base"
             />
           </div>
           
@@ -150,6 +172,7 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
               placeholder="e.g. United States"
               value={form.nationality}
               onChange={(e) => onChange('nationality', e.target.value)}
+              className="min-h-[48px] text-base"
             />
           </div>
           
@@ -162,6 +185,7 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
               required
               value={form.dateOfBirth}
               onChange={(e) => onChange('dateOfBirth', e.target.value)}
+              className="min-h-[48px] text-base"
             />
           </div>
           
@@ -174,6 +198,7 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
               placeholder="e.g. New York, USA"
               value={form.placeOfBirth}
               onChange={(e) => onChange('placeOfBirth', e.target.value)}
+              className="min-h-[48px] text-base"
             />
           </div>
           
@@ -186,6 +211,7 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
               required
               value={form.passportIssueDate}
               onChange={(e) => onChange('passportIssueDate', e.target.value)}
+              className="min-h-[48px] text-base"
             />
           </div>
           
@@ -198,6 +224,7 @@ export default function PassportStep({ form, onChange }: PassportStepProps) {
               required
               value={form.passportExpiryDate}
               onChange={(e) => onChange('passportExpiryDate', e.target.value)}
+              className="min-h-[48px] text-base"
             />
           </div>
         </div>

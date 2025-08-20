@@ -49,10 +49,10 @@ export const BaseModal: React.FC<BaseModalProps> = ({
         {/* Mobile Progress Bar */}
         {showProgressBar && progressSteps.length > 0 && (
           <div className="sm:hidden bg-background border-b border-border p-4">
-            <div className="flex gap-2 overflow-x-auto">
+            <div className="flex gap-2 overflow-x-auto pb-2">
               {progressSteps.map((step, index) => (
                 <div key={index} className="flex items-center gap-2 flex-shrink-0">
-                  <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-semibold touch-target ${
+                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold ${
                     step.completed 
                       ? 'bg-success text-success-foreground' 
                       : step.current 
@@ -78,7 +78,7 @@ export const BaseModal: React.FC<BaseModalProps> = ({
             <div className="space-y-4">
               {progressSteps.map((step, index) => (
                 <div key={index} className="flex items-center space-x-3">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold touch-target ${
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold ${
                     step.completed 
                       ? 'bg-success text-success-foreground' 
                       : step.current 
@@ -112,7 +112,7 @@ export const BaseModal: React.FC<BaseModalProps> = ({
               variant="ghost" 
               size="sm"
               onClick={onClose}
-              className="text-muted-foreground hover:text-foreground p-2 rounded-full hover:bg-muted touch-target flex-shrink-0"
+              className="text-muted-foreground hover:text-foreground p-3 rounded-full hover:bg-muted flex-shrink-0 min-w-[48px] min-h-[48px]"
             >
               <X className="w-5 h-5" />
             </Button>
@@ -130,7 +130,7 @@ export const BaseModal: React.FC<BaseModalProps> = ({
                 variant="outline" 
                 onClick={onBack}
                 size="lg"
-                className="flex items-center justify-center gap-2 w-full sm:w-auto order-2 sm:order-1"
+                className="flex items-center justify-center gap-2 w-full sm:w-auto order-2 sm:order-1 min-h-[48px] text-base"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Back
@@ -145,7 +145,7 @@ export const BaseModal: React.FC<BaseModalProps> = ({
                 onClick={onNext}
                 disabled={nextButtonDisabled}
                 size="lg"
-                className="w-full sm:w-auto order-1 sm:order-2"
+                className="w-full sm:w-auto order-1 sm:order-2 min-h-[48px] text-base"
               >
                 {nextButtonText}
               </Button>
