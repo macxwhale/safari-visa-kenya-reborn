@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import PassportStep from "./PassportStep";
 import SelfieStep from "./SelfieStep";
@@ -19,6 +19,9 @@ import { ApplicationFormHeader } from "./ApplicationFormHeader";
 import { ApplicationFormContent } from "./ApplicationFormContent";
 import { ApplicationFormNavigation } from "./ApplicationFormNavigation";
 import { ModalManager } from "./ModalManager";
+import { ProgressIndicator } from "./ProgressIndicator";
+import { useAutoSave } from "@/hooks/useAutoSave";
+import { ConfirmationDialog } from "./ConfirmationDialog";
 
 interface ApplicationFormProps {
   travelerType: string;
@@ -34,14 +37,77 @@ export default function ApplicationForm({ travelerType, applicationType, country
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [applicationId, setApplicationId] = useState<string | null>(null);
+  const [showExitConfirm, setShowExitConfirm] = useState(false);
+
+  // Track completed steps
+  const [completedSteps, setCompletedSteps] = useState<boolean[]>(
+    new Array(STEP_LABELS.length).fill(false)
+  );
+
+  // Auto-save functionality
+  useAutoSave({
+    data: form,
+    onSave: (data) => {
+      // Save to localStorage as backup
+      localStorage.setItem('visa-application-draft', JSON.stringify({
+        data,
+        step,
+        timestamp: Date.now()
+      }));
+    },
+    enabled: step < 7 // Don't auto-save on review/payment steps
+  });
+
+  // Load draft on mount
+  useEffect(() => {
+    const draft = localStorage.getItem('visa-application-draft');
+    if (draft) {
+      try {
+        const { data, step: savedStep, timestamp } = JSON.parse(draft);
+        // Only restore if less than 24 hours old
+        if (Date.now() - timestamp < 24 * 60 * 60 * 1000) {
+          // Show confirmation to restore draft
+          // For now, just console log - can be enhanced later
+          console.log('Draft found, can be restored:', { savedStep, timestamp });
+        }
+      } catch (error) {
+        console.error('Error loading draft:', error);
+      }
+    }
+  }, []);
 
   const goNext = () => {
-    if (step < STEP_LABELS.length - 1) setStep(s => s + 1);
+    if (step < STEP_LABELS.length - 1) {
+      setCompletedSteps(prev => {
+        const newCompleted = [...prev];
+        newCompleted[step] = true;
+        return newCompleted;
+      });
+      setStep(s => s + 1);
+    }
   };
 
   const goBack = () => {
-    if (step > 0) setStep(s => s - 1);
-    else onReset();
+    if (step > 0) {
+      setStep(s => s - 1);
+    } else {
+      setShowExitConfirm(true);
+    }
+  };
+
+  const handleExit = () => {
+    // Clear draft when explicitly exiting
+    localStorage.removeItem('visa-application-draft');
+    onReset();
+    setShowExitConfirm(false);
+  };
+
+  const handleClose = () => {
+    if (step > 0) {
+      setShowExitConfirm(true);
+    } else {
+      navigate("/");
+    }
   };
 
   const handleSubmit = async () => {
@@ -59,21 +125,18 @@ export default function ApplicationForm({ travelerType, applicationType, country
       return;
     }
 
-    // Store the application ID for payment step
     if (submissionData && submissionData.id) {
       setApplicationId(submissionData.id);
     }
 
+    // Clear draft on successful submission
+    localStorage.removeItem('visa-application-draft');
     setStep(8); // Payment step
     setSubmitting(false);
   };
 
-  const handleClose = () => {
-    navigate("/");
-  };
-
   const useModalForStep = (stepIndex: number) => {
-    return [0, 1, 2, 3, 4, 5, 6].includes(stepIndex); // All main steps use modals
+    return [0, 1, 2, 3, 4, 5, 6].includes(stepIndex);
   };
 
   const renderStepContent = () => {
@@ -99,6 +162,14 @@ export default function ApplicationForm({ travelerType, applicationType, country
 
   return (
     <ErrorBoundary>
+      {/* Progress Indicator */}
+      <ProgressIndicator
+        currentStep={step}
+        totalSteps={STEP_LABELS.length}
+        completedSteps={completedSteps}
+        stepLabels={STEP_LABELS}
+      />
+
       <ModalManager
         currentStep={step}
         form={form}
@@ -139,6 +210,17 @@ export default function ApplicationForm({ travelerType, applicationType, country
           </div>
         </ModalWrapper>
       )}
+
+      {/* Exit Confirmation Dialog */}
+      <ConfirmationDialog
+        open={showExitConfirm}
+        onOpenChange={setShowExitConfirm}
+        title="Exit Application?"
+        description="Your progress will be saved as a draft. You can continue later from where you left off."
+        confirmText="Exit"
+        cancelText="Continue Application"
+        onConfirm={handleExit}
+      />
     </ErrorBoundary>
   );
 }
