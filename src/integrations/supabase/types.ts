@@ -16,12 +16,35 @@ export type Database = {
     Tables: {
       eta_applications: {
         Row: {
+          accommodation_address: string | null
+          accommodation_check_in_date: string | null
+          accommodation_check_out_date: string | null
+          arrival_airline: string | null
+          arrival_mode: string | null
+          arrival_port: string | null
+          bringing_currency_over_5000: boolean | null
+          convicted_in_past_5_years: boolean | null
+          country_of_birth: string | null
+          customs_declaration: boolean | null
+          date_of_birth: string | null
+          denied_entry_to_kenya: boolean | null
+          departure_airline: string | null
+          departure_flight_number: string | null
+          departure_mode: string | null
+          departure_port: string | null
           doc_url: string | null
           email: string
           entry_date: string
+          exit_date: string | null
+          final_destination_country: string | null
+          flight_number: string | null
           full_name: string
+          home_address: string | null
           id: string
+          marital_status: string | null
           nationality: string
+          nationality_at_birth: string | null
+          occupation: string | null
           ocr_date_of_birth: string | null
           ocr_document_number: string | null
           ocr_extracted_at: string | null
@@ -29,22 +52,53 @@ export type Database = {
           ocr_validity_date: string | null
           paid_at: string | null
           passport: string
+          passport_expiry_date: string | null
+          passport_issue_date: string | null
           payment_amount_kes: number | null
           payment_amount_usd: number | null
           payment_reference: string | null
           payment_status: string | null
+          phone: string | null
+          place_of_birth: string | null
+          previously_travelled_to_kenya: boolean | null
+          purpose_of_visit: string | null
+          selfie_url: string | null
           status: string
           submitted_at: string | null
           travel_from: string
+          trip_financed_by_third_party: boolean | null
           user_id: string | null
         }
         Insert: {
+          accommodation_address?: string | null
+          accommodation_check_in_date?: string | null
+          accommodation_check_out_date?: string | null
+          arrival_airline?: string | null
+          arrival_mode?: string | null
+          arrival_port?: string | null
+          bringing_currency_over_5000?: boolean | null
+          convicted_in_past_5_years?: boolean | null
+          country_of_birth?: string | null
+          customs_declaration?: boolean | null
+          date_of_birth?: string | null
+          denied_entry_to_kenya?: boolean | null
+          departure_airline?: string | null
+          departure_flight_number?: string | null
+          departure_mode?: string | null
+          departure_port?: string | null
           doc_url?: string | null
           email: string
           entry_date: string
+          exit_date?: string | null
+          final_destination_country?: string | null
+          flight_number?: string | null
           full_name: string
+          home_address?: string | null
           id?: string
+          marital_status?: string | null
           nationality: string
+          nationality_at_birth?: string | null
+          occupation?: string | null
           ocr_date_of_birth?: string | null
           ocr_document_number?: string | null
           ocr_extracted_at?: string | null
@@ -52,22 +106,53 @@ export type Database = {
           ocr_validity_date?: string | null
           paid_at?: string | null
           passport: string
+          passport_expiry_date?: string | null
+          passport_issue_date?: string | null
           payment_amount_kes?: number | null
           payment_amount_usd?: number | null
           payment_reference?: string | null
           payment_status?: string | null
+          phone?: string | null
+          place_of_birth?: string | null
+          previously_travelled_to_kenya?: boolean | null
+          purpose_of_visit?: string | null
+          selfie_url?: string | null
           status?: string
           submitted_at?: string | null
           travel_from: string
+          trip_financed_by_third_party?: boolean | null
           user_id?: string | null
         }
         Update: {
+          accommodation_address?: string | null
+          accommodation_check_in_date?: string | null
+          accommodation_check_out_date?: string | null
+          arrival_airline?: string | null
+          arrival_mode?: string | null
+          arrival_port?: string | null
+          bringing_currency_over_5000?: boolean | null
+          convicted_in_past_5_years?: boolean | null
+          country_of_birth?: string | null
+          customs_declaration?: boolean | null
+          date_of_birth?: string | null
+          denied_entry_to_kenya?: boolean | null
+          departure_airline?: string | null
+          departure_flight_number?: string | null
+          departure_mode?: string | null
+          departure_port?: string | null
           doc_url?: string | null
           email?: string
           entry_date?: string
+          exit_date?: string | null
+          final_destination_country?: string | null
+          flight_number?: string | null
           full_name?: string
+          home_address?: string | null
           id?: string
+          marital_status?: string | null
           nationality?: string
+          nationality_at_birth?: string | null
+          occupation?: string | null
           ocr_date_of_birth?: string | null
           ocr_document_number?: string | null
           ocr_extracted_at?: string | null
@@ -75,13 +160,21 @@ export type Database = {
           ocr_validity_date?: string | null
           paid_at?: string | null
           passport?: string
+          passport_expiry_date?: string | null
+          passport_issue_date?: string | null
           payment_amount_kes?: number | null
           payment_amount_usd?: number | null
           payment_reference?: string | null
           payment_status?: string | null
+          phone?: string | null
+          place_of_birth?: string | null
+          previously_travelled_to_kenya?: boolean | null
+          purpose_of_visit?: string | null
+          selfie_url?: string | null
           status?: string
           submitted_at?: string | null
           travel_from?: string
+          trip_financed_by_third_party?: boolean | null
           user_id?: string | null
         }
         Relationships: []
