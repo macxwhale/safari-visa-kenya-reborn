@@ -8,13 +8,6 @@ import { sanitizeFormData } from "./dataValidationService";
 const SUBMIT_TIMEOUT = 15000;
 
 export const submitApplication = async (form: ApplicationFormState): Promise<{ id: string }> => {
-  // Get current user session
-  const { data: { user }, error: authError } = await supabase.auth.getUser();
-  
-  if (authError || !user) {
-    throw new Error("You must be logged in to submit an application");
-  }
-
   const cleanForm = sanitizeFormData(form);
   
   let passport_doc_url: string | undefined;
@@ -39,12 +32,12 @@ export const submitApplication = async (form: ApplicationFormState): Promise<{ i
     console.error('Some optional uploads failed:', error);
   });
 
-  // Submit application data
+  // Submit application data without requiring authentication
   const { data, error } = await safeAsync(async () => {
     const insertOperation = supabase
       .from("eta_applications")
       .insert({
-        user_id: user.id, // Set the user_id to the authenticated user's ID
+        user_id: null, // No longer requiring authentication
         full_name: cleanForm.fullName,
         email: cleanForm.email,
         phone: cleanForm.phone,

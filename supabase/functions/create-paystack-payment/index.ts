@@ -13,24 +13,10 @@ serve(async (req) => {
   }
 
   try {
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
-    );
+    const { applicationId, amount, currency = 'KES', email } = await req.json();
 
-    const authHeader = req.headers.get('Authorization')!;
-    const token = authHeader.replace('Bearer ', '');
-    const { data } = await supabaseClient.auth.getUser(token);
-    const user = data.user;
-
-    if (!user?.email) {
-      throw new Error('User not authenticated');
-    }
-
-    const { applicationId, amount, currency = 'KES' } = await req.json();
-
-    if (!applicationId || !amount) {
-      throw new Error('Missing required fields: applicationId, amount');
+    if (!applicationId || !amount || !email) {
+      throw new Error('Missing required fields: applicationId, amount, email');
     }
 
     const paystackSecretKey = Deno.env.get('PAYSTACK_SECRET_KEY');
@@ -49,14 +35,14 @@ serve(async (req) => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        email: user.email,
+        email: email,
         amount: Math.round(amount * 100), // Convert to kobo (smallest unit)
         currency: currency,
         reference: reference,
         callback_url: `${req.headers.get('origin')}/payment-success`,
         metadata: {
           applicationId: applicationId,
-          userId: user.id,
+          email: email,
         },
         channels: ['card', 'bank', 'mobile_money', 'bank_transfer'],
       }),
@@ -79,7 +65,7 @@ serve(async (req) => {
       .from('payments')
       .insert({
         application_id: applicationId,
-        user_id: user.id,
+        user_id: null, // No longer using user authentication
         paystack_reference: reference,
         paystack_access_code: paystackData.data.access_code,
         amount_usd: currency === 'USD' ? amount : (amount / 128), // Rough conversion
