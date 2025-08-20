@@ -26,25 +26,36 @@ export default function PaymentStep({ form, onChange, applicationId }: PaymentSt
       return;
     }
 
+    if (!form.email) {
+      toast({
+        title: "Error",
+        description: "Email is required for payment. Please complete your application details.",
+        variant: "destructive"
+      });
+      return;
+    }
+
     setIsProcessing(true);
     setPaymentMethod(method);
 
     try {
-      // Get current user session
-      const { data: { session } } = await supabase.auth.getSession();
-      
-      if (!session) {
-        throw new Error('Please log in to continue with payment');
-      }
+      console.log('Initializing payment with:', {
+        applicationId,
+        email: form.email,
+        amount: 6800
+      });
 
       // Initialize payment with Paystack
       const { data, error } = await supabase.functions.invoke('create-paystack-payment', {
         body: {
           applicationId: applicationId,
+          email: form.email, // Pass email from form data
           amount: 6800, // KES amount (equivalent to $53 USD)
           currency: 'KES'
         }
       });
+
+      console.log('Payment function response:', { data, error });
 
       if (error) {
         throw new Error(error.message || 'Failed to initialize payment');
