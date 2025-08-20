@@ -10,9 +10,27 @@ export const safeAsync = async <T>(
     const data = await operation();
     return { data, error: null };
   } catch (error) {
-    const errorMsg = errorMessage || (error instanceof Error ? error.message : 'An unexpected error occurred');
-    console.error('Async operation failed:', error);
-    return { data: null, error: errorMsg };
+    // Enhanced error logging with more details
+    const errorDetails = {
+      originalError: error,
+      errorMessage: error instanceof Error ? error.message : 'Unknown error',
+      errorStack: error instanceof Error ? error.stack : undefined,
+      customMessage: errorMessage
+    };
+    
+    console.error('Async operation failed with details:', errorDetails);
+    
+    // Return the most specific error message available
+    let finalErrorMessage = errorMessage || 'An unexpected error occurred';
+    
+    if (error instanceof Error) {
+      // If we have a custom message, append the original error for context
+      finalErrorMessage = errorMessage 
+        ? `${errorMessage}: ${error.message}`
+        : error.message;
+    }
+    
+    return { data: null, error: finalErrorMessage };
   }
 };
 
@@ -30,9 +48,10 @@ export const retryAsync = async <T>(
     try {
       return await operation();
     } catch (error) {
-      lastError = error instanceof Error ? error : new Error('Unknown error');
+      lastError = error instanceof Error ? error : new Error(String(error));
       
       if (attempt === maxRetries) {
+        console.error(`All ${maxRetries} retry attempts failed:`, lastError);
         throw lastError;
       }
       
@@ -54,8 +73,15 @@ export const withTimeout = <T>(
 ): Promise<T> => {
   return Promise.race([
     operation,
-    new Promise<never>((_, reject) => 
-      setTimeout(() => reject(new Error(timeoutMessage)), timeoutMs)
-    )
+    new Promise<never>((_, reject) => {
+      const timeoutId = setTimeout(() => {
+        const error = new Error(`${timeoutMessage} (${timeoutMs}ms)`);
+        console.error('Operation timed out:', error);
+        reject(error);
+      }, timeoutMs);
+      
+      // Clear timeout if operation completes
+      operation.finally(() => clearTimeout(timeoutId));
+    })
   ]);
 };

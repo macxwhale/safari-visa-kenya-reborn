@@ -1,25 +1,35 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
 import { safeAsync, withTimeout } from "@/utils/asyncHelpers";
 import { uploadCriticalFile, uploadOptionalFile } from "./fileUploadService";
 import { sanitizeFormData } from "./dataValidationService";
 
-const SUBMIT_TIMEOUT = 15000;
+const SUBMIT_TIMEOUT = 30000; // Keep at 30 seconds for submission, upload timeout is separate
 
 export const submitApplication = async (form: ApplicationFormState): Promise<{ id: string }> => {
+  console.log('Starting application submission process');
+  
   const cleanForm = sanitizeFormData(form);
   
   let passport_doc_url: string | undefined;
   let selfie_doc_url: string | undefined;
 
-  // Upload critical documents
-  if (cleanForm.passportDoc) {
-    passport_doc_url = await uploadCriticalFile(cleanForm.passportDoc, 'passport');
-  }
+  try {
+    // Upload critical documents with enhanced error handling
+    if (cleanForm.passportDoc) {
+      console.log('Uploading passport document...');
+      passport_doc_url = await uploadCriticalFile(cleanForm.passportDoc, 'passport');
+      console.log('Passport document uploaded successfully:', passport_doc_url);
+    }
 
-  if (cleanForm.selfieDoc) {
-    selfie_doc_url = await uploadCriticalFile(cleanForm.selfieDoc, 'selfie');
+    if (cleanForm.selfieDoc) {
+      console.log('Uploading selfie document...');
+      selfie_doc_url = await uploadCriticalFile(cleanForm.selfieDoc, 'selfie');
+      console.log('Selfie document uploaded successfully:', selfie_doc_url);
+    }
+  } catch (uploadError) {
+    console.error('Critical document upload failed:', uploadError);
+    throw new Error(`Document upload failed: ${uploadError instanceof Error ? uploadError.message : 'Unknown upload error'}`);
   }
 
   // Fire-and-forget optional uploads
@@ -28,9 +38,16 @@ export const submitApplication = async (form: ApplicationFormState): Promise<{ i
     ...cleanForm.airlineDocs.map(file => uploadOptionalFile(file, 'airline')),
   ];
 
-  Promise.allSettled(uploadPromises).catch(error => {
-    console.error('Some optional uploads failed:', error);
+  Promise.allSettled(uploadPromises).then(results => {
+    const failedUploads = results.filter(result => result.status === 'rejected');
+    if (failedUploads.length > 0) {
+      console.warn(`${failedUploads.length} optional uploads failed:`, failedUploads);
+    } else {
+      console.log('All optional uploads completed successfully');
+    }
   });
+
+  console.log('Submitting application data to database...');
 
   // Submit application data without requiring authentication
   const { data, error } = await safeAsync(async () => {
@@ -88,13 +105,16 @@ export const submitApplication = async (form: ApplicationFormState): Promise<{ i
   }, "Application submission failed");
 
   if (error) {
-    throw new Error(error);
+    console.error('Database submission failed:', error);
+    throw new Error(`Application submission failed: ${error}`);
   }
 
   if (!data?.data?.id) {
-    throw new Error("Failed to get application ID");
+    console.error('Submission succeeded but no application ID returned:', data);
+    throw new Error("Failed to get application ID from database");
   }
 
+  console.log('Application submitted successfully with ID:', data.data.id);
   return { id: data.data.id };
 };
 
