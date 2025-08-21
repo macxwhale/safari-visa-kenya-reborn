@@ -54,7 +54,7 @@ export const BottomSheetModal: React.FC<BottomSheetModalProps> = ({
   }, []);
 
   // Check if content is scrolled to top
-  const handleScroll = useCallback((e: Event) => {
+  const handleScroll = useCallback((e: React.UIEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
     setIsAtTop(target.scrollTop <= 5);
   }, []);
