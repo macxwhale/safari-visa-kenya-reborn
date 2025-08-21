@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { CreditCard, Banknote, Loader2, CheckCircle, AlertCircle } from "lucide-react";
@@ -7,7 +6,7 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface PaymentStepProps {
   form: any;
-  onChange: (field: string, value: any) => void;
+  onChange?: (field: string, value: any) => void;
   applicationId?: string;
 }
 
