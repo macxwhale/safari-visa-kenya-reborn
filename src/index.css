@@ -69,18 +69,18 @@
     --gray-800: 240 4% 16%;
     --gray-900: 240 6% 10%;
 
-    /* Touch & interaction */
-    --touch-target-min: 44px;
+    /* Mobile-optimized touch & interaction */
+    --touch-target-min: 48px;
     --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-normal: 250ms cubic-bezier(0.4, 0, 0.2, 1);
     --transition-slow: 350ms cubic-bezier(0.4, 0, 0.2, 1);
 
-    /* Shadows */
+    /* Enhanced mobile shadows */
     --shadow-xs: 0 1px 2px 0 hsl(240 5% 26% / 0.05);
     --shadow-sm: 0 1px 3px 0 hsl(240 5% 26% / 0.1), 0 1px 2px -1px hsl(240 5% 26% / 0.1);
     --shadow-md: 0 4px 6px -1px hsl(240 5% 26% / 0.1), 0 2px 4px -2px hsl(240 5% 26% / 0.1);
-    --shadow-lg: 0 10px 15px -3px hsl(240 5% 26% / 0.1), 0 4px 6px -4px hsl(240 5% 26% / 0.1);
-    --shadow-xl: 0 20px 25px -5px hsl(240 5% 26% / 0.1), 0 8px 10px -6px hsl(240 5% 26% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(240 5% 26% / 0.15), 0 4px 6px -4px hsl(240 5% 26% / 0.1);
+    --shadow-xl: 0 20px 25px -5px hsl(240 5% 26% / 0.15), 0 8px 10px -6px hsl(240 5% 26% / 0.1);
 
     /* Sidebar */
     --sidebar-background: 0 0% 98%;
@@ -139,61 +139,108 @@
 
   body {
     @apply bg-background text-foreground;
-    /* Improved font rendering */
+    /* Improved mobile font rendering */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    /* Prevent zoom on input focus on iOS */
+    -webkit-text-size-adjust: 100%;
   }
 
-  /* Fluid typography */
+  /* Mobile-optimized fluid typography */
   h1 {
-    font-size: clamp(1.75rem, 4vw, 3rem);
+    font-size: clamp(1.75rem, 5vw, 3rem);
     line-height: 1.2;
     font-weight: 700;
   }
 
   h2 {
-    font-size: clamp(1.5rem, 3vw, 2.25rem);
+    font-size: clamp(1.5rem, 4vw, 2.25rem);
     line-height: 1.25;
     font-weight: 600;
   }
 
   h3 {
-    font-size: clamp(1.25rem, 2.5vw, 1.875rem);
+    font-size: clamp(1.25rem, 3vw, 1.875rem);
     line-height: 1.3;
     font-weight: 600;
   }
 
   h4 {
-    font-size: clamp(1.125rem, 2vw, 1.5rem);
+    font-size: clamp(1.125rem, 2.5vw, 1.5rem);
     line-height: 1.35;
     font-weight: 500;
   }
 
-  /* Improved focus styles */
+  /* Enhanced mobile focus styles */
   :focus-visible {
     outline: 2px solid hsl(var(--brand-green));
     outline-offset: 2px;
-    border-radius: 4px;
+    border-radius: 6px;
   }
 
-  /* Better button and interactive element focus */
+  /* Better button and interactive element focus for mobile */
   button:focus-visible,
   a:focus-visible,
   [role="button"]:focus-visible {
     outline: 2px solid hsl(var(--brand-green));
     outline-offset: 2px;
+    box-shadow: 0 0 0 4px hsl(var(--brand-green) / 0.1);
+  }
+
+  /* Mobile input optimizations */
+  input, textarea, select {
+    /* Prevent zoom on iOS */
+    font-size: 16px;
+    @apply rounded-lg;
+  }
+
+  @media (max-width: 768px) {
+    input, textarea, select {
+      min-height: 48px;
+    }
   }
 }
 
 @layer components {
-  /* Touch-friendly utilities */
+  /* Enhanced touch-friendly utilities */
   .touch-target {
     min-height: var(--touch-target-min);
     min-width: var(--touch-target-min);
   }
 
-  /* Semantic color utilities */
+  /* Mobile-specific animations */
+  .mobile-slide-up {
+    animation: mobile-slide-up 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  @keyframes mobile-slide-up {
+    from {
+      transform: translateY(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateY(0);
+      opacity: 1;
+    }
+  }
+
+  .mobile-fade-in {
+    animation: mobile-fade-in 0.2s ease-out;
+  }
+
+  @keyframes mobile-fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Mobile-optimized semantic colors */
   .text-success {
     color: hsl(var(--success));
   }
@@ -261,50 +308,70 @@
   .bg-brand-green-light { background-color: hsl(var(--brand-green-light)); }
   .bg-brand-green-lighter { background-color: hsl(var(--brand-green-lighter)); }
 
-  /* Shadow utilities */
-  .shadow-xs { box-shadow: var(--shadow-xs); }
-  .shadow-sm { box-shadow: var(--shadow-sm); }
-  .shadow-md { box-shadow: var(--shadow-md); }
-  .shadow-lg { box-shadow: var(--shadow-lg); }
-  .shadow-xl { box-shadow: var(--shadow-xl); }
+  /* Enhanced mobile shadow utilities */
+  .shadow-mobile {
+    box-shadow: 0 4px 12px -2px hsl(240 5% 26% / 0.12), 0 2px 8px -2px hsl(240 5% 26% / 0.08);
+  }
+
+  .shadow-mobile-lg {
+    box-shadow: 0 8px 25px -5px hsl(240 5% 26% / 0.15), 0 4px 12px -4px hsl(240 5% 26% / 0.1);
+  }
+
+  /* Mobile scroll optimizations */
+  .mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  /* Safe area utilities for mobile devices */
+  .pb-safe {
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+  }
+
+  .pt-safe {
+    padding-top: max(1rem, env(safe-area-inset-top));
+  }
 }
 
-/* High Contrast Mode */
-.high-contrast {
-  --background: 0 0% 0%;
-  --foreground: 0 0% 100%;
-  --muted: 0 0% 20%;
-  --muted-foreground: 0 0% 80%;
-  --popover: 0 0% 10%;
-  --popover-foreground: 0 0% 100%;
-  --card: 0 0% 10%;
-  --card-foreground: 0 0% 100%;
-  --border: 0 0% 40%;
-  --input: 0 0% 20%;
-  --primary: 220 100% 70%;
-  --primary-foreground: 0 0% 0%;
-  --secondary: 0 0% 30%;
-  --secondary-foreground: 0 0% 100%;
-  --accent: 0 0% 30%;
-  --accent-foreground: 0 0% 100%;
-  --destructive: 0 100% 70%;
-  --destructive-foreground: 0 0% 0%;
-  --ring: 220 100% 70%;
+/* Mobile-specific high contrast mode enhancements */
+@media (prefers-contrast: high) {
+  .high-contrast {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 80%;
+    --popover: 0 0% 10%;
+    --popover-foreground: 0 0% 100%;
+    --card: 0 0% 10%;
+    --card-foreground: 0 0% 100%;
+    --border: 0 0% 40%;
+    --input: 0 0% 20%;
+    --primary: 220 100% 70%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 30%;
+    --secondary-foreground: 0 0% 100%;
+    --accent: 0 0% 30%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 100% 70%;
+    --destructive-foreground: 0 0% 0%;
+    --ring: 220 100% 70%;
+  }
+
+  .high-contrast * {
+    text-shadow: none !important;
+    box-shadow: 0 0 0 1px hsl(var(--border)) !important;
+  }
+
+  .high-contrast button,
+  .high-contrast input,
+  .high-contrast select,
+  .high-contrast textarea {
+    border: 3px solid hsl(var(--border)) !important;
+    min-height: 52px;
+  }
 }
 
-.high-contrast * {
-  text-shadow: none !important;
-  box-shadow: 0 0 0 1px hsl(var(--border)) !important;
-}
-
-.high-contrast button,
-.high-contrast input,
-.high-contrast select,
-.high-contrast textarea {
-  border: 2px solid hsl(var(--border)) !important;
-}
-
-/* Offline indicator styles */
+/* Mobile offline indicator enhancements */
 .offline {
   filter: grayscale(0.5);
 }
@@ -319,4 +386,38 @@
   background: rgba(0, 0, 0, 0.1);
   pointer-events: none;
   z-index: 1;
+}
+
+/* Mobile-specific responsive utilities */
+@media (max-width: 640px) {
+  .mobile-hidden {
+    display: none;
+  }
+
+  .mobile-full-width {
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
+  }
+}
+
+/* Improve mobile viewport handling */
+@media screen and (max-width: 768px) {
+  html {
+    /* Prevent horizontal scroll */
+    overflow-x: hidden;
+  }
+
+  body {
+    /* Better mobile text readability */
+    line-height: 1.6;
+    /* Prevent horizontal scroll */
+    overflow-x: hidden;
+  }
+}
+
+/* Better mobile modal and overlay performance */
+@media (max-width: 768px) {
+  .modal-backdrop {
+    backdrop-filter: blur(8px);
+  }
 }
