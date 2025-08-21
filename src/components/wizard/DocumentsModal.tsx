@@ -1,6 +1,7 @@
 
 import { useState } from "react";
 import { BaseModal } from "./BaseModal";
+import { MobileBaseModal } from "./MobileBaseModal";
 import DocumentsStep from "./DocumentsStep";
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
 import { getProgressSteps } from "./ModalProgressSteps";
@@ -16,6 +17,7 @@ interface DocumentsModalProps {
   form: ApplicationFormState;
   onChange: (field: string, value: any) => void;
   onSubmit: () => void;
+  isMobile?: boolean;
 }
 
 export const DocumentsModal: React.FC<DocumentsModalProps> = ({
@@ -25,7 +27,8 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
   onBack,
   form,
   onChange,
-  onSubmit
+  onSubmit,
+  isMobile = false
 }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -124,19 +127,23 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
     return "Confirm & Proceed to Payment";
   };
 
+  const modalProps = {
+    title: "Required Documents & Final Review",
+    subtitle: "Upload supporting documents and review your application before proceeding to payment",
+    onClose,
+    onBack,
+    onNext: handleConfirmAndProceed,
+    nextButtonText: getButtonContent(),
+    nextButtonDisabled: isSubmitting || isSaved,
+    className: "max-w-7xl",
+    showProgressBar: true,
+    progressSteps
+  };
+
+  const ModalComponent = isMobile ? MobileBaseModal : BaseModal;
+
   return (
-    <BaseModal
-      title="Required Documents & Final Review"
-      subtitle="Upload supporting documents and review your application before proceeding to payment"
-      onClose={onClose}
-      onBack={onBack}
-      onNext={handleConfirmAndProceed}
-      nextButtonText={getButtonContent()}
-      nextButtonDisabled={isSubmitting || isSaved}
-      className="max-w-7xl"
-      showProgressBar={true}
-      progressSteps={progressSteps}
-    >
+    <ModalComponent {...modalProps}>
       <div className="space-y-8 pb-4">
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
           <h3 className="text-lg font-semibold text-amber-900 mb-2">Final Checkpoint</h3>
@@ -154,6 +161,6 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
           </p>
         </div>
       </div>
-    </BaseModal>
+    </ModalComponent>
   );
 };
