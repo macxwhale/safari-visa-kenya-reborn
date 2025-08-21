@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet } from "react-router-dom";
 import TravelerTypeSelection from "@/components/wizard/TravelerTypeSelection";
 import ApplicationForm from "@/components/wizard/ApplicationForm";
 import { MobileApplicationProvider } from "@/contexts/MobileApplicationContext";
@@ -50,7 +50,7 @@ export default function ApplicationWizard() {
         applicationType={applicationData.applicationType}
         country={applicationData.country}
       >
-        {/* Mobile pages will be rendered through routing */}
+        <Outlet />
       </MobileApplicationProvider>
     );
   }
