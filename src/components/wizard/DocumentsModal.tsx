@@ -1,7 +1,6 @@
-
 import { useState } from "react";
 import { BaseModal } from "./BaseModal";
-import { MobileBaseModal } from "./MobileBaseModal";
+import { BottomSheetModal } from "./BottomSheetModal";
 import DocumentsStep from "./DocumentsStep";
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
 import { getProgressSteps } from "./ModalProgressSteps";
@@ -42,11 +41,9 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
     setIsSaved(false);
 
     try {
-      // First, auto-save the current form data
       await autoSaveFormData(form, 'documents');
       console.log("Form data auto-saved successfully");
 
-      // Validate required fields
       const requiredFields = {
         fullName: form.fullName,
         email: form.email,
@@ -73,20 +70,17 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
         return;
       }
 
-      // Submit the application to database
       console.log("Submitting application to database...");
       await submitApplication(form);
       
       setIsSaved(true);
       console.log("Application submitted successfully");
       
-      // Show success message
       toast({
         title: "Application Saved Successfully",
         description: "Your details have been saved. Redirecting to payment..."
       });
 
-      // Wait a moment to show the success state
       setTimeout(() => {
         onSubmit();
       }, 1500);
@@ -140,11 +134,11 @@ export const DocumentsModal: React.FC<DocumentsModalProps> = ({
     progressSteps
   };
 
-  const ModalComponent = isMobile ? MobileBaseModal : BaseModal;
+  const ModalComponent = isMobile ? BottomSheetModal : BaseModal;
 
   return (
     <ModalComponent {...modalProps}>
-      <div className="space-y-8 pb-4">
+      <div className="space-y-8">
         <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
           <h3 className="text-lg font-semibold text-amber-900 mb-2">Final Checkpoint</h3>
           <p className="text-sm text-amber-700">

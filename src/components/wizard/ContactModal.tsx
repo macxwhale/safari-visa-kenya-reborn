@@ -1,6 +1,6 @@
 
 import { BaseModal } from "./BaseModal";
-import { MobileBaseModal } from "./MobileBaseModal";
+import { BottomSheetModal } from "./BottomSheetModal";
 import ContactInfoStep from "./ContactInfoStep";
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
 import { getProgressSteps } from "./ModalProgressSteps";
@@ -44,11 +44,11 @@ export const ContactModal: React.FC<ContactModalProps> = ({
     progressSteps
   };
 
-  const ModalComponent = isMobile ? MobileBaseModal : BaseModal;
+  const ModalComponent = isMobile ? BottomSheetModal : BaseModal;
 
   return (
     <ModalComponent {...modalProps}>
-      <div className="space-y-6 sm:space-y-8 pb-4">
+      <div className="space-y-6 sm:space-y-8">
         <ContactInfoStep form={form} onChange={onChange} />
       </div>
     </ModalComponent>

@@ -1,6 +1,6 @@
 
 import { BaseModal } from "./BaseModal";
-import { MobileBaseModal } from "./MobileBaseModal";
+import { BottomSheetModal } from "./BottomSheetModal";
 import TripInfoStep from "./TripInfoStep";
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
 import { getProgressSteps } from "./ModalProgressSteps";
@@ -46,11 +46,11 @@ export const TripModal: React.FC<TripModalProps> = ({
     progressSteps
   };
 
-  const ModalComponent = isMobile ? MobileBaseModal : BaseModal;
+  const ModalComponent = isMobile ? BottomSheetModal : BaseModal;
 
   return (
     <ModalComponent {...modalProps}>
-      <div className="pb-4">
+      <div className="space-y-6 sm:space-y-8">
         <TripInfoStep 
           form={form} 
           onChange={onChange} 
