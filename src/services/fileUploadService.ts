@@ -11,6 +11,28 @@ interface FileValidationResult {
   error?: string;
 }
 
+const sanitizeFileName = (fileName: string): string => {
+  // Get file extension
+  const lastDotIndex = fileName.lastIndexOf('.');
+  const name = lastDotIndex > 0 ? fileName.substring(0, lastDotIndex) : fileName;
+  const extension = lastDotIndex > 0 ? fileName.substring(lastDotIndex) : '';
+  
+  // Replace problematic characters with safe alternatives
+  const sanitizedName = name
+    .replace(/[\[\](){}]/g, '_') // Replace brackets and parentheses with underscores
+    .replace(/\s+/g, '_') // Replace spaces with underscores
+    .replace(/[^a-zA-Z0-9._-]/g, '') // Remove any other special characters
+    .replace(/_+/g, '_') // Replace multiple underscores with single
+    .replace(/^_|_$/g, ''); // Remove leading/trailing underscores
+  
+  // Ensure we have a valid name
+  const finalName = sanitizedName || 'document';
+  
+  console.log(`Sanitized filename: "${fileName}" -> "${finalName}${extension}"`);
+  
+  return `${finalName}${extension}`;
+};
+
 const validateFile = (file: File): FileValidationResult => {
   console.log('Validating file:', {
     name: file.name,
@@ -81,8 +103,10 @@ export const uploadCriticalFile = async (file: File, type: string): Promise<stri
     throw new Error(validation.error);
   }
 
-  const fileName = `${Date.now()}_${type}_${file.name}`;
-  console.log('Generated filename:', fileName);
+  // Sanitize the original filename
+  const sanitizedOriginalName = sanitizeFileName(file.name);
+  const fileName = `${Date.now()}_${type}_${sanitizedOriginalName}`;
+  console.log('Generated sanitized filename:', fileName);
 
   const { data, error } = await safeAsync(async () => {
     return uploadWithRetry(file, fileName);
@@ -90,7 +114,15 @@ export const uploadCriticalFile = async (file: File, type: string): Promise<stri
 
   if (error) {
     console.error(`Critical upload failed for ${type}:`, error);
-    throw new Error(`${type} upload failed: ${error}`);
+    
+    // Provide more specific error messages based on the error type
+    if (error.toString().includes('400') || error.toString().includes('Bad Request')) {
+      throw new Error(`${type} upload failed: Invalid file name or format. Please try renaming your file.`);
+    } else if (error.toString().includes('413') || error.toString().includes('too large')) {
+      throw new Error(`${type} upload failed: File is too large. Maximum size is 10MB.`);
+    } else {
+      throw new Error(`${type} upload failed: ${error}`);
+    }
   }
 
   if (!data?.data) {
@@ -116,7 +148,10 @@ export const uploadOptionalFile = async (file: File, type: string): Promise<void
     return; // Don't throw for optional files, just log and return
   }
 
-  const fileName = `${Date.now()}_${type}_${file.name}`;
+  // Sanitize the original filename
+  const sanitizedOriginalName = sanitizeFileName(file.name);
+  const fileName = `${Date.now()}_${type}_${sanitizedOriginalName}`;
+  console.log('Generated sanitized filename for optional file:', fileName);
   
   const { error } = await safeAsync(async () => {
     return uploadWithRetry(file, fileName, 2); // Fewer retries for optional files
