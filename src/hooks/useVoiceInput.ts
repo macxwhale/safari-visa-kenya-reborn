@@ -29,8 +29,12 @@ export const useVoiceInput = (options: VoiceInputOptions = {}) => {
     }
 
     try {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognition = new SpeechRecognition();
+      const SpeechRecognitionClass = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (!SpeechRecognitionClass) {
+        throw new Error('Speech Recognition not available');
+      }
+      
+      const recognition = new SpeechRecognitionClass();
       
       recognition.continuous = options.continuous || false;
       recognition.interimResults = true;
