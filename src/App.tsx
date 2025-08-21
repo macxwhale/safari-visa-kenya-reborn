@@ -20,6 +20,7 @@ import MobileTripPage from "./pages/mobile/MobileTripPage";
 import MobileTravelerPage from "./pages/mobile/MobileTravelerPage";
 import MobileCustomsPage from "./pages/mobile/MobileCustomsPage";
 import MobileDocumentsPage from "./pages/mobile/MobileDocumentsPage";
+import MobilePaymentPage from "./pages/mobile/MobilePaymentPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -77,6 +78,11 @@ const AppContent = () => {
       <Route path="/application/documents" element={
         <MobileApplicationProvider travelerType="" applicationType="" country="">
           <MobileDocumentsPage />
+        </MobileApplicationProvider>
+      } />
+      <Route path="/application/payment" element={
+        <MobileApplicationProvider travelerType="" applicationType="" country="">
+          <MobilePaymentPage />
         </MobileApplicationProvider>
       } />
       
