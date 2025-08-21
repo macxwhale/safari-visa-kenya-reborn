@@ -1,5 +1,6 @@
 
 import { BaseModal } from "./BaseModal";
+import { MobileBaseModal } from "./MobileBaseModal";
 import TravelInfoStep from "./TravelInfoStep";
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
 import { getProgressSteps } from "./ModalProgressSteps";
@@ -11,6 +12,7 @@ interface TravelerModalProps {
   onBack: () => void;
   form: ApplicationFormState;
   onChange: (field: string, value: any) => void;
+  isMobile?: boolean;
 }
 
 export const TravelerModal: React.FC<TravelerModalProps> = ({
@@ -19,7 +21,8 @@ export const TravelerModal: React.FC<TravelerModalProps> = ({
   onNext,
   onBack,
   form,
-  onChange
+  onChange,
+  isMobile = false
 }) => {
   if (!isOpen) return null;
 
@@ -31,25 +34,29 @@ export const TravelerModal: React.FC<TravelerModalProps> = ({
 
   const progressSteps = getProgressSteps(4);
 
+  const modalProps = {
+    title: "Traveler Information",
+    subtitle: "Answer a few questions related to the traveler",
+    onClose,
+    onBack,
+    onNext,
+    nextButtonText: "Continue to Customs",
+    nextButtonDisabled: !isFormValid,
+    className: "max-w-7xl",
+    showProgressBar: true,
+    progressSteps
+  };
+
+  const ModalComponent = isMobile ? MobileBaseModal : BaseModal;
+
   return (
-    <BaseModal
-      title="Traveler Information"
-      subtitle="Answer a few questions related to the traveler"
-      onClose={onClose}
-      onBack={onBack}
-      onNext={onNext}
-      nextButtonText="Continue to Documents"
-      nextButtonDisabled={!isFormValid}
-      className="max-w-7xl"
-      showProgressBar={true}
-      progressSteps={progressSteps}
-    >
+    <ModalComponent {...modalProps}>
       <div className="pb-4">
         <TravelInfoStep 
           form={form} 
           onChange={onChange}
         />
       </div>
-    </BaseModal>
+    </ModalComponent>
   );
 };

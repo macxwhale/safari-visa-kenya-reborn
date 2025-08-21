@@ -1,5 +1,6 @@
 
 import { BaseModal } from "./BaseModal";
+import { MobileBaseModal } from "./MobileBaseModal";
 import CustomsDeclarationStep from "./CustomsDeclarationStep";
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
 import { getProgressSteps } from "./ModalProgressSteps";
@@ -11,6 +12,7 @@ interface CustomsModalProps {
   onBack: () => void;
   form: ApplicationFormState;
   onChange: (field: string, value: any) => void;
+  isMobile?: boolean;
 }
 
 export const CustomsModal: React.FC<CustomsModalProps> = ({
@@ -19,7 +21,8 @@ export const CustomsModal: React.FC<CustomsModalProps> = ({
   onNext,
   onBack,
   form,
-  onChange
+  onChange,
+  isMobile = false
 }) => {
   if (!isOpen) return null;
 
@@ -28,22 +31,26 @@ export const CustomsModal: React.FC<CustomsModalProps> = ({
 
   const progressSteps = getProgressSteps(5);
 
+  const modalProps = {
+    title: "Customs Declaration",
+    subtitle: "Declaration of goods and currency for customs purposes",
+    onClose,
+    onBack,
+    onNext,
+    nextButtonText: "Continue to Documents",
+    nextButtonDisabled: !isFormValid,
+    className: "max-w-7xl",
+    showProgressBar: true,
+    progressSteps
+  };
+
+  const ModalComponent = isMobile ? MobileBaseModal : BaseModal;
+
   return (
-    <BaseModal
-      title="Customs Declaration"
-      subtitle="Declaration of goods and currency for customs purposes"
-      onClose={onClose}
-      onBack={onBack}
-      onNext={onNext}
-      nextButtonText="Continue to Documents"
-      nextButtonDisabled={!isFormValid}
-      className="max-w-7xl"
-      showProgressBar={true}
-      progressSteps={progressSteps}
-    >
-      <div className="space-y-8 pb-4">
+    <ModalComponent {...modalProps}>
+      <div className="space-y-6 sm:space-y-8 pb-4">
         <CustomsDeclarationStep form={form} onChange={onChange} />
       </div>
-    </BaseModal>
+    </ModalComponent>
   );
 };

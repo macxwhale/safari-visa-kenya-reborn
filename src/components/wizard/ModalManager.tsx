@@ -7,6 +7,7 @@ import { TripModal } from "./TripModal";
 import { TravelerModal } from "./TravelerModal";
 import { CustomsModal } from "./CustomsModal";
 import { DocumentsModal } from "./DocumentsModal";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface ModalManagerProps {
   currentStep: number;
@@ -29,6 +30,8 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
   onSubmit,
   originCountry
 }) => {
+  const isMobile = useIsMobile();
+
   return (
     <>
       <PassportModal
@@ -38,6 +41,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         onBack={onBack}
         form={form}
         onChange={onChange}
+        isMobile={isMobile}
       />
       
       <SelfieModal
@@ -47,6 +51,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         onBack={onBack}
         form={form}
         onChange={onChange}
+        isMobile={isMobile}
       />
       
       <ContactModal
@@ -56,6 +61,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         onBack={onBack}
         form={form}
         onChange={onChange}
+        isMobile={isMobile}
       />
       
       <TripModal
@@ -66,6 +72,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         form={form}
         onChange={onChange}
         originCountry={originCountry}
+        isMobile={isMobile}
       />
       
       <TravelerModal
@@ -75,6 +82,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         onBack={onBack}
         form={form}
         onChange={onChange}
+        isMobile={isMobile}
       />
 
       <CustomsModal
@@ -84,6 +92,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         onBack={onBack}
         form={form}
         onChange={onChange}
+        isMobile={isMobile}
       />
 
       <DocumentsModal
@@ -94,6 +103,7 @@ export const ModalManager: React.FC<ModalManagerProps> = ({
         form={form}
         onChange={onChange}
         onSubmit={onSubmit}
+        isMobile={isMobile}
       />
     </>
   );

@@ -1,5 +1,6 @@
 
 import { BaseModal } from "./BaseModal";
+import { MobileBaseModal } from "./MobileBaseModal";
 import SelfieStep from "./SelfieStep";
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
 import { getProgressSteps } from "./ModalProgressSteps";
@@ -11,6 +12,7 @@ interface SelfieModalProps {
   onBack: () => void;
   form: ApplicationFormState;
   onChange: (field: string, value: File | null) => void;
+  isMobile?: boolean;
 }
 
 export const SelfieModal: React.FC<SelfieModalProps> = ({
@@ -19,29 +21,34 @@ export const SelfieModal: React.FC<SelfieModalProps> = ({
   onNext,
   onBack,
   form,
-  onChange
+  onChange,
+  isMobile = false
 }) => {
   if (!isOpen) return null;
 
   const isFormValid = form.selfieDoc !== null;
   const progressSteps = getProgressSteps(1);
 
+  const modalProps = {
+    title: "Selfie Verification",
+    subtitle: "Upload a clear photo of yourself or take a selfie for verification",
+    onClose,
+    onBack,
+    onNext,
+    nextButtonText: "Continue to Contact Info",
+    nextButtonDisabled: !isFormValid,
+    className: "max-w-7xl",
+    showProgressBar: true,
+    progressSteps
+  };
+
+  const ModalComponent = isMobile ? MobileBaseModal : BaseModal;
+
   return (
-    <BaseModal
-      title="Selfie Verification"
-      subtitle="Upload a clear photo of yourself or take a selfie for verification"
-      onClose={onClose}
-      onBack={onBack}
-      onNext={onNext}
-      nextButtonText="Continue to Contact Info"
-      nextButtonDisabled={!isFormValid}
-      className="max-w-7xl"
-      showProgressBar={true}
-      progressSteps={progressSteps}
-    >
-      <div className="space-y-8 pb-4">
+    <ModalComponent {...modalProps}>
+      <div className="space-y-6 sm:space-y-8 pb-4">
         <SelfieStep form={form} onChange={onChange} />
       </div>
-    </BaseModal>
+    </ModalComponent>
   );
 };

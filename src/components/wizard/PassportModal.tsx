@@ -1,5 +1,6 @@
 
 import { BaseModal } from "./BaseModal";
+import { MobileBaseModal } from "./MobileBaseModal";
 import PassportStep from "./PassportStep";
 import { ApplicationFormState } from "@/hooks/useApplicationForm";
 import { getProgressSteps } from "./ModalProgressSteps";
@@ -11,6 +12,7 @@ interface PassportModalProps {
   onBack: () => void;
   form: ApplicationFormState;
   onChange: (field: string, value: string | File | null) => void;
+  isMobile?: boolean;
 }
 
 export const PassportModal: React.FC<PassportModalProps> = ({
@@ -19,7 +21,8 @@ export const PassportModal: React.FC<PassportModalProps> = ({
   onNext,
   onBack,
   form,
-  onChange
+  onChange,
+  isMobile = false
 }) => {
   if (!isOpen) return null;
 
@@ -29,22 +32,26 @@ export const PassportModal: React.FC<PassportModalProps> = ({
 
   const progressSteps = getProgressSteps(0);
 
+  const modalProps = {
+    title: "Passport Information",
+    subtitle: "Upload your passport document and enter your passport details",
+    onClose,
+    onBack,
+    onNext,
+    nextButtonText: "Continue to Selfie",
+    nextButtonDisabled: !isFormValid,
+    className: "max-w-7xl",
+    showProgressBar: true,
+    progressSteps
+  };
+
+  const ModalComponent = isMobile ? MobileBaseModal : BaseModal;
+
   return (
-    <BaseModal
-      title="Passport Information"
-      subtitle="Upload your passport document and enter your passport details"
-      onClose={onClose}
-      onBack={onBack}
-      onNext={onNext}
-      nextButtonText="Continue to Selfie"
-      nextButtonDisabled={!isFormValid}
-      className="max-w-7xl"
-      showProgressBar={true}
-      progressSteps={progressSteps}
-    >
-      <div className="space-y-8 pb-4">
+    <ModalComponent {...modalProps}>
+      <div className="space-y-6 sm:space-y-8 pb-4">
         <PassportStep form={form} onChange={onChange} />
       </div>
-    </BaseModal>
+    </ModalComponent>
   );
 };
