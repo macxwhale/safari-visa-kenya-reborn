@@ -8,16 +8,19 @@ interface MobileDocumentsPageProps {
   form: ApplicationFormState;
   onChange: (field: string, value: any) => void;
   onSubmit: () => void;
+  submitting?: boolean;
 }
 
 export const MobileDocumentsPage: React.FC<MobileDocumentsPageProps> = ({
   form,
   onChange,
-  onSubmit
+  onSubmit,
+  submitting = false
 }) => {
   const navigate = useNavigate();
 
   const handleNext = () => {
+    console.log("Documents page - Continue button clicked");
     onSubmit();
   };
 
@@ -33,7 +36,8 @@ export const MobileDocumentsPage: React.FC<MobileDocumentsPageProps> = ({
       totalSteps={9}
       onNext={handleNext}
       onBack={handleBack}
-      nextButtonText="Continue to Review"
+      nextButtonText={submitting ? "Submitting..." : "Continue to Review"}
+      nextButtonDisabled={submitting}
     >
       <DocumentsStep form={form} onChange={onChange} />
     </MobilePageLayout>
